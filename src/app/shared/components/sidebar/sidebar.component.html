@@ -1,0 +1,257 @@
+<aside class="app-sidebar" id="sidebar" [ngClass]="{ 'sticky-pin': scrolled }">
+    <!-- Start::main-sidebar-header -->
+    <div class="main-sidebar-header">
+      <a routerLink="/dashboard/crm" class="header-logo">
+        <img
+          src="./images/brand-logos/desktop-logo.png"
+          alt="logo"
+          class="desktop-logo"
+        />
+        <img
+          src="./images/brand-logos/toggle-logo.png"
+          alt="logo"
+          class="toggle-logo"
+        />
+        <img
+          src="./images/brand-logos/desktop-dark.png"
+          alt="logo"
+          class="desktop-dark"
+        />
+        <img
+          src="./images/brand-logos/toggle-dark.png"
+          alt="logo"
+          class="toggle-dark"
+        />
+        <img
+          src="./images/brand-logos/desktop-white.png"
+          alt="logo"
+          class="desktop-white"
+        />
+        <img
+          src="./images/brand-logos/toggle-white.png"
+          alt="logo"
+          class="toggle-white"
+        />
+      </a>
+    </div>
+    <div>
+      <ngx-simplebar [options]="options" class="main-sidebar" id="sidebar-scroll">
+        <nav class="main-menu-container nav nav-pills flex-column sub-open">
+          <ul class="main-menu">
+            @for(menuItem of menuItems; track $index){
+  
+            <ng-container>
+              <li
+                class="slide"
+                #activeMenuItems
+                [ngClass]="{'slide__category':menuItem.headTitle,
+                          'slide has-sub':menuItem.title,
+                          'open': menuItem.active,
+                          'active': menuItem.selected,}"
+              >
+                <!-- head title  -->
+                @if(menuItem.headTitle){
+  
+                <span class="category-name">{{ menuItem.headTitle }}</span>
+                }
+                <!-- has-Link -->
+                @if(menuItem.type === 'link'){
+  
+                <a
+                  class="side-menu__item"
+                  [routerLink]="!menuItem.type ? null : [menuItem.path]"
+                  routerLinkActive="active"
+                  (click)="setNavActive(menuItem); menuOpen()"
+                >
+                  @if(menuItem.icon){
+                  <i class="side-menu__icon fa-solid fa-{{ menuItem.icon }}"></i>
+                  }
+                  <span class="side-menu__label"
+                    >{{ menuItem.title }}
+                    <span
+                      class="badge !bg-{{ menuItem.badgeClass }}/10 !text-{{
+                        menuItem.badgeText
+                      }} !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
+                      >{{ menuItem.badgeValue }}</span
+                    >
+                  </span>
+                </a>
+                }
+                <!-- has-empty -->
+                @if(menuItem.type === 'empty'){
+  
+                <a
+                  class="side-menu__item"
+                  href="javascript:;"
+                  (click)="setNavActive(menuItem)"
+                >
+                  @if(menuItem.icon){
+  
+                  <i class="side-menu__icon  bx bx-{{ menuItem.icon }}"></i>
+                  }
+                  <span class="side-menu__label"
+                    >{{ menuItem.title }}
+                    <span
+                      class="badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
+                      >hot</span
+                    >
+                  </span>
+                </a>
+                }
+                <!-- has-Sub -->
+                @if(menuItem.type === 'sub'){
+  
+                <a
+                  class="side-menu__item"
+                  [routerLink]="menuItem.type ? null : [menuItem.path]"
+                  [ngClass]="{ active: menuItem.selected }"
+                  (click)="toggleNavActive(menuItem)"
+                >
+                  @if(menuItem.icon){
+  
+                  <i class="side-menu__icon  fa-solid fa-{{ menuItem.icon }}"></i>
+                  }
+                  <span class="side-menu__label"
+                    >{{ menuItem.title }}
+                    <span
+                      class="badge !bg-{{ menuItem.badgeClass }}/10 !text-{{
+                        menuItem.badgeText
+                      }} !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
+                      >{{ menuItem.badgeValue }}</span
+                    >
+                  </span>
+  
+                  <i class="fa-solid fa-chevron-right side-menu__angle"></i>
+                </a>
+                }
+  
+                <!-- 2nd Level menu -->
+                @if(menuItem.children){
+  
+                <ul
+                  class="slide-menu child1 {{ menuItem.menutype }}"
+                  [ngClass]="{ active: menuItem.active }"
+                  [ngClass]="{
+                    active: menuItem.active,
+                    'double-menu-active': menuItem.active
+                  }"
+                  [ngStyle]="{ display: menuItem.active ? 'block' : 'none' }"
+                >
+                  <li class="slide side-menu__label1">
+                    <a href="javascript:void(0)">{{ menuItem.title }}</a>
+                  </li>
+                  @for(childrenItem of menuItem.children;track $index){
+  
+                  <ng-container>
+                    <li
+                      class="slide"
+                      activeMenuItems
+                      [ngClass]="{
+                        open: childrenItem.active,
+                        'has-sub': childrenItem.type === 'sub'
+                      }"
+                    >
+                      <!-- link -->
+                      @if(childrenItem.type === 'link'){
+  
+                      <a
+                        class="side-menu__item"
+                        [routerLink]="
+                          !childrenItem.type ? null : [childrenItem.path]
+                        "
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="setNavActive(childrenItem)"
+                      >
+                        {{ childrenItem.title }}
+                      </a>
+                      }
+                      <!-- empty -->
+                      @if(childrenItem.type === 'empty'){
+  
+                      <a
+                        class="side-menu__item"
+                        href="javascript:;"
+                        (click)="setNavActive(childrenItem)"
+                      >
+                        {{ childrenItem.title }}
+                      </a>
+                      }
+                      <!-- sub -->
+                      @if(childrenItem.type === 'sub'){
+  
+                      <a
+                        class="side-menu__item"
+                        [ngClass]="{ active: childrenItem.active }"
+                        [routerLink]="
+                          childrenItem.type ? null : [childrenItem.path]
+                        "
+                        (click)="toggleNavActive(childrenItem)"
+                      >
+                        <span class="">{{ childrenItem.title }}</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                      </a>
+                      }
+                      <!-- 3rd Level menu -->
+                      @if(childrenItem.children){
+  
+                      <ul
+                        class="slide-menu child2"
+                        [ngStyle]="{
+                          display: childrenItem.active ? 'block' : 'none',
+                          right: localdata['ynex-dir'] == 'rtl' ? 'auto' : '',
+                          left: localdata['ynex-dir'] == 'rtl' ? '100%' : ''
+                        }"
+                        [ngClass]="{ open: childrenItem.active }"
+                      >
+                        @for(childrenSubItem of childrenItem.children;track
+                        $index){
+  
+                        <ng-container>
+                          <li
+                            class="slide"
+                            activeMenuItems
+                            [ngClass]="{ active: childrenSubItem.selected }"
+                          >
+                            <!-- link -->
+                            @if(childrenSubItem.type === 'link'){ }
+                            <a
+                              class="side-menu__item"
+                              [ngClass]="{ active: childrenSubItem.selected }"
+                              routerLinkActive="active"
+                              [routerLink]="
+                                !childrenSubItem.type
+                                  ? null
+                                  : [childrenSubItem.path]
+                              "
+                              [routerLinkActiveOptions]="{ exact: true }"
+                            >
+                              {{ childrenSubItem.title }}
+                              {{ localdata["ynex-dir"] }}
+                            </a>
+                            <!-- empty -->
+                            @if(childrenSubItem.type === 'empty'){
+  
+                            <a class="side-menu__item" href="javascript:;">
+                              {{ childrenSubItem.title }}
+                            </a>
+                            }
+                          </li>
+                        </ng-container>
+                        }
+                      </ul>
+                      }
+                    </li>
+                  </ng-container>
+                  }
+                </ul>
+                }
+              </li>
+            </ng-container>
+            }
+          </ul>
+        </nav>
+      </ngx-simplebar>
+    </div>
+  </aside>
+  
