@@ -1,16 +1,13 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { Menu, NavService } from '../../services/nav.service';
+import { Component, ElementRef, OnInit, } from '@angular/core';
 
 @Component({
-  selector: 'app-content-layout',
-  templateUrl: './content-layout.component.html',
-  styleUrl: './content-layout.component.scss'
+  selector: 'app-administration-layout',
+  templateUrl: './administration-layout.component.html',
+  styleUrl: './administration-layout.component.scss'
 })
-export class ContentLayoutComponent {
-  public menuItems!: Menu[];
+export class AdministrationLayoutComponent implements OnInit  {
   
   constructor(
-    public navServices: NavService,
     private elementRef: ElementRef,
   ){}
 
@@ -37,16 +34,6 @@ export class ContentLayoutComponent {
   }
 
   closeMenu() {
-    this.menuItems?.forEach((a: any) => {
-      if (this.menuItems) {
-        a.active = false;
-      }
-      a?.children?.forEach((b: any) => {
-        if (a.children) {
-          b.active = false;
-        }
-      });
-    });
   }
   ngOnInit(): void {
   }

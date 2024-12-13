@@ -17,6 +17,7 @@ import { TabToTopComponent } from './components/tab-to-top/tab-to-top.component'
 import { AuthenticationLayoutComponent } from './layouts/authentication-layout/authentication-layout.component';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { RouterModule } from '@angular/router';
+import { AdministrationLayoutComponent } from './layouts/administration-layout/administration-layout.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { RouterModule } from '@angular/router';
     SidebarComponent, 
     SwitcherComponent,
     TabToTopComponent,
+    AdministrationLayoutComponent,
     AuthenticationLayoutComponent,
     ContentLayoutComponent,
     HoverEffectSidebarDirective,
@@ -39,6 +41,7 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
   ],
   exports:[
+    AdministrationLayoutComponent,
     AuthenticationLayoutComponent,
     ContentLayoutComponent,
     HoverEffectSidebarDirective,

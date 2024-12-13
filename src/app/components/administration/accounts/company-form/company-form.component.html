@@ -1,0 +1,101 @@
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-12">
+      <label for="name" class="form-label">Nombre:</label>
+      <input type="text" class="form-control" id="name" name="name" formControlName="name" oninput="this.value = this.value.toUpperCase();" maxlength="254"/>
+      <span *ngIf="isValidField('name')" class="text-[#EE312A]">
+        {{ getFieldError('name') }}
+      </span>
+    </div>
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="rfc" class="form-label">RFC:</label>
+      <input type="text" class="form-control" #inputElement id="rfc"  name="rfc" formControlName="rfc" oninput="this.value = this.value.toUpperCase();" maxlength="13" (input)="onInputRFC($event)"/>
+      <span *ngIf="isValidField('rfc')" class="text-[#EE312A]">
+        {{ getFieldError('rfc') }}
+      </span>
+    </div>
+    @if(myForm.controls['rfc'].value.length == 13){
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="curp" class="form-label">Curp:</label>
+      <input type="text" class="form-control" id="curp" name="curp" formControlName="curp" oninput="this.value = this.value.toUpperCase();" maxlength="254"/>
+      <span *ngIf="isValidField('curp')" class="text-[#EE312A]">
+        {{ getFieldError('curp') }}
+      </span>
+    </div>
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="employee_registration" class="form-label">Reg. Patronal:</label>
+      <input type="text" class="form-control" id="employee_registration" name="employee_registration" formControlName="employee_registration" max="40"/>
+      <span *ngIf="isValidField('employee_registration')" class="text-[#EE312A]">
+        {{ getFieldError('employee_registration') }}
+      </span>
+    </div>
+    }
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="email" class="form-label">Correo:</label>
+      <input type="text" class="form-control" id="email" name="email" formControlName="email" maxlength="75"/>
+      <span *ngIf="isValidField('email')" class="text-[#EE312A]">
+        {{ getFieldError('email') }}
+      </span>
+    </div>
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="phone" class="form-label">Teléfono:</label>
+      <input type="text" class="form-control" id="phone" name="phone" formControlName="phone" maxlength="13"/>
+      <span *ngIf="isValidField('phone')" class="text-[#EE312A]">
+        {{ getFieldError('phone') }}
+      </span>
+    </div>
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      <label for="cp" class="form-label">Código P:</label>
+      <input type="number" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5"/>
+      <span *ngIf="isValidField('cp')" class="text-[#EE312A]">
+        {{ getFieldError('cp') }}
+      </span>
+    </div>
+
+
+    <div class="col-span-12 sm:col-span-12 md:col-span-12">
+      <label for="regime" class="form-label">Regimen:</label>
+      <select formControlName="regime" class="form-control">
+        <option value="">Selecciona el tipo</option>
+        @for (item of listadoRegimen; track $index) {
+          <option value="{{ item.RegimenFiscal }}">{{ item.descripcion }}</option>
+        }
+      </select>
+      <span *ngIf="isValidField('regime')" class="text-[#EE312A]">
+        {{ getFieldError('regime') }}
+      </span>
+    </div>
+    
+    <div class="col-span-12 sm:col-span-12 md:col-span-12">
+      <label for="address" class="form-label">Dirección:</label>
+      <textarea type="text" class="form-control" id="address" name="address"
+        formControlName="address"></textarea>
+        <span *ngIf="isValidField('address')" class="text-[#EE312A]">
+          {{ getFieldError('address') }}
+        </span>
+    </div>
+  </div>
+
+  <div class="modal-footer flex-container mb-4">
+    <div class="flex justify-between mb-4">
+      <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+          data-hs-overlay="#hs-extralarge-modal" (click)="closeModal()">
+          Cancelar
+        </button>
+      </div>
+      <div class="mr-3">
+        <button type="submit" class="ti-btn ti-btn-success-full text-white !font-medium">
+          Crear Empresa
+        </button>
+      </div>
+    </div>
+  </div>
+
+</form>

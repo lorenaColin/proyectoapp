@@ -3,14 +3,7 @@ import { Component, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { fromEvent } from 'rxjs';
 
-import { Router, Event, NavigationEnd } from '@angular/router';
-import { IStaticMethods } from 'preline/preline';
 
-declare global {
-  interface Window {
-    HSStaticMethods: IStaticMethods;
-  }
-}
 
 @Component({
   selector: 'app-authentication-layout',
@@ -20,8 +13,7 @@ declare global {
 export class AuthenticationLayoutComponent {
   constructor(
     @Inject(DOCUMENT) private document: Document,private elementRef: ElementRef,
-    private renderer: Renderer2,
-    private router: Router,
+    private renderer: Renderer2
   ) {}
   ngOnInit(): void {
   
@@ -36,22 +28,14 @@ export class AuthenticationLayoutComponent {
 
       fromEvent(rtl, 'click').subscribe(() => {
         this.customOptions = { ...this.customOptions, rtl: true, autoplay: true };
-      });
-
-      this.router.events.subscribe((event: Event) => {
-        if (event instanceof NavigationEnd) {
-          setTimeout(() => {
-            window.HSStaticMethods.autoInit();
-          }, 100);
-        }
-      });
-      
+      });      
 
     }
-    ngOnDestroy(): void {
-      this.renderer.removeClass(this.document.body, 'bg-white');
-      this.renderer.removeClass(this.document.body, 'dark:bg-!bodybg');
+  ngOnDestroy(): void {
+    this.renderer.removeClass(this.document.body, 'bg-white');
+    this.renderer.removeClass(this.document.body, 'dark:bg-!bodybg');
   }
+
   customOptions: OwlOptions = {
     loop: true,
     rtl:false,
@@ -85,14 +69,5 @@ export class AuthenticationLayoutComponent {
     this.activeSlides = data;
     console.log(this.activeSlides);
   }
-  showPassword = false;
-  toggleClass = "off-line";
-  toggleVisibility() {
-    this.showPassword = !this.showPassword;
-    if (this.toggleClass === "off-line") {
-      this.toggleClass = "line";
-    } else {
-      this.toggleClass = "off-line";
-    }
-  }
+
 }
