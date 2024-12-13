@@ -2,10 +2,10 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { PATRON_RFC, PATRON_EMAIL, PATRON_PHONE, PATRON_CURP } from '../../../../shared/utils/expressions';
-import { LISTADOREGIMEN } from '../../../../shared/utils/sat';
 
 import { RegimenInterface } from '../../../../shared/interfaces/shared.interface';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
+import { UtilsService } from '../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-company-form',
@@ -15,6 +15,7 @@ import { ValidatorsService } from '../../../../shared/services/validators.servic
 export class CompanyFormComponent {
   private fb = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
+  private utilsService = inject(UtilsService);
   listadoRegimen: RegimenInterface[] = [];
 
   myForm: FormGroup = this.fb.group({
@@ -36,7 +37,13 @@ export class CompanyFormComponent {
     this.listadoRegimen = [];
     if(rfcValue.length < 12 || rfcValue.length > 13) return;
     if( rfcValue.length == 12) this.myForm.patchValue({ curp: '', employee_registration: '' });
-    this.listadoRegimen = LISTADOREGIMEN.filter(regimen => rfcValue.length === 13 ? regimen.fisica : regimen.moral);
+    this.listadoRegimen = this.utilsService.getRegimenSat( rfcValue );
+  }
+
+  cpSearch(event: Event): void {
+    const el = event.target as HTMLInputElement;
+    const cpValue = el.value;
+    this.utilsService.getCpSat( cpValue );
   }
 
 

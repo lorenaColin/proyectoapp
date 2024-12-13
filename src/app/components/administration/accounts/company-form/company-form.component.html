@@ -19,7 +19,7 @@
     @if(myForm.controls['rfc'].value.length == 13){
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="curp" class="form-label">Curp:</label>
-      <input type="text" class="form-control" id="curp" name="curp" formControlName="curp" oninput="this.value = this.value.toUpperCase();" maxlength="254"/>
+      <input type="text" class="form-control" id="curp" name="curp" formControlName="curp" oninput="this.value = this.value.toUpperCase();" maxlength="18"/>
       <span *ngIf="isValidField('curp')" class="text-[#EE312A]">
         {{ getFieldError('curp') }}
       </span>
@@ -52,12 +52,11 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="cp" class="form-label">Código P:</label>
-      <input type="number" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5"/>
+      <input type="number" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5" (input)="cpSearch($event)" maxlength="5"/>
       <span *ngIf="isValidField('cp')" class="text-[#EE312A]">
         {{ getFieldError('cp') }}
       </span>
     </div>
-
 
     <div class="col-span-12 sm:col-span-12 md:col-span-12">
       <label for="regime" class="form-label">Regimen:</label>
