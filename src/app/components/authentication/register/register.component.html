@@ -1,60 +1,163 @@
 <p class="h5 font-semibold mb-2">Registrate</p>
 <div class="btn-list">
-    <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"><i class="ri-facebook-fill"></i></button>
-    <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light"><i class="ri-twitter-fill"></i></button>
+  <button
+    aria-label="button"
+    type="button"
+    class="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"
+  >
+    <i class="ri-facebook-fill"></i>
+  </button>
+  <button
+    aria-label="button"
+    type="button"
+    class="ti-btn ti-btn-icon ti-btn-light"
+  >
+    <i class="ri-twitter-fill"></i>
+  </button>
 </div>
 <form [formGroup]="myForm" (submit)="onSubmit()">
-    <div class="grid grid-cols-12 gap-y-4">
-        <div class="xl:col-span-12 col-span-12 mt-0">
-            <label for="name" class="form-label text-default">Nombre:</label>
-            <input type="text" class="form-control form-control-lg w-full !rounded-md" name="name" id="name" formControlName="name" maxlength="75">
-            <span *ngIf="isValidField('name')" class="text-[#EE312A]">
-                {{ getFieldError('name') }}
-            </span>
-        </div>
-        <div class="xl:col-span-12 col-span-12">
-            <label for="email" class="form-label text-default">Correo:</label>
-            <input type="text" class="form-control form-control-lg w-full !rounded-md" name="email" id="email" formControlName="email" maxlength="75">
-            <span *ngIf="isValidField('email')" class="text-[#EE312A]">
-                {{ getFieldError('email') }}
-            </span>
-        </div>
-        <div class="xl:col-span-12 col-span-12">
-            <label for="password" class="form-label text-default">Contraseña:</label>
-            <div class="input-group">
-                <input type="password" class="form-control form-control-lg !rounded-e-none" name="password" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" maxlength="12">
-                <button aria-label="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0" (click)="toggleVisibility()" type="button" id="button-addon2"><i class="ri-eye-{{toggleClass}} align-middle"></i></button>
-            </div>
-            <span *ngIf="isValidField('password')" class="text-[#EE312A]">
-                {{ getFieldError('password') }}
-            </span>
-        </div>
-        <div class="xl:col-span-12 col-span-12">
-            <label for="confirmPassword" class="form-label text-default">Confirmar contraseña:</label>
-            <div class="input-group">
-                <input type="password" class="form-control form-control-lg !rounded-e-none" name="confirmPassword" id="confirmPassword" [type]="showPassword1 ? 'text' : 'password'" formControlName="confirmPassword" maxlength="12">
-                <button aria-label="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0" (click)="toggleVisibility1()" type="button" id="button-addon21"><i class="ri-eye-{{toggleClass1}} align-middle"></i></button>
-            </div>
-            <span *ngIf="isValidField('confirmPassword')" class="text-[#EE312A]">
-                {{ getFieldError('confirmPassword') }}
-            </span>
-        </div>
-        <div class="xl:col-span-12 col-span-12 mb-4">
-            <div class="form-check mt-4 flex !ps-0 ">
-                <input class="form-check-input align-middle" type="checkbox" name="termsAndConditions" id="termsAndConditions" formControlName="termsAndConditions">
-                <label class="form-check-label text-[#8c9097] dark:text-white/50 font-normal " for="termsAndConditions">
-                    Acepto los  <a routerLink="/pages/terms-counditions" class="text-success"><u> términos y condiciones</u></a>
-                </label>
-            </div>
-            <span *ngIf="isValidField('termsAndConditions')" class="text-[#EE312A]">
-                Debes aceptar los términos y condiciones
-            </span>
-        </div>
-        <div class="xl:col-span-12 col-span-12 grid mt-2">
-            <button type="submit" class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10">Regístrate</button>
-        </div>
+  <div class="grid grid-cols-12 gap-y-4">
+    <div class="xl:col-span-12 col-span-12 mt-0">
+      <label for="name" class="form-label text-default">Nombre:</label>
+      <input
+        type="text"
+        class="form-control form-control-lg w-full !rounded-md"
+        name="name"
+        id="name"
+        formControlName="name"
+        maxlength="75"
+      />
+      @if (isValidField('name')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('name') }}
+      </span>
+      }
     </div>
+    <div class="xl:col-span-12 col-span-12">
+      <label for="email" class="form-label text-default">Correo:</label>
+      <input
+        type="text"
+        class="form-control form-control-lg w-full !rounded-md"
+        name="email"
+        id="email"
+        formControlName="email"
+        maxlength="75"
+      />
+      @if (isValidField('email')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('email') }}
+      </span>
+      }
+    </div>
+    <div class="xl:col-span-12 col-span-12">
+      <label for="type" class="form-label text-default">Cuenta:</label>
+      <select formControlName="type" class="form-control">
+        <option value="" selected>Selecciona una opçión</option>
+        <option value="user">Una empresa</option>
+        <option value="mrfc">MultiEmpresa</option>
+      </select>
+      @if (isValidField('type')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('type') }}
+      </span>
+      }
+    </div>
+    <div class="xl:col-span-12 col-span-12">
+      <label for="password" class="form-label text-default">Contraseña:</label>
+      <div class="input-group">
+        <input
+          type="password"
+          class="form-control form-control-lg !rounded-e-none"
+          name="password"
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          maxlength="12"
+        />
+        <button
+          aria-label="button"
+          class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+          (click)="toggleVisibility()"
+          type="button"
+          id="button-addon2"
+        >
+          <i class="ri-eye-{{ toggleClass }} align-middle"></i>
+        </button>
+      </div>
+      @if (isValidField('password')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('password') }}
+      </span>
+      }
+    </div>
+    <div class="xl:col-span-12 col-span-12">
+      <label for="confirmPassword" class="form-label text-default"
+        >Confirmar contraseña:</label
+      >
+      <div class="input-group">
+        <input
+          type="password"
+          class="form-control form-control-lg !rounded-e-none"
+          name="confirmPassword"
+          id="confirmPassword"
+          [type]="showPassword1 ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          maxlength="12"
+        />
+        <button
+          aria-label="button"
+          class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+          (click)="toggleVisibility1()"
+          type="button"
+          id="button-addon21"
+        >
+          <i class="ri-eye-{{ toggleClass1 }} align-middle"></i>
+        </button>
+      </div>
+      @if (isValidField('confirmPassword')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('confirmPassword') }}
+      </span>
+      }
+    </div>
+    <div class="xl:col-span-12 col-span-12 mb-4">
+      <div class="form-check mt-4 flex !ps-0">
+        <input
+          class="form-check-input align-middle"
+          type="checkbox"
+          name="termsAndConditions"
+          id="termsAndConditions"
+          formControlName="termsAndConditions"
+        />
+        <label
+          class="form-check-label text-[#8c9097] dark:text-white/50 font-normal"
+          for="termsAndConditions"
+        >
+          Acepto los
+          <a routerLink="/pages/terms-counditions" class="text-success"
+            ><u> términos y condiciones</u></a
+          >
+        </label>
+      </div>
+      @if (isValidField('termsAndConditions')) {
+      <span class="text-[#EE312A]">
+        Debes aceptar los términos y condiciones
+      </span>
+      }
+    </div>
+    <div class="xl:col-span-12 col-span-12 grid mt-2">
+      <button
+        type="submit"
+        class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10"
+      >
+        Regístrate
+      </button>
+    </div>
+  </div>
 </form>
 <div class="text-center">
-    <p class="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">Ya tienes una cuenta? <a routerLink="/login" class="text-primary">Iniciar sesión</a></p>
+  <p class="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
+    Ya tienes una cuenta?
+    <a routerLink="/login" class="text-primary">Iniciar sesión</a>
+  </p>
 </div>

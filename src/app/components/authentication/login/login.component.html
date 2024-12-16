@@ -1,34 +1,84 @@
 <p class="h5 font-semibold mb-2">Iniciar sesión</p>
 <div class="btn-list">
-  <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"><i
-      class="ri-facebook-fill"></i></button>
-  <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light"><i
-      class="ri-twitter-fill"></i></button>
+  <button
+    aria-label="button"
+    type="button"
+    class="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"
+  >
+    <i class="ri-facebook-fill"></i>
+  </button>
+  <button
+    aria-label="button"
+    type="button"
+    class="ti-btn ti-btn-icon ti-btn-light"
+  >
+    <i class="ri-twitter-fill"></i>
+  </button>
 </div>
-<form [formGroup]="myForm" (ngSubmit)="onSubmit()" autocomplete="off">
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
   <div class="grid grid-cols-12 gap-y-4">
     <div class="xl:col-span-12 col-span-12 mt-0">
-      <label for="signin-username" class="form-label text-default">Correo:</label>
-      <input type="text" class="form-control form-control-lg w-full !rounded-md" id="signin-username">
+      <label for="email" class="form-label text-default">Correo:</label>
+      <input
+        type="text"
+        class="form-control form-control-lg w-full !rounded-md"
+        name="email"
+        id="email"
+        formControlName="email"
+      />
+      @if (isValidField('email')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('email') }}
+      </span>
+      }
     </div>
     <div class="xl:col-span-12 col-span-12 mb-4">
-      <label for="signin-password" class="form-label text-default block">Contraseña:</label>
+      <label for="password" class="form-label text-default block"
+        >Contraseña:</label
+      >
       <div class="input-group">
-        <input type="password" class="form-control form-control-lg !rounded-e-none" id="signin-password"
-          [type]="showPassword ? 'text' : 'password'" autocomplete>
-        <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
-          (click)="toggleVisibility()" id="button-addon2"><i class="ri-eye-{{toggleClass}} align-middle"></i></button>
+        <input
+          type="password"
+          class="form-control form-control-lg !rounded-e-none"
+          name="password"
+          id="password"
+          formControlName="password"
+          [type]="showPassword ? 'text' : 'password'"
+        />
+        <button
+          aria-label="button"
+          type="button"
+          class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+          (click)="toggleVisibility()"
+          id="button-addon2"
+        >
+          <i class="ri-eye-{{ toggleClass }} align-middle"></i>
+        </button>
       </div>
+      @if (isValidField('password')) {
+      <span class="text-[#EE312A]">
+        {{ getFieldError('password') }}
+      </span>
+      }
     </div>
     <div class="xl:col-span-12 col-span-12 mb-4">
-      <a class="text-danger text-center" routerLink="/reset">¿Olvidaste tu contraseña?</a>
+      <a class="text-danger text-center" routerLink="/reset"
+        >¿Olvidaste tu contraseña?</a
+      >
     </div>
     <div class="xl:col-span-12 col-span-12 grid mt-2">
-      <button type="submit" class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10">Iniciar sesión</button>
+      <button
+        type="submit"
+        class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10"
+      >
+        Iniciar sesión
+      </button>
     </div>
   </div>
 </form>
 <div class="text-center">
-  <p class="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">Aún no tienes cuenta? <a routerLink="/auth/register"
-      class="text-primary">Regístrate</a></p>
+  <p class="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
+    Aún no tienes cuenta?
+    <a routerLink="/auth/register" class="text-primary">Regístrate</a>
+  </p>
 </div>

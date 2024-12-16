@@ -7,6 +7,8 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from '../../shared/interceptors/auth.interceptor';
 
 
 
@@ -22,6 +24,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     RouterModule,
     AuthenticationRoutingModule,
     ReactiveFormsModule,
-  ]
+  ],
+  providers: [ provideHttpClient(
+    withInterceptors([authInterceptor]),
+  )
+]
 })
 export class AuthenticationModule { }

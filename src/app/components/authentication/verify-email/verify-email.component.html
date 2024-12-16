@@ -1,39 +1,32 @@
 <p class="h5 font-semibold mb-2">Verifique su cuenta</p>
-<p class="mb-4 text-[#8c9097] dark:text-white/50 opacity-[0.7] font-normal">Ingrese el código de 4 dígitos enviado al correo electrónico registrado</p>
-<div class="grid grid-cols-12 gap-4">
+<p class="mb-4 text-[#8c9097] dark:text-white/50 opacity-[0.7] font-normal">Ingrese el código de 4 dígitos enviado al
+  correo electrónico registrado</p>
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <div class="grid grid-cols-12 gap-4">
     <div class="xl:col-span-12 col-span-12 mb-4">
-        <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-3 px-1">
-                <input #oneInput type="text"
-                    class="!px-0 form-control w-full !rounded-md form-control-lg text-center !text-[1rem]" required
-                    id="one" maxlength="1" (keyup)="onDigitInput($event, twoInput)" />
-            </div>
-            <div class="col-span-3 px-1">
-                <input type="text"
-                    class="!px-0 form-control w-full !rounded-md form-control-lg text-center !text-[1rem]" maxlength="1"
-                    #twoInput required id="two" (keyup)="onDigitInput($event, threeInput)" />
-            </div>
-            <div class="col-span-3 px-1">
-                <input type="text"
-                    class="!px-0 form-control w-full !rounded-md form-control-lg text-center !text-[1rem]" id="three"
-                    maxlength="1" #threeInput required (keyup)="onDigitInput($event, fourInput)" />
-            </div>
-            <div class="col-span-3 px-1">
-                <input #fourInput type="text"
-                    class="!px-0 form-control w-full !rounded-md form-control-lg text-center !text-[1rem]" id="four"
-                    maxlength="1">
-            </div>
-        </div>
-        <div class="form-check mt-2 mb-0 !ps-0">
-            <label class="form-check-label" for="defaultCheck1">¿No recibiste un código?<button type="button" class="text-primary ms-2 inline-block" (click)="sendCode()">Reenviar</button>
-            </label>
-        </div>
+      <div class="grid grid-cols-12 gap-4">
+          <div class="xl:col-span-12 col-span-12">
+            <input type="text" class="form-control form-control-lg w-full !rounded-md" name="code" id="code" formControlName="code" oninput="this.value = this.value.toUpperCase();" maxlength="4">
+             @if (isValidField('code')) {
+               <span class="text-[#EE312A]">
+                 {{ getFieldError('code') }}
+                </span>
+              }
+          </div>
+      </div>
+      <div class="form-check mt-2 mb-0 !ps-0">
+        <label class="form-check-label" for="defaultCheck1">¿No recibiste un código?<button type="button"
+            class="text-primary ms-2 inline-block" (click)="sendCode()">Reenviar</button>
+        </label>
+      </div>
     </div>
     <div class="xl:col-span-12 col-span-12 grid">
-        <a routerLink="/verify"
-            class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10">Verificar</a>
+      <button type="submit"
+        class="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10">Verificar</button>
     </div>
-</div>
+  </div>
+</form>
 <div class="text-center">
-    <p class="text-[0.75rem] text-danger mt-4"><sup><i class="ri-asterisk"></i></sup>¡No compartas el código de verificación con nadie!</p>
+  <p class="text-[0.75rem] text-danger mt-4"><sup><i class="ri-asterisk"></i></sup>¡No compartas el código de
+    verificación con nadie!</p>
 </div>
