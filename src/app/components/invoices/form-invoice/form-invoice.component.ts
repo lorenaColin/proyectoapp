@@ -16,9 +16,12 @@ export class FormInvoiceComponent {
       modal.classList.add('hidden');
     }
   }
+  isTableActive: boolean = true; 
+  isCreateActive: boolean = false; 
 
-  selectedTab: string = 'tabla'; 
-  selectTab(tab: string): void {
-    this.selectedTab = tab;
+  selectTab(isTable: boolean): void {
+    this.isTableActive = isTable;
+    this.isCreateActive = !isTable;
   }
+
 }

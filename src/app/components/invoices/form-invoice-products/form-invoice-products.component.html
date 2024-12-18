@@ -1,13 +1,13 @@
 <div class="flex justify-end mt-6">
-    @if (selectedTab === 'tabla'){
-    <button type="button" class="ti-btn ti-btn-primary p-4 mr-4" (click)="selectTab('crear')">
+    @if (isTableActive){
+    <button type="button" class="ti-btn ti-btn-primary p-4 mr-4" (click)="selectTab(false)">
         <i class="ri-add-line"></i>
     </button>
     }
 </div>
 
 <div class="tab-pane fade show active mb-4" id="tabla-tab-pane" role="tabpanel">
-    @if (selectedTab === 'tabla'){
+    @if (isTableActive){
     <div class="flex justify-between mb-4 ">
         <div class="flex items-center space-x-4 ml-4 mb-4" >
             <input type="text" class="p-2 border rounded-md" placeholder="Buscar..." />
@@ -42,9 +42,9 @@
                 <td class="px-4 py-2 border border-gray-300">ejemplo</td>
                 <td class="px-4 py-2 border border-gray-300">234</td>
                 <td class="px-4 py-2 border border-gray-300">
-                    @if (selectedTab === 'tabla')
+                    @if (isTableActive)
                     {
-                    <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab('crear')">
+                    <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab(false)">
                         <i class="ri-edit-line"></i>
                     </button>
                     }
@@ -64,8 +64,8 @@
 </div>
 
 <div class="tab-pane fade show active" id="crear-tab-pane" role="tabpanel">
-    @if (selectedTab==='crear' ) {
-         <button type="button" class="ti-btn ti-btn-primary mr-4 p-4 mt-4" (click)="selectTab('tabla')"
+    @if (isCreateActive ) {
+         <button type="button" class="ti-btn ti-btn-primary mr-4 p-4 mt-4" (click)="selectTab(true)"
         style="float: right;">
         <i class="ri-arrow-left-line"></i>
     </button>
@@ -134,7 +134,7 @@
 }
 </div>
 <div class="flex justify-between mb-4 mt-5">
-    @if (selectedTab === 'tabla'){
+    @if (isTableActive){
 
     <div class="ms-3">
         <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"

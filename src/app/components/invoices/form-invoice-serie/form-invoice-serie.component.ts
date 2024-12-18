@@ -17,8 +17,11 @@ export class FormInvoiceSerieComponent {
     }
   }
 
-  selectedTab: string = 'tabla'; 
-  selectTab(tab: string): void {
-    this.selectedTab = tab;
+  isTableActive: boolean = true; 
+  isCreateActive: boolean = false; 
+
+  selectTab(isTable: boolean): void {
+    this.isTableActive = isTable;
+    this.isCreateActive = !isTable;
   }
 }
