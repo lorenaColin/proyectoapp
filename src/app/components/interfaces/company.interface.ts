@@ -36,24 +36,14 @@ export interface CompanyListResponseInterface {
     message:    string;
     statusCode: number;
     error:      boolean;
-    data:       CompanyListInterface;
+    data:       CompanyListInterface[];
 }
 
+
 export interface CompanyListInterface {
-    id:                    string;
-    name:                  string;
-    address:               string;
-    cp:                    string;
-    curp:                  string;
-    status:                string;
-    rfc:                   string;
-    regime:                string;
-    employee_registration: string;
-    type:                  string;
-    email:                 string;
-    phone:                 string;
-    logo:                  string;
-    id_usr_create:         number;
-    created_at:            Date;
-    updated_at:            Date;
+    id:             string;
+    name:           string;
+    rfc:            string;
+    status:         string;
+    tones_incluide: number;
 }

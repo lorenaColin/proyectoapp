@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { PATRON_RFC, PATRON_EMAIL, PATRON_PHONE, PATRON_CURP } from '../../../../shared/utils/expressions';
@@ -15,12 +15,15 @@ import { CompanyListInterface } from '../../../interfaces/company.interface';
   styleUrl: './company-form.component.scss'
 })
 export class CompanyFormComponent implements OnInit  {
+  @Output() respuestaHijo = new EventEmitter<CompanyListInterface>();
+
   private fb = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
   private utilsService = inject(UtilsService);
   private companyService = inject(CompanyService);
+  public banderaFisica: boolean = false;
   listadoRegimen: RegimenInterface[] = [];
-  listadoEmpresas: CompanyListInterface[] = [];
+
 
   myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(254)]],
@@ -35,18 +38,17 @@ export class CompanyFormComponent implements OnInit  {
   });
 
   ngOnInit(): void {
-    this.companyService.listCompany().subscribe((response) => {
-      let { error, data } = response;
-      if(error) return console.error('Error al obtener las empresas');
-      // this.listadoEmpresas = data;
-    });
   }
 
   onInputRFC(event: Event): void {
+    this.banderaFisica = false
     const el = event.target as HTMLInputElement;
     const rfcValue = el.value;
     this.listadoRegimen = [];
     if(rfcValue.length < 12 || rfcValue.length > 13) return;
+
+    this.banderaFisica = rfcValue.length === 13 ? true : false;
+
     if( rfcValue.length == 12) this.myForm.patchValue({ curp: '', employee_registration: '' });
     this.listadoRegimen = this.utilsService.getRegimenSat( rfcValue );
   }
@@ -77,11 +79,18 @@ export class CompanyFormComponent implements OnInit  {
 
       if (error) {
         console.error(message);
-        return
+        return;
       }
-      
       this.myForm.reset();
-      console.log({message, data,});
+      const { id, name, rfc } = data;
+      const company = {
+        id,
+        name,
+        rfc,
+        status: 'Activo',
+        tones_incluide: 0,
+      }
+      this.respuestaHijo.emit(company);
     });
   
 

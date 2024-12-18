@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Observable } from 'rxjs';
-import { UserResponseInterface, VerifyCodeResponseInterface } from '../interfaces/auth.interface';
+import { TokenRefreshResponseInterface, UserResponseInterface, VerifyCodeResponseInterface } from '../interfaces/auth.interface';
 
 
 @Injectable({
@@ -17,7 +17,7 @@ export class AuthService {
         return this.http.post<UserResponseInterface>(`${this.apiUrl}/login`, { email, password });
     }
 
-    verifyCode(code: string, ): Observable<VerifyCodeResponseInterface>{
+    verifyCode(code: string): Observable<VerifyCodeResponseInterface>{
         return this.http.post<VerifyCodeResponseInterface>(`${this.apiUrl}/verifycode/`, {code});
     }
 
@@ -26,7 +26,8 @@ export class AuthService {
         return localStorage.getItem('token') || '';
     }
 
-    refreshToken() {
+    refreshToken(): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/refresh/`, {});
     }
 
 

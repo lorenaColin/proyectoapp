@@ -12,27 +12,31 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       Authorization: `Bearer ${ token }`
     }
   });
-  return next(authReq);
-  // return next(authReq).pipe(
-  //   catchError((err) => {
-  //     return authService.refreshToken().pipe(
-  //       switchMap((res) => {
-  //         localStorage.setItem('refreshToken', res.accessToke)
-  //         const newReq = req.clone({
-  //           setHeaders: { 
-  //             Authorization: `Bearer ${ token }`
-  //           }
-  //         });
-  //       }),
-  //       catchError((refreshErr) => {
-  //         const finalError = new Error(refreshErr);
 
-  //         localStorage.removeItem('token');
-  //         localStorage.removeItem('refreshToken');
+  return next(authReq).pipe(
+    catchError( (err) => {
+      return authService.refreshToken().pipe(
+        catchError((err):any => {
+          console.error(err)
+          // handle the error here.
+        })
+        // switchMap((eror:any) => {
+        //   // localStorage.setItem('refreshToken', res.accessToke)
+        //   const newReq = req.clone({
+        //     setHeaders: { 
+        //       Authorization: `Bearer ${ token }`
+        //     }
+        //   });
+        // }),
+        // catchError((refreshErr) => {
+        //   const finalError = new Error(refreshErr);
 
-  //         return throwError(() => finalError);
-  //       })
-  //     )
-  //   })
-  // );
+        //   localStorage.removeItem('token');
+        //   localStorage.removeItem('refreshToken');
+
+        //   return throwError(() => finalError);
+        // })
+      )
+    })
+  );
 };

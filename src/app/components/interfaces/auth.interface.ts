@@ -23,3 +23,11 @@ export interface VerifyCodeResponseInterface {
 export interface Data {
     code: string[];
 }
+
+
+export interface TokenRefreshResponseInterface {
+    message:    string;
+    statusCode: number;
+    error:      boolean;
+    data:       any[];
+}
