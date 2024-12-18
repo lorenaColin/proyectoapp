@@ -9,7 +9,9 @@ const routes: Routes = [
   { path: 'administration',
     loadChildren: () => import('./components/administration/administration.module').then(m => m.AdministrationModule)
   },
-
+  { path:'invoices',
+    loadChildren:()=>import('./components/invoices/invoices.module').then(m => m.InvoicesModule)
+  },
   { path: 'dashboard', component: ContentLayoutComponent },
   { path: '**', redirectTo: 'auth' },
   

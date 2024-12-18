@@ -1,0 +1,129 @@
+<div class="flex justify-end mt-6">
+    @if (isTableActive){
+    <button type="button" class="ti-btn ti-btn-primary p-4 mr-4"  (click)="selectTab(false)">
+        <i class="ri-add-line"></i>
+    </button>
+    }
+</div>
+
+
+
+<div class="tab-pane fade show active mb-4" id="tabla-tab-pane" role="tabpanel">
+    @if (isTableActive){
+    <div class="flex justify-between mb-4 ">
+        <div class="flex items-center space-x-4 ml-4 mb-4">
+            <input type="text" class="p-2 border rounded-md" placeholder="Buscar..." />
+        </div>
+
+        <div class="flex items-center space-x-2 mr-4 mb-4">
+            <label for="rows-per-page" class="text-sm">Mostrar</label>
+            <select id="rows-per-page" class="p-2 border rounded-md">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+    </div>
+    <table class="min-w-full table-auto border-collapse border border-gray-300">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 border border-gray-300">RFC</th>
+                <th class="px-4 py-2 border border-gray-300">Razón Social</th>
+                <th class="px-4 py-2 border border-gray-300">CP</th>
+                <th class="px-4 py-2 border border-gray-300">Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="px-4 py-2 border border-gray-300">ABC123456T</td>
+                <td class="px-4 py-2 border border-gray-300">Empresa S.A.</td>
+                <td class="px-4 py-2 border border-gray-300">12345</td>
+                <td class="px-4 py-2 border border-gray-300">
+                    @if (isTableActive)
+                    {
+                    <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab(false)">
+                        <i class="ri-edit-line"></i>
+                    </button>
+                    }
+
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="flex justify-end space-x-4 mt-4">
+        <button class="p-2  rounded-l-md ">
+            Anterior
+        </button>
+        <button class="p-2  rounded-r-md ">
+            Siguiente
+        </button>
+    </div>
+    }
+</div>
+
+<div class="tab-pane fade show active" id="crear-tab-pane" role="tabpanel">
+    @if (isCreateActive) {
+    <button type="button" class="ti-btn ti-btn-primary mr-4 p-4 mt-4"(click)="selectTab(true)"
+        style="float: right;">
+        <i class="ri-arrow-left-line"></i>
+    </button>
+    <form class="grid grid-cols-2 gap-4 p-4">
+        <div class="col-span-1 mb-4">
+            <label class="block">RFC</label>
+            <input type="text" class="border px-4 py-2 w-full" />
+        </div>
+        <div class="col-span-3 mb-4">
+            <label class="block">Razón Social</label>
+            <input type="text" class="border px-4 py-2 w-full" />
+        </div>
+
+        <div>
+            <label>Régimen Fiscal</label>
+            <input type="text" class="border px-4 py-2 w-full" />
+        </div>
+        <div>
+            <label>País</label>
+            <input type="text" class="border px-4 py-2 w-full" />
+        </div>
+        <div>
+            <label>CP</label>
+            <input type="text" class="border px-4 py-2 w-full" />
+        </div>
+
+        <div class="col-span-3 mb-4">
+            <label class="block">Dirección</label>
+            <textarea class="border px-4 py-2 w-full" rows="4"></textarea>
+        </div>
+
+
+    </form>
+    <div class="flex justify-between mb-4 mt-5">
+        <div class="ms-3">
+            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+                data-hs-overlay="#hs-extralarge-modal1">
+
+                Cancelar
+            </button>
+        </div>
+        <div class="mr-3">
+            <button class="ti-btn ti-btn-primary-full text-white !font-medium">
+                Guardar
+            </button>
+        </div>
+    </div>
+    }
+</div>
+
+<div class="flex justify-between mb-4 mt-5">
+    @if (isTableActive){
+
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+            Cancelar
+        </button>
+    </div>
+    }
+</div>
