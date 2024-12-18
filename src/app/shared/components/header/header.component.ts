@@ -1,5 +1,6 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { Menu, NavService } from '../../services/nav.service';
+import { AuthService } from '../../../components/services/auth.service';
 
 interface Item {
   id: number;
@@ -17,6 +18,8 @@ export class HeaderComponent {
   cartItemCount: number = 5;
   notificationCount: number = 5;
   public isCollapsed = true;
+
+  private authService = inject(AuthService);
 
   constructor(public navServices: NavService,
     private elementRef: ElementRef,private renderer:Renderer2) {
@@ -210,5 +213,10 @@ export class HeaderComponent {
   handleCardClick(event: MouseEvent) {
     // Prevent the click event from propagating to the container
     event.stopPropagation();
+  }
+
+  onLogout() {
+    console.log('logout');
+    this.authService.logout();  // Llama al método logout del servicio
   }
 }

@@ -3,40 +3,44 @@ import { inject } from '@angular/core';
 import { AuthService } from '../../components/services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn  = (req, next) => {
 
   const authService = inject(AuthService);
   const token = authService.getAuthToken();
   const authReq = req.clone({
-    setHeaders: { 
-      Authorization: `Bearer ${ token }`
+    setHeaders: {
+      Authorization: `Bearer ${token}`
     }
   });
-
+  return next(authReq);
+  /*
   return next(authReq).pipe(
-    catchError( (err) => {
+    catchError((err) => {
       return authService.refreshToken().pipe(
-        catchError((err):any => {
-          console.error(err)
-          // handle the error here.
+        switchMap((res) => {
+          // Guardar el nuevo token
+          localStorage.setItem('token', res.access_token);
+          localStorage.setItem('refreshToken', res.access_token);
+
+          const newReq = req.clone({
+            setHeaders: {
+               Authorization: `Bearer ${res.access_token}`
+            }
+          });
+
+          return next(newReq);
+        }),
+        catchError((refreshErr) => {
+          console.log(":(")
+          const finalError = new Error(refreshErr);
+
+          // localStorage.removeItem('token');
+          // localStorage.removeItem('refreshToken');
+
+          return throwError(() => finalError);
         })
-        // switchMap((eror:any) => {
-        //   // localStorage.setItem('refreshToken', res.accessToke)
-        //   const newReq = req.clone({
-        //     setHeaders: { 
-        //       Authorization: `Bearer ${ token }`
-        //     }
-        //   });
-        // }),
-        // catchError((refreshErr) => {
-        //   const finalError = new Error(refreshErr);
-
-        //   localStorage.removeItem('token');
-        //   localStorage.removeItem('refreshToken');
-
-        //   return throwError(() => finalError);
-        // })
       )
     })
   );
+  */
 };
