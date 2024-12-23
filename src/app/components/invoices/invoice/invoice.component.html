@@ -5,163 +5,170 @@
         <div class="border-b pb-4 mb-4">
             <h1 class="text-xl font-bold">Factura</h1>
         </div>
-        <div class="box">
-            <div class="box-body">
-                <div class="p-6 rounded-md shadow-md">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="grid grid-cols-12">
-                            <div class="md:col-span-12 col-span-12 mb-4">
-                                <div class="mb-4">
-                                    <label for="tipoComprobante" class="form-label text-[.875rem] text-black">Tipo de Comprobante:</label>
-                                    <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="tipoComprobante" id="tipoComprobante">
-                                        <option>Ingreso</option>
-                                        <option>Egreso</option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
-                                    <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="regimenEmisor" id="regimenEmisor">
-                                        <option>Selecciona</option>
-                                    </select>
+        <form [formGroup]="myForm">
+            <div class="box">
+                <div class="box-body">
+                    <div class="p-6 rounded-md shadow-md">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-12">
+                                <div class="md:col-span-12 col-span-12 mb-4">
+                                    <div class="mb-4">
+                                        <label for="tipoComprobante" class="form-label text-[.875rem] text-black">Tipo de Comprobante:</label>
+                                        <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="tipoComprobante" id="tipoComprobante">
+                                            <option>Ingreso</option>
+                                            <option>Egreso</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
+                                        <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="regimenEmisor" id="regimenEmisor">
+                                            <option>Selecciona</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-12">
-                            <div class="md:col-span-12 col-span-12 mb-4">
-                                <div class="mb-4">
-                                    <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>
-                                    <input type="date" class="form-control" name="fechaEmision" id="fechaEmision">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="serieFolio" id="serieFolio">
-                                        <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
-                                            <i class="ri-add-line"></i>
+                            
+                            <div class="grid grid-cols-12">
+                                <div class="md:col-span-12 col-span-12 mb-4">
+                                    <div class="mb-4">
+                                        <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>
+                                        <input type="text" class="form-control" mwlFlatpickr [options]="datePickerOptions" name="fechaEmision" id="fechaEmision" formControlName="fecha">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="serieFolio" id="serieFolio">
+                                            <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                                <i class="ri-add-line"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-12">
-                            <div class="md:col-span-12 col-span-12 mb-4">
-                                <div class="mb-4">
-                                    <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="receptor" id="receptor">
-                                        <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal1">
-                                            <i class="ri-add-line"></i>
+                            <div class="grid grid-cols-12">
+                                <div class="md:col-span-12 col-span-12 mb-4">
+                                    <div class="mb-4">
+                                        <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="receptor" id="receptor" formControlName="receptor">
+                                            <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal1">
+                                                <i class="ri-add-line"></i>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div class="mb-4">
+                                        <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
+                                        <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi" id="usoCfdi">
+                                            <option>Selecciona</option>
+                                        </select>
+                                    </div>
+
                                 </div>
 
+                            </div>
+                        </div>
+
+                        <hr class="my-6 border-gray-300">
+
+                        <div>
+                            <table class="w-full border border-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b text-left">Código</th>
+                                        <th class="py-2 px-4 border-b text-left">Descripción</th>
+                                        <th class="py-2 px-4 border-b text-center">Cantidad</th>
+                                        <th class="py-2 px-4 border-b text-center">Precio U.</th>
+                                        <th class="py-2 px-4 border-b text-center">Descuento</th>
+                                        <th class="py-2 px-4 border-b text-center">ObjetoImp</th>
+                                        <th class="py-2 px-4 border-b text-center">Importe</th>
+                                        <th class="py-2 px-4 border-b text-center">Acc</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" class="py-4 px-4 text-center text-gray-500">No hay artículos</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button"
+                                class="mt-4 flex items-center justify-center w-10 h-10  rounded-full  mx-auto  ti-btn-primary "
+                                data-hs-overlay="#hs-extralarge-modal3">
+                                <i class="ri-add-line "></i>
+                            </button>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="mb-4">
-                                    <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
-                                    <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi" id="usoCfdi">
-                                        <option>Selecciona</option>
+                                    <label for="metodoPago" class="form-label text-[.875rem] text-black">Método Pago:</label>
+                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago">
+                                        <option>Pago en parcialidades o diferido</option>
                                     </select>
                                 </div>
-
+                                <div class="mb-4">
+                                    <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
+                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago">
+                                        <option>Por definir</option>
+                                    </select>
+                                </div>
                             </div>
-
-                        </div>
-                    </div>
-
-                    <hr class="my-6 border-gray-300">
-
-                    <div>
-                        <table class="w-full border border-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="py-2 px-4 border-b text-left">Código</th>
-                                    <th class="py-2 px-4 border-b text-left">Descripción</th>
-                                    <th class="py-2 px-4 border-b text-center">Cantidad</th>
-                                    <th class="py-2 px-4 border-b text-center">Precio U.</th>
-                                    <th class="py-2 px-4 border-b text-center">Descuento</th>
-                                    <th class="py-2 px-4 border-b text-center">ObjetoImp</th>
-                                    <th class="py-2 px-4 border-b text-center">Importe</th>
-                                    <th class="py-2 px-4 border-b text-center">Acc</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="8" class="py-4 px-4 text-center text-gray-500">No hay artículos</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button"
-                            class="mt-4 flex items-center justify-center w-10 h-10  rounded-full  mx-auto  ti-btn-primary "
-                            data-hs-overlay="#hs-extralarge-modal3">
-                            <i class="ri-add-line "></i>
-                        </button>
-
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="mb-4">
-                                <label for="metodoPago" class="form-label text-[.875rem] text-black">Método Pago:</label>
-                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago">
-                                    <option>Pago en parcialidades o diferido</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
-                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago">
-                                    <option>Por definir</option>
-                                </select>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="mb-4">
+                                    <label for="moneda" class="form-label text-[.875rem] text-black">Moneda:</label>
+                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="moneda" id="moneda">
+                                        <option>Peso Mexicano</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="condiciones" class="form-label text-[.875rem] text-black">Condiciones:</label>
+                                    <input type="text" class="mt-1 block w-full rounded-md sm:text-sm" name="" id="">
+                                </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="mb-4">
-                                <label for="moneda" class="form-label text-[.875rem] text-black">Moneda:</label>
-                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="moneda" id="moneda">
-                                    <option>Peso Mexicano</option>
-                                </select>
+
+                        <hr class="my-6 border-gray-300">
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="tipo-cambio" class="block text-sm font-medium">Tipo de Cambio</label>
+                                    <input id="tipo-cambio" type="text" class="mt-1 block w-full rounded-md sm:text-sm" value="1">
+                                </div>
+                                <div>
+                                    <label for="fecha-vencimiento" class="block text-sm font-medium">Fecha Vencimiento</label>
+                                    <input id="fecha-vencimiento" type="date" class="mt-1 block w-full rounded-md sm:text-sm">
+                                </div>
                             </div>
-                            <div class="mb-4">
-                                <label for="condiciones" class="form-label text-[.875rem] text-black">Condiciones:</label>
-                                <input type="text" class="mt-1 block w-full rounded-md sm:text-sm" name="" id="">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="text-sm font-medium">
+                                    <p>SubTotal: <span class="float-right font-bold">0.00</span></p>
+                                    <p>Descuento: <span class="float-right font-bold">0.00</span></p>
+                                    <p>Impuestos: <span class="float-right font-bold">0.00</span></p>
+                                    <p>Retenciones: <span class="float-right font-bold">0.00</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-bold">Total: <span class="float-right">0.00</span></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <hr class="my-6 border-gray-300">
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label for="tipo-cambio" class="block text-sm font-medium">Tipo de Cambio</label>
-                                <input id="tipo-cambio" type="text" class="mt-1 block w-full rounded-md sm:text-sm" value="1">
-                            </div>
-                            <div>
-                                <label for="fecha-vencimiento" class="block text-sm font-medium">Fecha Vencimiento</label>
-                                <input id="fecha-vencimiento" type="date" class="mt-1 block w-full rounded-md sm:text-sm">
-                            </div>
+                        <div class="mt-6 text-right">
+                            <button class="px-6 py-2 bg-blue-500 rounded-md hover:bg-blue-600">
+                                Enviar
+                            </button>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="text-sm font-medium">
-                                <p>SubTotal: <span class="float-right font-bold">0.00</span></p>
-                                <p>Descuento: <span class="float-right font-bold">0.00</span></p>
-                                <p>Impuestos: <span class="float-right font-bold">0.00</span></p>
-                                <p>Retenciones: <span class="float-right font-bold">0.00</span></p>
-                            </div>
-                            <div>
-                                <p class="text-lg font-bold">Total: <span class="float-right">0.00</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 text-right">
-                        <button class="px-6 py-2 bg-blue-500 rounded-md hover:bg-blue-600">
-                            Enviar
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
     </div>
+
+    
+
+
     <div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
         <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
             <div class="ti-modal-content">
