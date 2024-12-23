@@ -1,7 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { flatpickrLanguage } from '../../../shared/utils/utils';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { Spanish } from "flatpickr/dist/l10n/es.js"
+import { LISTADOMETODOPAGO, LISTADOFORMAPAGO } from '../../../shared/utils/sat';
+import { FormaPagoInterface, MetodoPagoInterface } from '../../../shared/interfaces/shared.interface';
+import {Decimal} from 'decimal.js';
 
 
 @Component({
@@ -10,97 +14,37 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrl: './invoice.component.scss'
 })
 export class InvoiceComponent implements OnInit {
-
+  public listadoMetodoPago: MetodoPagoInterface[]= LISTADOMETODOPAGO;
+  public listadoFormaPago: FormaPagoInterface[] = [];
   private fb =  inject(FormBuilder);
-  keyword = 'name';
-  public countries = [
-    {
-      id: 1,
-      name: 'Albania',
-    },
-    {
-      id: 2,
-      name: 'Belgium',
-    },
-    {
-      id: 3,
-      name: 'Denmark',
-    },
-    {
-      id: 4,
-      name: 'Montenegro',
-    },
-    {
-      id: 5,
-      name: 'Turkey',
-    },
-    {
-      id: 6,
-      name: 'Ukraine',
-    },
-    {
-      id: 7,
-      name: 'Macedonia',
-    },
-    {
-      id: 8,
-      name: 'Slovenia',
-    },
-    {
-      id: 9,
-      name: 'Georgia',
-    },
-    {
-      id: 10,
-      name: 'India',
-    },
-    {
-      id: 11,
-      name: 'Russia',
-    },
-    {
-      id: 12,
-      name: 'Switzerland',
-    }
-  ];
-
-
-
-  selectEvent(item:any) {
-    // do something with selected item
-  }
-
-  onChangeSearch(val: string) {
-    // fetch remote data from here
-    // And reassign the 'data' which is binded to 'data' property.
-  }
-  
-  onFocused(e:any){
-    // do something when input is focused
-  }
-
-
   public myForm: FormGroup = this.fb.group({
     receptor: [, []],
     fecha: [new Date(), []],
-
+    metodoPago: ['', []],
+    formaPago: ['', []]
   });
 
 
   public datePickerOptions : FlatpickrDefaultsInterface = {
-    mode : 'single',
     dateFormat : "Y-m-d",
-    locale: flatpickrLanguage,
+    locale: Spanish,
     enableTime: false,
     minDate: new Date(new Date().getTime() - (3 * 24 * 60 * 60 * 1000)),
     maxDate: new Date(),
-    now: "2024-12-19",
   }
  
 
+  searchFormaPago(): void {
+    const{  metodoPago } = this.myForm.value;
+    this.listadoFormaPago = [];
+    if(metodoPago === "") return;
+    this.listadoFormaPago = LISTADOFORMAPAGO.filter(forma => forma.metodoPago === metodoPago);
+  }
+
   ngOnInit() {
 
-    
+    let x = new Decimal(123.4567)
+    console.log(x);
 
     // flatpickrLanguage
     // console.log(new Date())

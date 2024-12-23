@@ -6,6 +6,9 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { FormInvoiceComponent } from './form-invoice/form-invoice.component';
 import { FormInvoiceSerieComponent } from './form-invoice-serie/form-invoice-serie.component';
 import { FormInvoiceProductsComponent } from './form-invoice-products/form-invoice-products.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FlatpickrDirective, provideFlatpickrDefaults } from 'angularx-flatpickr';
+
 
 
 @NgModule({
@@ -17,7 +20,13 @@ import { FormInvoiceProductsComponent } from './form-invoice-products/form-invoi
   ],
   imports: [
     CommonModule,
-    InvoicesRoutingModule
+    InvoicesRoutingModule,
+    ReactiveFormsModule,
+    FlatpickrDirective,
+    
+  ],
+  providers:[
+    provideFlatpickrDefaults()
   ]
 })
 export class InvoicesModule { }

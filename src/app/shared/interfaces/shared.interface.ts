@@ -6,3 +6,21 @@ export interface RegimenInterface {
 }
 
 
+export interface MetodoPagoInterface {
+    metodo:      string;
+    descripcion: string;
+}
+
+
+export interface FormaPagoInterface {
+    clave:       string;
+    descripcion: string;
+    metodoPago:  string;
+}
+
+
+export interface UsoCfdiInterface {
+    nombre:  string;
+    uso:     string;
+    regimen: number[];
+}

@@ -103,14 +103,19 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="mb-4">
                                     <label for="metodoPago" class="form-label text-[.875rem] text-black">Método Pago:</label>
-                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago">
-                                        <option>Pago en parcialidades o diferido</option>
+                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago" formControlName="metodoPago" (change)="searchFormaPago()">
+                                        <option value="">Selecciona una opción</option>
+                                        @for (metodoPago of listadoMetodoPago; track $index) {
+                                            <option value="{{ metodoPago.metodo }}">{{ metodoPago.descripcion }}</option>
+                                        }
                                     </select>
                                 </div>
                                 <div class="mb-4">
                                     <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
                                     <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago">
-                                        <option>Por definir</option>
+                                        @for (formaPago of listadoFormaPago; track $index) {
+                                            <option value="{{ formaPago.clave }}">{{ formaPago.descripcion }}</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
