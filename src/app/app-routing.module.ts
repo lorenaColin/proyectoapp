@@ -4,13 +4,25 @@ import { ContentLayoutComponent } from './shared/layouts/content-layout/content-
 
 const routes: Routes = [
   { path: 'auth',
-    loadChildren: () => import('./components/authentication/authentication.module').then(m => m.AuthenticationModule)
+    loadChildren: () => import('./components/authentication/authentication.module').then(m => m.AuthenticationModule),
   },
   { path: 'administration',
-    loadChildren: () => import('./components/administration/administration.module').then(m => m.AdministrationModule)
+    loadChildren: () => import('./components/administration/administration.module').then(m => m.AdministrationModule),
   },
   { path:'invoices',
-    loadChildren:()=>import('./components/invoices/invoices.module').then(m => m.InvoicesModule)
+    loadChildren:()=>import('./components/invoices/invoices.module').then(m => m.InvoicesModule),
+  },
+  {
+    path: 'customers',
+    loadChildren:() => import('./components/customers/customers.module').then(m => m.CustomersModule),
+  },
+  {
+    path: 'products',
+    loadChildren:() => import('./components/products/products.module').then(m => m.ProductsModule),
+  },
+  {
+    path: 'series',
+    loadChildren: () => import('./components/series/series.module').then(m => m.SeriesModule),
   },
   { path: 'dashboard', component: ContentLayoutComponent },
   { path: '**', redirectTo: 'auth' },

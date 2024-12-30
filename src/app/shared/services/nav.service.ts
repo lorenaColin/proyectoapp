@@ -89,25 +89,27 @@ export class NavService implements OnDestroy {
 
   MENUITEMS: Menu[] = [
     // Dashboard
-    { headTitle: 'MAIN' },
+    { headTitle: 'Catalogos' },
     {
-      title: 'Dashboards',
+      title: 'Catalogos',
       icon: 'home',
       type: 'sub',
       badgeClass:'warning',
       badgeText:'warning',
-      badgeValue:'12',
+      badgeValue:'3',
       selected : false,
       active: false,
       children: [
-        { path: '/dashboard/crm', title: 'CRM', type: 'link' },
+        { path: '/customers/', title: 'Clientes', type: 'link' },
+        { path: '/products/', title: 'Productos', type: 'link' },
+        { path: '/series/', title: 'Series', type: 'link' },
        
       ],
     },
  
-    { headTitle: 'PAGES' },
+    { headTitle: 'Comprobantes' },
     {
-      title: 'Pages',
+      title: 'Comprobantes',
       type: 'sub',
       active: false,
       selected : false,
@@ -116,25 +118,12 @@ export class NavService implements OnDestroy {
       badgeText: 'secondary',
       badgeValue: 'New',
       children: [
-    
-        {
-          title: 'File Manger',
-          type: 'sub',
-          active: false,
-          children: [
-            {
-              path: '/pages/filemanager/filemanager',
-              title: 'File Manger',
-              type: 'link',
-            },
-          ],
-        },
-       
+        { path: '/invoices/create-invoice', title: 'CFDI 4.0', type: 'link' },
+        { path: '/invoices/payment', title: 'Recepción de Pago 4.0', type: 'link' },
+        { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
+        { path: '/invoices/list', title: 'Listar', type: 'link' },
       ],
-    },
- 
-  
-  
+    },  
   ];
 
   items = new BehaviorSubject<Menu[]>(this.MENUITEMS);
