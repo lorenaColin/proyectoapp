@@ -15,10 +15,11 @@ export class RegisterComponent {
   private fb =  inject(FormBuilder);
   private router = inject(Router)
   private validatorsService = inject(ValidatorsService);
-  // private userService = inject(UserService);
-  constructor(private userService: UserService){
+  private userService = inject(UserService);
+  public banderaLoader = false;
+  // constructor(private userService: UserService){
 
-  }
+  // }
 
   public myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
@@ -58,6 +59,7 @@ export class RegisterComponent {
       this.myForm.markAllAsTouched();
       return;
     }
+    this.banderaLoader = !this.banderaLoader;
 
     const { confirmPassword, termsAndConditions, ...newUser } = this.myForm.value;
     this.userService.createUser( newUser ).subscribe(response => {
@@ -67,6 +69,7 @@ export class RegisterComponent {
       }
       let { token, user } = data;
       this.myForm.reset();
+      this.banderaLoader = !this.banderaLoader;
       localStorage.setItem('token', token);
       this.router.navigate(['/auth/verify']);
     });

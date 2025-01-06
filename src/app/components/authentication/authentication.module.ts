@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from '../../shared/interceptors/auth.interceptor';
+import { SharedModule } from "../../shared/shared.module";
 
 
 
@@ -24,7 +25,8 @@ import { authInterceptor } from '../../shared/interceptors/auth.interceptor';
     RouterModule,
     AuthenticationRoutingModule,
     ReactiveFormsModule,
-  ],
+    SharedModule
+],
   providers: [ provideHttpClient(
     withInterceptors([authInterceptor]),
   )

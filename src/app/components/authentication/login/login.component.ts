@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ValidatorsService } from '../../../shared/services/validators.service';
 import { AuthService } from '../../services/auth.service';
 import { PATRON_EMAIL } from '../../../shared/utils/expressions';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,6 +15,7 @@ export class LoginComponent {
   private router = inject(Router);
   private validatorsService = inject(ValidatorsService)
   private authService = inject(AuthService)
+  public banderaLoader = false;
 
   public myForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.pattern(PATRON_EMAIL)]],
@@ -42,17 +43,14 @@ export class LoginComponent {
       this.myForm.markAllAsTouched();
       return;
     }
+    this.banderaLoader = true;
 
     const { email, password } = this.myForm.value;
 
-    this.authService.login(email, password).subscribe(
-      (response) => {
-        const { error, data, message } = response;
-
-        if(error) {
-          console.error('Error on login:', message);
-        }
-
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        const { data, message } = response;
+        this.banderaLoader = !this.banderaLoader;
         const { token, type: tipoUsuario, verified } = data;
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', token);
@@ -64,8 +62,14 @@ export class LoginComponent {
         let rutaDashboard: string = tipoUsuario === 'user' ? '/dashboard': '/administration';
 
         this.router.navigate([rutaDashboard]);
+      },
+      error: (err) => {
+        this.banderaLoader = !this.banderaLoader;
+        Swal.fire("Credenciales invalidas", "Verifica tu correo y contraseña.", "error");
       }
-    );
+    });
   }
+
+
 
 }

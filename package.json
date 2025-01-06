@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@sweetalert2/ngx-sweetalert2": "^12.4.0",
     "@tailwindcss/forms": "^0.5.9",
     "angularx-flatpickr": "^8.1.0",
     "decimal.js": "^10.4.3",
@@ -27,6 +28,7 @@
     "preline": "^1.9.0",
     "rxjs": "~7.8.0",
     "simplebar-angular": "^3.2.4",
+    "sweetalert2": "^11.15.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },

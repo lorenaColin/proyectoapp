@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorsService } from '../../../shared/services/validators.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-verify-email',
@@ -20,6 +21,7 @@ export class VerifyEmailComponent {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  public banderaLoader = false;
 
   public myForm: FormGroup =  this.fb.group({
     code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]]
@@ -51,20 +53,33 @@ export class VerifyEmailComponent {
   }
 
   onSubmit(): void {
+    
     if(this.myForm.invalid){
       this.myForm.markAllAsTouched();
       return;
     }
+    this.banderaLoader = !this.banderaLoader;
 
     const { code } = this.myForm.value;
-    this.authService.verifyCode( code ).subscribe(response => {
-      const { error, message } = response;
-      if(error) {
-        console.error(message)
-        return
+    console.log("_daniel")
+    this.authService.verifyCode( code ).subscribe({
+      next: (response) => {
+        const { error, message } = response;
+        this.banderaLoader = !this.banderaLoader;
+        if(error) {
+          console.log("::::")
+          Swal.fire("Mensaje", message, "error");
+          return
+        }
+        console.log("::::afuera")
+      }, 
+      error: (error) => {
+        console.log(error.message)
+        console.log(":)))")
+        this.banderaLoader =!this.banderaLoader;
+        const { message } = error.message;
+        Swal.fire("Mensaje", message, "error");
       }
-      console.log(message)
-      this.router.navigate(['/administration']);
     });
   }
 

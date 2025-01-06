@@ -15,8 +15,10 @@ export class AccountsComponent implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
+    console.log(":::")
     this.companyService.listCompany().subscribe((response) => {
       let { error, data } = response;
+      console.log(data)
       if(error) return console.error('Error al obtener las empresas');
       this.listadoEmpresas = data;
     });

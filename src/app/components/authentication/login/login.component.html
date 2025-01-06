@@ -24,6 +24,7 @@
         class="form-control form-control-lg w-full !rounded-md"
         name="email"
         id="email"
+        maxlength="75"
         formControlName="email"
       />
       @if (isValidField('email')) {
@@ -42,6 +43,7 @@
           class="form-control form-control-lg !rounded-e-none"
           name="password"
           id="password"
+          maxlength="12"
           formControlName="password"
           [type]="showPassword ? 'text' : 'password'"
         />
@@ -81,4 +83,8 @@
     Aún no tienes cuenta?
     <a routerLink="/auth/register" class="text-primary">Regístrate</a>
   </p>
+</div>
+
+<div id="loader" *ngIf="banderaLoader">
+  <img src="./images/loader.svg" alt="" />
 </div>
