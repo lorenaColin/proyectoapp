@@ -7,29 +7,38 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from '../../shared/interceptors/auth.interceptor';
-import { SharedModule } from "../../shared/shared.module";
-
-
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import {
+  AuthInterceptor,
+} from '../../shared/interceptors/auth.interceptor';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
     VerifyEmailComponent,
     LoginComponent,
     ResetPasswordComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     AuthenticationRoutingModule,
     ReactiveFormsModule,
-    SharedModule
-],
-  providers: [ provideHttpClient(
-    withInterceptors([authInterceptor]),
-  )
-]
+    SharedModule,
+  ],
+  providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}

@@ -7,8 +7,8 @@ import { SharedModule } from './shared/shared.module';
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -18,13 +18,12 @@ import { authInterceptor } from './shared/interceptors/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule,
   ],
   providers: [
     provideAnimations(),
-    provideHttpClient(
-      withInterceptors([authInterceptor])
-    )
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
