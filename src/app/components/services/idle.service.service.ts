@@ -17,7 +17,7 @@ export class IdleService {
   }
 
   startWatching() {
-    // console.log("startWatching");
+    console.log("startWatching");
     this.resetTimer();
     window.addEventListener('click', this.resetTimer.bind(this));
     window.addEventListener('mousemove', this.resetTimer.bind(this));
@@ -26,7 +26,7 @@ export class IdleService {
   }
 
   stopWatching() {
-    // console.log("stopWatching");
+    console.log("stopWatching");
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
@@ -38,7 +38,7 @@ export class IdleService {
   }
 
   resetTimer() {
-    // console.log("resetTimer");
+    console.log("resetTimer");
     clearTimeout(this.timeoutId);
 
     if (this.isWarningShown) {
@@ -51,7 +51,7 @@ export class IdleService {
   }
 
   private handleInactivity() {
-    // console.log("handleInactivity");
+    console.log("handleInactivity");
     const token = localStorage.getItem('token');
     if (!token) {
       this.stopWatching();
