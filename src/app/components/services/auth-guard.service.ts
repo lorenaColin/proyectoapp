@@ -22,7 +22,7 @@ export class AuthGuardService implements CanActivate {
     if (token) {
       const decoded: any = jwtDecode(token);
       const currentTime = Date.now() / 1000;
-  
+
       if (decoded.exp < currentTime) {
         if (!this.authService.isSessionExpiredState()) {
           this.authService.setSessionExpired(true);
