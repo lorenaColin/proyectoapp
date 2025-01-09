@@ -1,0 +1,66 @@
+<div>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <div class="col-span-2">
+            <label for="serie" class="block text-sm font-medium">Serie</label>
+            <input id="serie" formControlName="serie"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="25"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('serie')" class="text-[#EE312A]">
+                {{ getFieldError('serie') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="folio" class="block text-sm font-medium">Folio</label>
+            <input id="folio" formControlName="folio"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="40"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('folio')" class="text-[#EE312A]">
+                {{ getFieldError('folio') }}
+            </span>
+        </div>
+
+
+        <div class="col-span-2">
+            <label for="folio" class="block text-sm font-medium">Tipo de Comprobante</label>
+            <div class="box custom-box">
+                <div class="box-body">
+                    <ng-select [multiple]="true" [maxSelectedItems]="5" formControlName="selectedCars2">
+                        @for(car of Comprobante;track car.id){   
+                            <ng-option  [value]="car.id"
+                                >{{car.name}}</ng-option>
+                            
+                        }
+                    </ng-select>
+                   
+                </div>
+            </div>
+            <span *ngIf="isValidField('selectedCars2')" class="text-[#EE312A]">
+                {{ getFieldError('selectedCars2') }}
+            </span>
+        </div>
+
+
+        
+
+
+
+
+
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            Guardar
+        </button>
+    </div>
+</div>

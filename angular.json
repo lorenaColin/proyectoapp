@@ -100,7 +100,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/@ng-select/ng-select/themes/material.theme.css"
             ],
             "scripts": [
               "node_modules/preline/dist/preline.js"

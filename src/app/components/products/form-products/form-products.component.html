@@ -1,0 +1,95 @@
+<div>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6 bg-white rounded-lg">
+        <div class="col-span-2">
+            <label for="ClavInterna" class="block text-sm font-medium">Clave interna:</label>
+            <input id="ClavInterna" formControlName="ClavInterna"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="5" 
+                oninput="this.value = this.value.toUpperCase();"/>
+            <span *ngIf="isValidField('ClavInterna')" class="text-[#EE312A]">
+                {{ getFieldError('ClavInterna') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="ClavProdSer" class="block text-sm font-medium">Clave Producto Servicio:</label>
+            <input id="ClavProdSer" formControlName="ClavProdSer" (input)="searchClavProdSer()"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="8" 
+                oninput="this.value = this.value.toUpperCase();"/>
+            <span *ngIf="isValidField('ClavProdSer')" class="text-[#EE312A]">
+                {{ getFieldError('ClavProdSer') }}
+            </span>
+        </div>
+
+
+        <div class="col-span-1">
+            <label for="clavUnit" class="block text-sm font-medium">Clave Unidad:</label>
+            <input id="clavUnit" formControlName="clavUnit" (input)="searchClavUnidad()"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="2" maxlength="3"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('clavUnit')" class="text-[#EE312A]">
+                {{ getFieldError('clavUnit') }}
+            </span>
+        </div>
+
+        <div class="col-span-1">
+            <label for="uniDescripcion" class="block text-sm font-medium">Descripción de unidad:</label>
+            <input type="text" class="form-control" id="uniDescripcion" name="uniDescripcion"
+                formControlName="uniDescripcion" maxlength="20"  
+                 oninput="this.value = this.value.toUpperCase();" />
+            @if (isValidField('uniDescripcion')) {
+            <span class="text-[#EE312A]">
+                {{ getFieldError("uniDescripcion") }}
+            </span>
+            }
+        </div>
+        <div class="col-span-1">
+            <label for="numIdentificacion" class="block text-sm font-medium">Numero de Identificación</label>
+            <input id="numIdentificacion" formControlName="numIdentificacion" type="number"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="100" />
+            <span *ngIf="isValidField('numIdentificacion')" class="text-[#EE312A]">
+                {{ getFieldError('numIdentificacion') }}
+            </span>
+        </div>
+
+        <div class="col-span-1">
+            <label for="PrecioUnidad" class="block text-sm font-medium">Precio:</label>
+            <input id="PrecioUnidad" formControlName="PrecioUnidad" type="number"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
+            <span *ngIf="isValidField('PrecioUnidad')" class="text-[#EE312A]">
+                {{ getFieldError('PrecioUnidad') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="cantidad" class="block text-sm font-medium">Cantidad:</label>
+            <input id="cantidad" formControlName="cantidad" type="number"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
+            <span *ngIf="isValidField('cantidad')" class="text-[#EE312A]">
+                {{ getFieldError('cantidad') }}
+            </span>
+        </div>
+        <div class="col-span-3">
+            <label for="descripcion" class="block text-sm font-medium">Descripción:</label>
+            <textarea formControlName="descripcion" id="descripcion"
+                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="4" 
+                 oninput="this.value = this.value.toUpperCase();"></textarea>
+            <span *ngIf="isValidField('descripcion')" class="text-[#EE312A]">
+                {{ getFieldError('descripcion') }}
+            </span>
+        </div>
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            Guardar
+        </button>
+    </div>
+</div>

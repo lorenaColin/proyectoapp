@@ -2,15 +2,8 @@
   <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
     <div class="col-span-12 sm:col-span-12 md:col-span-12">
       <label for="name" class="form-label">Nombre:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="name"
-        name="name"
-        formControlName="name"
-        oninput="this.value = this.value.toUpperCase();"
-        maxlength="254"
-      />
+      <input type="text" class="form-control" id="name" name="name" formControlName="name"
+        oninput="this.value = this.value.toUpperCase();" maxlength="254" />
       @if (isValidField('name')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("name") }}
@@ -20,17 +13,8 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="rfc" class="form-label">RFC:</label>
-      <input
-        type="text"
-        class="form-control"
-        #inputElement
-        id="rfc"
-        name="rfc"
-        formControlName="rfc"
-        oninput="this.value = this.value.toUpperCase();"
-        maxlength="13"
-        (input)="onInputRFC($event)"
-      />
+      <input type="text" class="form-control" #inputElement id="rfc" name="rfc" formControlName="rfc"
+        oninput="this.value = this.value.toUpperCase();" maxlength="13" (input)="onInputRFC($event)" />
       @if (isValidField('rfc')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("rfc") }}
@@ -40,15 +24,8 @@
     @if(banderaFisica){
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="curp" class="form-label">Curp:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="curp"
-        name="curp"
-        formControlName="curp"
-        oninput="this.value = this.value.toUpperCase();"
-        maxlength="18"
-      />
+      <input type="text" class="form-control" id="curp" name="curp" formControlName="curp"
+        oninput="this.value = this.value.toUpperCase();" maxlength="18" />
       @if (isValidField('curp')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("curp") }}
@@ -57,17 +34,9 @@
     </div>
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="employee_registration" class="form-label"
-        >Reg. Patronal:</label
-      >
-      <input
-        type="text"
-        class="form-control"
-        id="employee_registration"
-        name="employee_registration"
-        formControlName="employee_registration"
-        max="40"
-      />
+      <label for="employee_registration" class="form-label">Reg. Patronal:</label>
+      <input type="text" class="form-control" id="employee_registration" name="employee_registration"
+        formControlName="employee_registration" max="40" />
       @if (isValidField('employee_registration')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("employee_registration") }}
@@ -78,14 +47,7 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="email" class="form-label">Correo:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="email"
-        name="email"
-        formControlName="email"
-        maxlength="75"
-      />
+      <input type="text" class="form-control" id="email" name="email" formControlName="email" maxlength="75" />
       @if (isValidField('email')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("email") }}
@@ -95,14 +57,8 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="phone" class="form-label">Teléfono:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="phone"
-        name="phone"
-        formControlName="phone"
-        maxlength="13"
-      />
+      <input type="text" class="form-control" id="phone" name="phone" formControlName="phone" maxlength="13" 
+      pattern="\d*" />
       @if (isValidField('phone')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("phone") }}
@@ -112,16 +68,8 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-4">
       <label for="cp" class="form-label">Código P:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="cp"
-        name="cp"
-        formControlName="cp"
-        maxlength="5"
-        (input)="cpSearch($event)"
-        maxlength="5"
-      />
+      <input type="number" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5"
+        (input)="cpSearch($event)" maxlength="5" />
       @if (isValidField('cp')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("cp") }}
@@ -146,13 +94,7 @@
 
     <div class="col-span-12 sm:col-span-12 md:col-span-12">
       <label for="address" class="form-label">Dirección:</label>
-      <textarea
-        type="text"
-        class="form-control"
-        id="address"
-        name="address"
-        formControlName="address"
-      ></textarea>
+      <textarea type="text" class="form-control" id="address" name="address" formControlName="address"></textarea>
       @if (isValidField('address')) {
       <span class="text-[#EE312A]">
         {{ getFieldError("address") }}
@@ -164,20 +106,13 @@
   <div class="modal-footer flex-container mb-4">
     <div class="flex justify-between mb-4">
       <div class="ms-3">
-        <button
-          type="button"
-          class="ti-btn ti-btn-danger-full text-white !font-medium"
-          data-hs-overlay="#hs-extralarge-modal"
-          (click)="closeModal()"
-        >
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+          data-hs-overlay="#hs-extralarge-modal" (click)="closeModal()">
           Cancelar
         </button>
       </div>
       <div class="mr-3">
-        <button
-          type="submit"
-          class="ti-btn ti-btn-success-full text-white !font-medium"
-        >
+        <button type="submit" class="ti-btn ti-btn-success-full text-white !font-medium">
           Crear Empresa
         </button>
       </div>

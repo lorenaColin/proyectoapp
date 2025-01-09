@@ -1,0 +1,149 @@
+<div>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+
+        <div class="col-span-3">
+            <label for="name" class="block text-sm font-medium">Nombre</label>
+            <input id="name" formControlName="name"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('name')" class="text-[#EE312A]">
+                {{ getFieldError('name') }}
+            </span>
+        </div>
+
+        <div class="col-span-1">
+            <label for="rfc" class="block text-sm font-medium">RFC</label>
+            <input id="rfc" formControlName="rfc" (input)="onInputRFC($event)"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="13" 
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('rfc')" class="text-[#EE312A]">
+                {{ getFieldError('rfc') }}
+            </span>
+        </div>
+
+        <div class="col-span-1" *ngIf="!RFCXEXX">
+            <label for="postalCode" class="block text-sm font-medium">Código Postal</label>
+            <input type="number" class="form-control" id="postalCode" name="postalCode" formControlName="postalCode" maxlength="5"
+                (input)="cpSearch($event)"  maxlength="5"
+                 />
+            @if (isValidField('postalCode')) {
+            <span class="text-[#EE312A]">
+                {{ getFieldError("postalCode") }}
+            </span>
+            }
+        </div>
+
+        <div class="col-span-1"   *ngIf="RFCXEXX">
+            <label for="residencia" class="block text-sm font-medium">Residencia</label>
+            <input id="residencia" formControlName="residencia" (input)="searchPais()"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="15" 
+                oninput="this.value = this.value.toUpperCase();"  />
+            <span *ngIf="isValidField('residencia')" class="text-[#EE312A]">
+                {{ getFieldError('residencia') }}
+            </span>
+        </div>
+        
+        <div class="col-span-2">
+            <label for="fiscalRegimen" class="block text-sm font-medium">Régimen Fiscal</label>
+            <select id="" formControlName="fiscalRegimen" class="form-select">
+                <option value="" disabled selected>Selecciona un régimen fiscal</option>
+                <option *ngFor="let item of listadoRegimen" [value]="item.RegimenFiscal">
+                    {{ item.descripcion }}
+                </option>
+
+            </select>
+
+            <span *ngIf="isValidField('fiscalRegimen')" class="text-[#EE312A]">
+                {{ getFieldError('fiscalRegimen') }}
+            </span>
+        </div>
+
+
+        <div class="col-span-1" *ngIf="RFCXEXX">
+            <label for="registroTrib" class="block text-sm font-medium">Número de Registro Tributario</label>
+            <input id="registroTrib" formControlName="registroTrib"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="40" 
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('registroTrib')" class="text-[#EE312A]">
+                {{ getFieldError('registroTrib') }}
+            </span>
+        </div>
+
+        <div class="col-span-1">
+            <label for="email" class="block text-sm font-medium">Email</label>
+            <input id="email" formControlName="email"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="75" 
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('email')" class="text-[#EE312A]">
+                {{ getFieldError('email') }}
+            </span>
+        </div>
+
+        <div class="col-span-1">
+            <label for="tel" class="block text-sm font-medium">Teléfono</label>
+            <input id="tel" type="number" formControlName="tel"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="12" />
+            <span *ngIf="isValidField('tel')" class="text-[#EE312A]">
+                {{ getFieldError('tel') }}
+            </span>
+        </div>
+
+
+        <div class="col-span-2">
+            <label for="metPago" class="block text-sm font-medium">Método de Pago</label>
+            <select id="metPago" formControlName="metPago" (change)="getFormaPago($event)"
+                    class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
+              <option value="" >Seleccione un método</option>
+              <option *ngFor="let metodo of listaMetodoPago" [value]="metodo.metodo">
+                {{ metodo.descripcion }}
+              </option>
+            </select>
+            <span *ngIf="isValidField('metPago')" class="text-[#EE312A]">
+              {{ getFieldError('metPago') }}
+            </span>
+          </div>
+          
+
+          <div class="col-span-1">
+            <label for="fomPago" class="block text-sm font-medium">Forma de Pago</label>
+            <select id="fomPago" formControlName="fomPago"
+                    class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
+              <option value="" disabled selected>Seleccione una forma</option>
+              <option *ngFor="let forma of listaFormaPago" [value]="forma.clave">
+                {{ forma.descripcion }}
+              </option>
+            </select>
+            <span *ngIf="isValidField('fomPago')" class="text-[#EE312A]">
+              {{ getFieldError('fomPago') }}
+            </span>
+          </div>
+          
+        <div class="col-span-3">
+            <label for="direccion" class="block text-sm font-medium">Dirección</label>
+            <textarea formControlName="direccion" id="direccion"
+                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="4"
+                oninput="this.value = this.value.toUpperCase();" ></textarea>
+            <span *ngIf="isValidField('direccion')" class="text-[#EE312A]">
+                {{ getFieldError('direccion') }}
+            </span>
+        </div>
+
+
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            Guardar
+        </button>
+    </div>
+</div>
