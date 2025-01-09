@@ -22,17 +22,19 @@ export class AuthGuardService implements CanActivate {
     if (token) {
       const decoded: any = jwtDecode(token);
       const currentTime = Date.now() / 1000;
+  
       if (decoded.exp < currentTime) {
-        this.authService.logout();
-         Swal.fire('Tu sesión ha caducado', 'Inicia sesión nuevamente.', "warning").then(() => {
-          this.router.navigate(['auth/login']);
-        });
-        return true;
-      } else {
-        this.authService.logout();
-        this.router.navigate(['auth/login']);
+        if (!this.authService.isSessionExpiredState()) {
+          this.authService.setSessionExpired(true);
+          this.authService.logout();
+          Swal.fire('Tu sesión ha caducado GUARD', 'Inicia sesión nuevamente.', 'warning').then(() => {
+            this.router.navigate(['auth/login']);
+            this.authService.setSessionExpired(false);
+          });
+        }
         return false;
       }
+      return true;
     } else {
       this.router.navigate(['auth/login']);
       return false;

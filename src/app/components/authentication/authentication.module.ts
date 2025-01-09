@@ -32,13 +32,13 @@ import { SharedModule } from '../../shared/shared.module';
     ReactiveFormsModule,
     SharedModule,
   ],
-  providers: [
-    provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-  ],
+  // providers: [
+  //   provideHttpClient(withInterceptorsFromDi()),
+  //   {
+  //     provide: HTTP_INTERCEPTORS,
+  //     useClass: AuthInterceptor,
+  //     multi: true,
+  //   },
+  // ],
 })
 export class AuthenticationModule {}
