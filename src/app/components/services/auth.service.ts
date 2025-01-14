@@ -15,7 +15,7 @@ import { IdleService } from './idle.service.service';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class AuthService {
   private isLoggingOut: boolean = false;
@@ -40,13 +40,13 @@ export class AuthService {
 
   private startTokenRenewalTimer(): void {
     if (this.tokenRenewalSubscription) {
-      // console.warn("El timer ya está activo, no se inicializará de nuevo.");
+      console.warn("El timer ya está a ctivo, no se inicializará de nuevo.");
       return;
     }
   
-    // console.log("Inicializando startTokenRenewalTimer");
+    console.log("Inicializando startTokenRenewalTimer");
     this.tokenRenewalSubscription = interval(1 * 60 * 1000).subscribe(() => {
-      // console.log("Interval ejecutado");
+      console.log("Interval ejecutado");
       this.checkTokenExpiry();
     });
   }
