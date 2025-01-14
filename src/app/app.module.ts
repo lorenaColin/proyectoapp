@@ -23,9 +23,9 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
     BrowserAnimationsModule,
   ],
   providers: [
-    provideAnimations(),
-    importProvidersFrom(),
-    provideHttpClient(withInterceptorsFromDi()),
+    // provideAnimations(),
+    provideHttpClient(
+      withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
