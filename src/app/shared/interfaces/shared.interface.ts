@@ -10,6 +10,19 @@ export interface MetodoPagoInterface {
     metodo:      string;
     descripcion: string;
 }
+export interface MetodoMonedaPago {
+    forma:      string;
+    descripcion: string;
+}
+export interface ListaBanco {
+    id_Banco:      string;
+    c_Banco: string;
+    Descripcion:string;
+    NombreRazonsocial:string;
+
+
+}
+
 
 
 export interface FormaPagoInterface {

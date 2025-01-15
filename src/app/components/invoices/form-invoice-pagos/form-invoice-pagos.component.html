@@ -1,0 +1,425 @@
+<!-- <div>
+    <form [formGroup]="myForm" class=" gap-6 p-4  rounded-lg">
+
+        <div class=" rounded-lg">
+            <h3 class=" font-semibold  mb-2">Relacionados</h3>
+            <div class="grid grid-cols-3 gap-2 ">
+                <div>
+                    <label class=" text-sm font-medium ">Buscador Clientes</label>
+                    <input type="text" id="buscador" formControlName="name"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        oninput="this.value = this.value.toUpperCase();" placeholder="Buscar cliente" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Folio Temporal</label>
+                    <input type="text" id="folio" formControlName="name"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254" value=""
+                        readonly />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">UUID </label>
+                    <input type="text" id="buscador" formControlName="name"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        maxlength="254" value="" readonly />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Parcialidad</label>
+                    <input type="text" id="parcialidad" formControlName="parcialidad"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Monto Factura</label>
+                    <input type="text" id="factura" formControlName="factura"
+                    class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                    value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Fecha Pago</label>
+                    <input type="text" id="fechaPago" formControlName="fechaPago"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Forma de Pago </label>
+                    <input type="text" id="formaPago" formControlName="formaPago"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Moneda de Pago </label>
+                    <input type="text" id="MonedaPago" formControlName="MonedaPago"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">T. Cambio </label>
+                    <input type="text" id="cambio" formControlName="cambio"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Monto </label>
+                    <input type="text" id="monto" formControlName="monto"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Saldo insoluto </label>
+                    <input type="text" id="salgoInsoluto" formControlName="salgoInsoluto"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium ">Num Operacion </label>
+                    <input type="text" id="numOperacion" formControlName="numOperacion"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value="" />
+                </div>
+            </div>
+
+
+            <div class="mb-6">
+                <h3 class=" font-semibold  mb-2">Resumen</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium ">Recepcion de pago </label>
+                        <input type="text" id="numOperacion" formControlName="numOperacion"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class=" font-semibold  mb-2">Confirmación</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium ">RFC del Receptor</label>
+                        <input type="text" id="rfcReceptor" formControlName="rfcReceptor"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value=""  readonly />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Nombre o Razón Social</label>
+                        <input type="text" id="razonSocial" formControlName="razonSocial"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                        value=""readonly />
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2" />
+                        <span class="text-sm ">Fideicomiso</span>
+                    </label>
+                </div>
+            </div>
+
+           
+        </div>
+
+    </form>
+</div>
+ -->
+<form [formGroup]="myForm" class="gap-6 p-4 rounded-lg">
+
+    <div class=" mt-6 hs-accordion-group">
+        <!-- Relacionados -->
+        <div class="hs-accordion active overflow-hidden bg-white dark:bg-bodybg border -mt-px first:rounded-t-sm last:rounded-b-sm dark:bg-bgdark dark:border-white/10"
+            id="hs-secondary-heading-1">
+            <button
+                class="hs-accordion-toggle hs-accordion-active:text-white hs-accordion-active:bg-secondary group py-4 px-5 inline-flex items-center justify-between gap-x-3 w-full font-semibold text-start text-gray-800 transition hover:text-gray-500 dark:hs-accordion-active:text-white dark:text-gray-200 dark:hover:text-white/80"
+                aria-controls="hs-secondary-collapse-1" type="button">
+                Relacionados
+                <svg class="hs-accordion-active:hidden hs-accordion-active:text-white hs-accordion-active:group-hover:text-white block w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 5L8.16086 10.6869C8.35239 10.8637 8.64761 10.8637 8.83914 10.6869L15 5"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <svg class="hs-accordion-active:block hs-accordion-active:text-white hs-accordion-active:group-hover:text-white hidden w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 11L8.16086 5.31305C8.35239 5.13625 8.64761 5.13625 8.83914 5.31305L15 11"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <div id="hs-secondary-collapse-1 mt-4 "
+                class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
+                aria-labelledby="hs-secondary-heading-1">
+                <!-- <form [formGroup]="myForm" class="gap-6 p-4 rounded-lg"> -->
+                <!-- <pre> {{myForm.value|json}}</pre> -->
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="text-sm font-medium">Buscador Clientes</label>
+                        <input type="text" formControlName="buscador"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            oninput="this.value = this.value.toUpperCase();" placeholder="Buscar cliente" />
+                        <span *ngIf="isValidField('buscador')" class="text-[#EE312A]">
+                            {{ getFieldError('buscador') }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Folio Temporal</label>
+                        <input type="text" formControlName="folio"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">UUID </label>
+                        <input type="text" id="uuid" formControlName="uuid"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            maxlength="254" value="" readonly />
+                        <span *ngIf="isValidField('uuid')" class="text-[#EE312A]">
+                            {{ getFieldError('uuid') }}
+                        </span>
+
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Parcialidad</label>
+                        <input type="text" id="parcialidad" formControlName="parcialidad"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Monto Factura</label>
+                        <input type="number" id="factura" formControlName="factura"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Fecha Pago</label>
+                        <input type="text" id="fechaPago" formControlName="fechaPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                        <span *ngIf="isValidField('uuid')" class="text-[#EE312A]">
+                            {{ getFieldError('uuid') }}
+                        </span>
+
+                    </div>
+                    <!-- <div>
+                            <label class="block text-sm font-medium ">Forma de Pago </label>
+                            <input type="text" id="formaPago" formControlName="formaPago"
+                                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                                value="" />
+                                <span *ngIf="isValidField('formaPago')" class="text-[#EE312A]">
+                                    {{ getFieldError('formaPago') }}
+                                </span>
+                        </div> -->
+                    <div>
+                        <label class="block text-sm font-medium">Forma de Pago</label>
+                        <select id="formaPago" formControlName="formaPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
+                            <option *ngFor="let formaPago of listadoFormaPago" [value]="formaPago.clave">
+                                {{ formaPago.descripcion }}
+                            </option>
+                        </select>
+                        <span *ngIf="isValidField('formaPago')" class="text-[#EE312A]">
+                            {{ getFieldError('formaPago') }}
+                        </span>
+                    </div>
+
+                    <!-- <div>
+                        <label class="block text-sm font-medium ">Moneda de Pago </label>
+                        <input type="text" id="MonedaPago" formControlName="MonedaPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                        <span *ngIf="isValidField('MonedaPago')" class="text-[#EE312A]">
+                            {{ getFieldError('MonedaPago') }}
+                        </span>
+                    </div> -->
+                    <div>
+                        <label class="block text-sm font-medium">Moneda de Pago</label>
+                        <select id="MonedaPago" formControlName="MonedaPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
+                            <option *ngFor="let moneda of listaMonedaPago" [value]="moneda.forma">
+                                {{ moneda.descripcion }}
+                            </option>
+                        </select>
+                        <span *ngIf="isValidField('MonedaPago')" class="text-[#EE312A]">
+                            {{ getFieldError('MonedaPago') }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium">T. Cambio</label>
+                        <input type="number" id="cambio" formControlName="cambio"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" />
+                        <span *ngIf="isValidField('cambio')" class="text-[#EE312A]">
+                            {{ getFieldError('cambio') }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Monto </label>
+                        <input type="number" id="monto" formControlName="monto"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                        <span *ngIf="isValidField('monto')" class="text-[#EE312A]">
+                            {{ getFieldError('monto') }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Saldo insoluto </label>
+                        <input type="number" id="salgoInsoluto" formControlName="salgoInsoluto"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" readonly />
+                        <span *ngIf="isValidField('salgoInsoluto')" class="text-[#EE312A]">
+                            {{ getFieldError('salgoInsoluto') }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Num Operacion </label>
+                        <input type="text" id="numOperacion" formControlName="numOperacion"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">R.F.C Cta Origen</label>
+                        <input type="text" id="ctaOrigen" formControlName="ctaOrigen"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Banco</label>
+                        <select id="banco" formControlName="banco"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
+                            <option *ngFor="let listabanco of listabanco" [value]="listabanco.id_Banco">
+                                {{ listabanco.Descripcion }}
+                            </option>
+                        </select>
+                        <span *ngIf="isValidField('banco')" class="text-[#EE312A]">
+                            {{ getFieldError('banco') }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Cta Ordenante</label>
+                        <input type="text" id="ctaOrdenante" formControlName="ctaOrdenante"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">R.F.C Cta Beneficiaria</label>
+                        <input type="text" id="ctaBeneficiaria" formControlName="ctaBeneficiaria"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">R.F.C Cta Beneficiario</label>
+                        <input type="text" id="ctaBeneficiario" formControlName="ctaBeneficiario"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Certificado de pago</label>
+                        <input type="text" id="certiPago" formControlName="certiPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Cadena de pago</label>
+                        <input type="text" id="cadePago" formControlName="cadePago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Sello de pago</label>
+                        <input type="text" id="selloPago" formControlName="selloPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" />
+                    </div>
+
+
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+
+
+        <div class="hs-accordion overflow-hidden bg-white dark:bg-bodybg border -mt-px first:rounded-t-sm last:rounded-b-sm dark:bg-bgdark dark:border-white/10"
+            id="hs-secondary-heading-2">
+            <button
+                class="hs-accordion-toggle hs-accordion-active:text-white hs-accordion-active:bg-secondary group py-4 px-5 inline-flex items-center justify-between gap-x-3 w-full font-semibold text-start text-gray-800 transition hover:text-gray-500 dark:hs-accordion-active:text-white dark:text-gray-200 dark:hover:text-white/80"
+                aria-controls="hs-secondary-collapse-2" type="button">
+                Resumen
+                <svg class="hs-accordion-active:hidden hs-accordion-active:text-white hs-accordion-active:group-hover:text-white block w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 5L8.16086 10.6869C8.35239 10.8637 8.64761 10.8637 8.83914 10.6869L15 5"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <svg class="hs-accordion-active:block hs-accordion-active:text-white hs-accordion-active:group-hover:text-white hidden w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 11L8.16086 5.31305C8.35239 5.13625 8.64761 5.13625 8.83914 5.31305L15 11"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <div id="hs-secondary-collapse-2"
+                class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                aria-labelledby="hs-secondary-heading-2">
+                <!-- <form [formGroup]="myForm" class="gap-6 p-4 rounded-lg"> -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium">Recepcion de pago</label>
+                        <input type="text" formControlName="recepcionPago"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" />
+                    </div>
+
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+
+        <div class="hs-accordion overflow-hidden bg-white dark:bg-bodybg border -mt-px first:rounded-t-sm last:rounded-b-sm dark:bg-bgdark dark:border-white/10"
+            id="hs-secondary-heading-3">
+            <button
+                class="hs-accordion-toggle hs-accordion-active:text-white hs-accordion-active:bg-secondary group py-4 px-5 inline-flex items-center justify-between gap-x-3 w-full font-semibold text-start text-gray-800 transition hover:text-gray-500 dark:hs-accordion-active:text-white dark:text-gray-200 dark:hover:text-white/80"
+                aria-controls="hs-secondary-collapse-3" type="button">
+                Confirmación
+                <svg class="hs-accordion-active:hidden hs-accordion-active:text-white hs-accordion-active:group-hover:text-white block w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 5L8.16086 10.6869C8.35239 10.8637 8.64761 10.8637 8.83914 10.6869L15 5"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <svg class="hs-accordion-active:block hs-accordion-active:text-white hs-accordion-active:group-hover:text-white hidden w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-[#8c9097] dark:text-white/50"
+                    width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 11L8.16086 5.31305C8.35239 5.13625 8.64761 5.13625 8.83914 5.31305L15 11"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <div id="hs-secondary-collapse-3"
+                class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                aria-labelledby="hs-secondary-heading-3">
+                <!-- <form [formGroup]="myForm" class="gap-6 p-4 rounded-lg"> -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium ">RFC del Receptor</label>
+                        <input type="text" id="rfcReceptor" formControlName="rfcReceptor"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ">Nombre o Razón Social</label>
+                        <input type="text" id="razonSocial" formControlName="razonSocial"
+                            class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="254"
+                            value="" readonly />
+                    </div>
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            Guardar
+        </button>
+    </div>
+</div>

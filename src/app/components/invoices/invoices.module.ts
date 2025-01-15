@@ -9,6 +9,7 @@ import { FormInvoiceProductsComponent } from './form-invoice-products/form-invoi
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlatpickrDirective, provideFlatpickrDefaults } from 'angularx-flatpickr';
 import { ListComponent } from './list/list.component';
+import { FormInvoicePagosComponent } from './form-invoice-pagos/form-invoice-pagos.component';
 
 
 
@@ -18,7 +19,8 @@ import { ListComponent } from './list/list.component';
     FormInvoiceComponent,
     FormInvoiceSerieComponent,
     FormInvoiceProductsComponent,
-    ListComponent
+    ListComponent,
+    FormInvoicePagosComponent
   ],
   imports: [
     CommonModule,

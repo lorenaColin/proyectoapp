@@ -9,10 +9,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { FormInvoicePagosComponent } from './components/invoices/form-invoice-pagos/form-invoice-pagos.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    // FormInvoicePagosComponent
   ],
   imports: [
     BrowserModule,
