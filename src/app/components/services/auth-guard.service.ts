@@ -27,7 +27,7 @@ export class AuthGuardService implements CanActivate {
         if (!this.authService.isSessionExpiredState()) {
           this.authService.setSessionExpired(true);
           this.authService.logout();
-          Swal.fire('Tu sesión ha caducado GUARD', 'Inicia sesión nuevamente.', 'warning').then(() => {
+          Swal.fire('Tu sesión ha caducado', 'Inicia sesión nuevamente.', 'warning').then(() => {
             this.router.navigate(['auth/login']);
             this.authService.setSessionExpired(false);
           });

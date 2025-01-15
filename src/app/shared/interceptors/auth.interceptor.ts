@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isAlertShown = true;
           this.authService.setSessionExpired(true);
   
-          swal.fire("Sesión expirada INTERCEPTOR", "Tu sesión ha caducado, por favor inicia sesión nuevamente.", "warning")
+          swal.fire("Sesión expirada", "Tu sesión ha caducado, por favor inicia sesión nuevamente.", "warning")
             .then(() => {
               this.authService.logout();
               this.router.navigate(['auth/login']).then(() => {

@@ -37,13 +37,13 @@ export class AuthService {
 
   private startTokenRenewalTimer(): void {
     if (this.tokenRenewalSubscription) {
-      console.warn('El timer ya está a ctivo, no se inicializará de nuevo.');
+      // console.warn('El timer ya está a ctivo, no se inicializará de nuevo.');
       return;
     }
 
-    console.log('Inicializando startTokenRenewalTimer');
+    // console.log('Inicializando startTokenRenewalTimer');
     this.tokenRenewalSubscription = interval(1 * 60 * 1000).subscribe(() => {
-      console.log('Interval ejecutado');
+      // console.log('Interval ejecutado');
       this.checkTokenExpiry();
     });
   }
@@ -97,10 +97,10 @@ export class AuthService {
         this.isSessionExpired = false;
       },
       (error) => {
-        console.error('Error al intentar hacer logout:', error);
+        // console.error('Error al intentar hacer logout:', error);
         if (error.status === 401) {
           console.warn(
-            'El token ya no es válido o no existe. Finalizando sesión.'
+            // 'El token ya no es válido o no existe. Finalizando sesión.'
           );
           this.finalizeLogout();
           this.isSessionExpired = false;
@@ -143,7 +143,7 @@ export class AuthService {
   }
 
   checkTokenExpiry() {
-    console.log('checkTokenExpiry');
+    // console.log('checkTokenExpiry');
     if (this.isTokenRenewing) return;
 
     const token = this.getToken();
@@ -153,15 +153,15 @@ export class AuthService {
     const currentTime = Date.now() / 1000;
 
     if (decoded.exp - currentTime < 60) {
-      console.log('Token está por expirar, intentando renovar...');
+      // console.log('Token está por expirar, intentando renovar...');
       this.isTokenRenewing = true;
       this.renewToken().subscribe({
         next: () => {
-          console.log('Token renovado');
+          // console.log('Token renovado');
           this.isTokenRenewing = false;
         },
         error: (err) => {
-          console.log('Error al renovar el token', err);
+          // console.log('Error al renovar el token', err);
           this.isTokenRenewing = false;
         },
       });
@@ -171,7 +171,7 @@ export class AuthService {
   renewToken(): Observable<any> {
     const token = this.getToken();
     if (!token) {
-      console.log('Token no disponible para renovar');
+      // console.log('Token no disponible para renovar');
       return throwError('Token no disponible');
     }
 
@@ -187,16 +187,16 @@ export class AuthService {
       )
       .pipe(
         tap((response: any) => {
-          console.log('Respuesta del servidor:', response); 
+          // console.log('Respuesta del servidor:', response); 
           if (response.token) {
-            console.log('Seteando el nuevo token:', response.token); 
+            // console.log('Seteando el nuevo token:', response.token); 
             this.setToken(response.token);
           } else {
-            console.warn('No se encontró un token en la respuesta');
+            // console.warn('No se encontró un token en la respuesta');
           }
         }),
         catchError((err) => {
-          console.error('Error al renovar el token:', err);
+          // console.error('Error al renovar el token:', err);
           this.logout();
           return throwError(err);
         })
@@ -207,7 +207,7 @@ export class AuthService {
   }
 
   setToken(token: string): void {
-    console.log('Token recibido en setToken:', token);
+    // console.log('Token recibido en setToken:', token);
     this.token = token;
     localStorage.setItem('token', token);
   }
