@@ -38,6 +38,22 @@ export class FormInvoicePagosComponent {
     rfcReceptor: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(254)]],
     razonSocial: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(254)]],
     banco: ['', [Validators.required, Validators.maxLength(254)]],
+    ctaOrigen: ['', [ Validators.maxLength(254)]],
+    ctaOrdenante: ['', [ Validators.maxLength(254)]],
+    ctaBeneficiaria: ['', [ Validators.maxLength(254)]],
+    ctaBeneficiario: ['', [ Validators.maxLength(254)]],
+    certiPago: ['', [ Validators.maxLength(254)]],
+    cadePago: ['', [ Validators.maxLength(254)]],
+    selloPago: ['', [ Validators.maxLength(254)]],
+    recepcionPago: ['', [ Validators.maxLength(254)]],
+
+    
+
+
+
+    
+    
+
 
 
 
