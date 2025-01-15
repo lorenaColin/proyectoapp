@@ -5,6 +5,7 @@ export interface UserResponseInterface {
     statusCode: number;
     error:      boolean;
     data:       UserLoginInterface;
+    token: string;
 }
 
 export interface UserLoginInterface {
@@ -31,3 +32,13 @@ export interface TokenRefreshResponseInterface {
     error:      boolean;
     data:       any[];
 }
+
+export interface AuthResponse {
+    token: string;
+    user: {
+      name: string;
+      email: string;
+    //   roles: string;
+    //   permissions: string;
+    };
+  }

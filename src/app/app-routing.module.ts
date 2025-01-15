@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ContentLayoutComponent } from './shared/layouts/content-layout/content-layout.component';
+import { AuthGuardService } from './components/services/auth-guard.service';
 
 const routes: Routes = [
   { path: 'auth',
@@ -18,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'products',
-    loadChildren:() => import('./components/products/products.module').then(m => m.ProductsModule),
+    loadChildren:() => import('./components/products/products.module').then(m => m.ProductsModule), canActivate: [AuthGuardService],
   },
   {
     path: 'series',

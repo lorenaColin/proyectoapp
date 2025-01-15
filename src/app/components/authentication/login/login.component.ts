@@ -53,7 +53,7 @@ export class LoginComponent {
         this.banderaLoader = !this.banderaLoader;
         const { token, type: tipoUsuario, verified } = data;
         localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', token);
+        // localStorage.setItem('refreshToken', token);
         if( verified.length === 0 ) {
           this.router.navigate(['/auth/verify']);
           return;

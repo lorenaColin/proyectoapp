@@ -1,46 +1,50 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { Injectable } from '@angular/core';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import swal from 'sweetalert2';
 import { AuthService } from '../../components/services/auth.service';
-import { catchError, switchMap, throwError } from 'rxjs';
 
-export const authInterceptor: HttpInterceptorFn  = (req, next) => {
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  const authService = inject(AuthService);
-  const token = authService.getAuthToken();
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
+  private isAlertShown: boolean = false;
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.authService.getAuthToken();
+  
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });  
     }
-  });
-  return next(authReq);
-  /*
-  return next(authReq).pipe(
-    catchError((err) => {
-      return authService.refreshToken().pipe(
-        switchMap((res) => {
-          // Guardar el nuevo token
-          localStorage.setItem('token', res.access_token);
-          localStorage.setItem('refreshToken', res.access_token);
-
-          const newReq = req.clone({
-            setHeaders: {
-               Authorization: `Bearer ${res.access_token}`
-            }
-          });
-
-          return next(newReq);
-        }),
-        catchError((refreshErr) => {
-          console.log(":(")
-          const finalError = new Error(refreshErr);
-
-          // localStorage.removeItem('token');
-          // localStorage.removeItem('refreshToken');
-
-          return throwError(() => finalError);
-        })
-      )
-    })
-  );
-  */
-};
+  
+    return next.handle(request).pipe(
+      catchError(err => {
+        if (err.status === 401 && !this.authService.isSessionExpiredState() && !this.isAlertShown) {
+          this.isAlertShown = true;
+          this.authService.setSessionExpired(true);
+  
+          swal.fire("Sesión expirada INTERCEPTOR", "Tu sesión ha caducado, por favor inicia sesión nuevamente.", "warning")
+            .then(() => {
+              this.authService.logout();
+              this.router.navigate(['auth/login']).then(() => {
+                this.authService.setSessionExpired(false);
+                this.isAlertShown = false;
+              });
+            });
+        }
+        return throwError(err);
+      })
+    );
+  }
+}

@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, Renderer2 } from '@angular/core';
 import { Menu, NavService } from '../../services/nav.service';
+import { AuthService } from '../../../components/services/auth.service';
 
 @Component({
   selector: 'app-content-layout',
@@ -8,6 +9,7 @@ import { Menu, NavService } from '../../services/nav.service';
 })
 export class ContentLayoutComponent {
   public menuItems!: Menu[];
+    private authService = inject(AuthService)
   
   constructor(
     public navServices: NavService,
