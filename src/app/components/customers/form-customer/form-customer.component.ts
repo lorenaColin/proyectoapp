@@ -13,7 +13,7 @@ import {
   LISTADORFCSGENERICOS,
 } from '../../../shared/utils/sat';
 import { PATRON_EMAIL, PATRON_RFC } from '../../../shared/utils/expressions';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { cat_pais } from '../../services/cat_pais.service';
 import { CustomerService } from '../../services/customer.service';
 import { AuthService } from '../../services/auth.service';
@@ -39,7 +39,8 @@ export class FormCustomerComponent implements OnChanges{
   private cat_pais = inject(cat_pais);
   private customerService = inject(CustomerService);
   private authService = inject(AuthService);
-
+  buttonTitle: string = 'Guardar';
+  private subscription: Subscription = new Subscription();
   @Input() productoHijo!: CustomersInterface;
   @Output() respuesta = new EventEmitter<CustomerResponseInterface>();
   clientes: CustomersInterface[] = [];
@@ -69,7 +70,8 @@ export class FormCustomerComponent implements OnChanges{
   ngOnChanges(): void {
     this.idCustomer = this.productoHijo.id || 0;
     this.myForm.patchValue(this.productoHijo);
-    // this.idCustomer != 0 ? (this.buttonTitle = 'Actualizar') : 'Crear';
+    this.idCustomer != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
+    this.listadoRegimen = this.utilsService.getRegimenSat(this.productoHijo.rfc);
   }
   onInputRFC(event: Event): void {
     const el = event.target as HTMLInputElement;
@@ -123,32 +125,45 @@ export class FormCustomerComponent implements OnChanges{
   }
   closeModal(): void {
     this.myForm.reset();
+    this.buttonTitle = 'Guardar';
   }
   onSubmit(): void {
     this.showLoader = true;
-    if (this.myForm.valid) {
-      const formData = this.myForm.value;
-      const company_id = this.authService.getUuid();
-      if (!company_id) {
-        console.log('No se pudo obtener el company_id.');
-        return;
-      }
-      const customerData = { ...formData, company_id };
-      console.log('Datos a enviar:', customerData);
-      this.customerService
-        .createCustomer(customerData)
-        .subscribe((response) => {
-          this.showLoader = false;
-          this.respuesta.emit(response);
-          console.log('Respuesta del servidor:', response);
-          this.closeModal();
-        });
-    } else {
+  
+    // Verificar si el formulario es válido
+    if (this.myForm.invalid) {
       this.showLoader = false;
       this.myForm.markAllAsTouched();
       console.log('Formulario inválido. Por favor corrija los errores.');
+      return;
     }
+  
+    const formData = this.myForm.value;
+    const company_id = this.authService.getUuid();
+  
+    if (!company_id) {
+      console.log('No se pudo obtener el company_id.');
+      this.showLoader = false;
+      return;
+    }
+  
+    const customerData = { ...formData, company_id };
+    console.log('Datos a enviar:', customerData);
+    const submitCustomer =
+      this.idCustomer
+        ? this.customerService.updateCustomer(this.idCustomer, customerData)
+        : this.customerService.createCustomer(customerData);
+    this.subscription.add(
+      submitCustomer.subscribe((response) => {
+        this.showLoader = false;
+        this.respuesta.emit(response);
+        console.log('Respuesta del servidor:', response);
+        this.myForm.reset();
+        this.closeModal();
+      })
+    );
   }
+  
 
   cpSearch(event: Event): void {
     const el = event.target as HTMLInputElement;
@@ -157,7 +172,7 @@ export class FormCustomerComponent implements OnChanges{
   }
 
   searchPais(): void {
-    const termino = this.myForm.get('Residencia')?.value;
+    const termino = this.myForm.get('residence')?.value;
     console.log('Buscando:', termino);
 
     if (termino && termino.length >= 2) {

@@ -5,6 +5,8 @@ import {
   CustomerResponseInterface,
   CustomersInterface,
 } from '../../interfaces/customers.interface';
+import { RegimenInterface } from '../../../shared/interfaces/shared.interface';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-list',
@@ -13,11 +15,13 @@ import {
 })
 export class ListComponent {
   private customerService = inject(CustomerService);
+  private utilsService = inject(UtilsService);
   constructor() {}
   filteredCustomer: any[] = [];
   clientes: CustomersInterface[] = [];
   @Input() cliente: CustomersInterface = {} as CustomersInterface;
   showLoader = false;
+  listadoRegimen: RegimenInterface[] = [];
   ngOnInit() {
     this.showLoader = true;
     this.customerService.getCustomers().subscribe((response) => {
@@ -26,6 +30,7 @@ export class ListComponent {
       this.filteredCustomer = response.data;
       console.log(this.clientes);
     });
+    this.listadoRegimen = this.utilsService.getRegimenSat('');
   }
 
   editCustomer(id: number): void {
@@ -33,6 +38,7 @@ export class ListComponent {
     this.customerService.getCustomerById(id).subscribe((response) => {
       this.cliente = response.data;
       console.log(this.cliente);
+      this.listadoRegimen = this.utilsService.getRegimenSat(this.cliente.rfc);
       this.showLoader = false;
     });
   }

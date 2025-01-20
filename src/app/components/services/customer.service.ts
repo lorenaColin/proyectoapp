@@ -29,5 +29,8 @@ export class CustomerService {
       getCompanyInfo(companyId: string): Observable<any> {
         return this.http.get<any>(`${this.urlCompanies}/${companyId}`);
       }
-      
+
+      updateCustomer(id: number, formData: CustomersInterface): Observable<CustomerResponseInterface> {
+        return this.http.put<CustomerResponseInterface>(`${this.urlCustomers}/${id}`, formData);
+      }  
 }
