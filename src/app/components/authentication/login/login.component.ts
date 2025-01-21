@@ -59,9 +59,9 @@ export class LoginComponent {
           return;
         }
 
-        let rutaDashboard: string = tipoUsuario === 'user' ? '/dashboard': '/administration';
+        // let rutaDashboard: string = tipoUsuario === 'user' ? '/dashboard': '/administration';
 
-        this.router.navigate([rutaDashboard]);
+        this.router.navigate(['/administration']);
       },
       error: (err) => {
         this.banderaLoader = !this.banderaLoader;

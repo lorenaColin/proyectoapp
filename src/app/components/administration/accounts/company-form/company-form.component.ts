@@ -9,6 +9,8 @@ import { UtilsService } from '../../../../shared/services/utils.service';
 import { CompanyService } from '../../../services/company.service';
 import { CompanyListInterface } from '../../../interfaces/company.interface';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-company-form',
   templateUrl: './company-form.component.html',
@@ -78,19 +80,11 @@ export class CompanyFormComponent implements OnInit  {
       const { error, data, message } = response;
 
       if (error) {
-        console.error(message);
+        Swal.fire("Mensaje", message, "error");
         return;
       }
       this.myForm.reset();
-      const { id, name, rfc } = data;
-      const company = {
-        id,
-        name,
-        rfc,
-        status: 'Activo',
-        tones_incluide: 0,
-      }
-      this.respuestaHijo.emit(company);
+      this.respuestaHijo.emit(data[0]);
     });
   
 
