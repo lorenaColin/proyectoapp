@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 })
 export class IdleService {
   private timeoutId: any;
-  private idleTime: number = 2 * 60 * 1000; // minutos de inactividad
+  private idleTime: number = 15 * 60 * 1000; // minutos de inactividad
   private isWarningShown: boolean = false;
 
   private inactivitySubject = new Subject<void>();

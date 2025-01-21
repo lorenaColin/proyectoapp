@@ -36,6 +36,8 @@ export class InvoiceComponent implements OnInit {
 
   searchFormaPago(): void {
     const{  metodoPago } = this.myForm.value;
+    console.log(metodoPago);
+
     this.listadoFormaPago = [];
     if(metodoPago === "") return;
     this.listadoFormaPago = LISTADOFORMAPAGO.filter(forma => forma.metodoPago === metodoPago);

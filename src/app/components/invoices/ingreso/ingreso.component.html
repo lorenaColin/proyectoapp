@@ -1,0 +1,103 @@
+<form [formGroup]="formIngreso" (ngSubmit)="onSubmitIngreso()">
+    <pre> {{ formIngreso.value | json }} </pre>
+
+    <div class="grid grid-cols-12 gap-x-6">
+        <div class="xl:col-span-12 col-span-12">
+            <div class="box mt-4">
+                <div class="box-body">
+                    <div class="contact-header">
+                        <div class="sm:flex block items-center justify-between">
+                            <div class="h5 font-semibold mb-5">Ingreso</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="serieFolio" id="serieFolio" formControlName="serie_folio">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>
+                            <input type="date" class="form-control" name="fechaEmision" id="fechaEmision" formControlName="fecha">
+                        </div>
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" formControlName="regimen_emisor" name="regimenEmisor" id="regimenEmisor">
+                                <option>Selecciona</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="receptor" id="receptor"
+                                    formControlName="receptor">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal1">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi" formControlName="uso_cfdi"
+                                id="usoCfdi">
+                                <option>Selecciona</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="my-6 border-gray-300">
+                    
+                    <!-- CONCEPTOS -->
+
+                    <app-conceptos [typeProof]="typeProof"></app-conceptos>
+
+                    <hr class="my-6 border-gray-300">
+
+                    <div class="form-check form-switch mb-2" id="agregaCP">
+                        <input class="form-check-input" (change)="agregarCartaP($event)" type="checkbox" role="switch"
+                            id="switch-primary">
+                        <label class="form-check-label" for="switch-primary"><b> Complemento Carta Porte </b></label>
+                    </div>
+
+                    <hr class="my-6 border-gray-300">
+
+                    @if (mostrarCP) {
+                    <app-complemento-cp />
+                    }
+
+                    <hr class="my-6 border-gray-300">
+                    <!-- <form [formGroup]="forma_pago"> -->
+                        <app-forma-pago></app-forma-pago>
+                    <!-- </form> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="hs-extralarge-modal2" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+        <div class="ti-modal-content">
+            <div class="ti-modal-header">
+                <h6 class="ti-modal-title">Series y Folio</h6>
+            </div>
+            <app-form-invoice-serie />
+        </div>
+    </div>
+</div>
+<div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+        <div class="ti-modal-content">
+            <div class="ti-modal-header">
+                <h6 class="ti-modal-title">Receptor</h6>
+            </div>
+            <app-form-invoice />
+        </div>
+    </div>
+</div>

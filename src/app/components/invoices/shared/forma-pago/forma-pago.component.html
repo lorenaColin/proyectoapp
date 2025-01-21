@@ -1,0 +1,50 @@
+<form [formGroup]="formaPagoForm">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <!-- Primera columna -->
+        <div class="grid grid-cols-1 gap-4">
+            <div class="">
+                <label for="metodoPago" class="form-label text-[.875rem] text-black">Método Pago:</label>
+                <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago" (change)="searchFormaPago()" formControlName="metodo_pago">
+                    <option value="">Selecciona una opción</option>
+                    @for (metodoPago of listadoMetodoPago; track $index) {
+                        <option value="{{ metodoPago.metodo }}">{{ metodoPago.descripcion }}</option>
+                    }
+                </select>
+            </div>
+            <div class="">
+                <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
+                <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago" formControlName="forma_pago">
+                    @for (formaPago of listadoFormaPago; track $index) {
+                        <option value="{{ formaPago.clave }}">{{ formaPago.descripcion }}</option>
+                    }
+                </select>
+            </div>
+            <div class="">
+                <label for="moneda" class="form-label text-[.875rem] text-black">Moneda:</label>
+                <select class="mt-1 block w-full rounded-md sm:text-sm" name="moneda" id="moneda" formControlName="moneda" formControlName="forma_pago" >
+                    <option>Peso Mexicano</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Segunda columna -->
+        <div class="grid grid-cols-1 gap-4">
+            <div class="">
+                <label for="condiciones" class="form-label text-[.875rem] text-black">Condiciones:</label>
+                <input type="text" class="mt-1 block w-full rounded-md sm:text-sm" id="condiciones" formControlName="condiciones">
+            </div>
+            <div>
+                <label for="tipo-cambio" class="block text-sm font-medium">Tipo de Cambio:</label>
+                <input id="tipo-cambio" type="text" class="mt-1 block w-full rounded-md sm:text-sm" formControlName="tipo_cambio">
+            </div>
+            <div>
+                <label for="fecha-vencimiento" class="block text-sm font-medium">Fecha Vencimiento:</label>
+                <input id="fecha-vencimiento" type="date" class="mt-1 block w-full rounded-md sm:text-sm" formControlName="fecha_vencimiento">
+            </div>
+        </div>
+        <!-- Tercera columna: Totales -->
+        <div class="grid grid-cols-1">
+            <app-totales></app-totales>
+        </div>
+    </div>
+</form>

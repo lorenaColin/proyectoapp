@@ -9,7 +9,7 @@
 <div class="tab-pane fade show active mb-4" id="tabla-tab-pane" role="tabpanel">
     @if (isTableActive){
     <div class="flex justify-between mb-4 ">
-        <div class="flex items-center space-x-4 ml-4 mb-4" >
+        <div class="flex items-center space-x-4 ml-4 mb-4">
             <input type="text" class="p-2 border rounded-md" placeholder="Buscar..." />
         </div>
 
@@ -43,6 +43,9 @@
                     <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab(false)">
                         <i class="ri-edit-line"></i>
                     </button>
+                    <button type="button" class="ti-btn ti-btn-primary mr-7">
+                        <i class="ri-edit-line"></i>
+                    </button>
                     }
                 </td>
             </tr>
@@ -56,79 +59,158 @@
             Siguiente
         </button>
     </div>
-}
+    }
 </div>
 
 <div class="tab-pane fade show active" id="crear-tab-pane" role="tabpanel">
-    @if (isCreateActive ) {
-         <button type="button" class="ti-btn ti-btn-primary mr-4 p-4 mt-4" (click)="selectTab(true)"
-        style="float: right;">
-        <i class="ri-arrow-left-line"></i>
-    </button>
-    <form class="grid grid-cols-2 gap-4 p-4">
-        <div class="col-span-1 mb-4">
-            <label class="block">Codigo:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div class="col-span-3 mb-4">
-            <label class="block">Producto/Servicio:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
+    @if (isCreateActive){
+    <div class="mb-4 flex justify-end me-2">
+        <button type="button" class="ti-btn ti-btn-primary px-4 py-2" (click)="selectTab(true)">
+            <i class="ri-arrow-left-line"></i>
+        </button>
+    </div>
 
-        <div>
-            <label>Unidad:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
+    <form [formGroup]="formConcepts">
+        <!-- <pre> {{ formConcepts.value | json }} </pre> -->
+        <div class="m-2 p-2">
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 sm:col-span-12 md:col-span-6">
+                    <label class="block form-label">Código:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control"
+                        formControlName="product_service_code" />
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Producto/Servicio:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product"
+                        readonly />
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Unidad:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value"
+                        readonly />
+                </div>
+                <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Predial:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="predial" />
+                </div> -->
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Cantidad:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="quantity" />
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Precio:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price" />
+                </div>
+                @if (typeProof !== 'T') {
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                        <label class="block form-label">Descuento:</label>
+                        <input type="text" class="border px-4 py-2 w-full form-control" formControlName="discount" />
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                        <label class="form-label" for="objeto">ObjetoImp: </label>
+                        <select class="border px-4 py-2 w-full form-control" (change)="objectTax($event)"
+                            formControlName="tax_object">
+                            <option value="01">No objeto de impuesto</option>
+                            <option value="02">Sí objeto de impuesto</option>
+                            <option value="03">Sí objeto de impuesto y no oblig</option>
+                        </select>
+                    </div>
+                    @if (isTax) {
+                    <!-- <div class="grid grid-cols-12 gap-4"> -->
+                    <!-- <div formGroupName="taxes" class="grid grid-cols-12 gap-4 mb-3"> -->
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="iva">% Iva: </label>
+                        <select class="form-control border w-full" formControlName="tax_iva" onchange="calculosConcepto()">
+                            <option value="">N/A</option>
+                            <option value="0.160000">0.160000</option>
+                            <option value="0.080000">0.080000</option>
+                            <option value="0.00000">0.00000</option>
+                            <option value="Exento">Exento</option>
+                        </select>
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="totalIva">T. Iva: </label>
+                        <input type="number" class="form-control border w-full" formControlName="rate_iva">
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="ieps">% Ieps: </label>
+                        <select class="form-control border w-full" formControlName="tax_ieps" onchange="calculosConcepto()">
+                            <option value="">N/A</option>
+                            <option value="0.265000">0.265000</option>
+                            <option value="0.300000">0.300000</option>
+                            <option value="0.530000">0.530000</option>
+                            <option value="0.500000">0.500000</option>
+                            <option value="1.600000">1.600000</option>
+                            <option value="0.304000">0.304000</option>
+                            <option value="0.250000">0.250000</option>
+                            <option value="0.090000">0.090000</option>
+                            <option value="0.080000">0.080000</option>
+                            <option value="0.070000">0.070000</option>
+                            <option value="0.060000">0.060000</option>
+                            <option value="0.030000">0.030000</option>
+                            <option value="0.000000">0.000000</option>
+                        </select>
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="totalIeps">T. Ieps: </label>
+                        <input type="number" class="form-control" formControlName="rate_ieps">
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="">Ish: </label>
+                        <select class="form-control" formControlName="tax_ish">
+                            <option value="0.000000">0.000000</option>
+                            <option value="0.530000">53.000000</option>
+                        </select>
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="ivaRetenido">Iva Ret: </label>
+                        <input type="number" class="form-control" formControlName="ret_iva" onchange="calculosConcepto()">
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="ivaRetenido">IEPS Ret: </label>
+                        <input type="number" class="form-control" formControlName="ret_ieps" onchange="calculosConcepto()">
+                    </div>
+                    <div class="col-span-12 sm:col-span-12 md:col-span-3 mt-3">
+                        <label class="form-label" for="isrRetenido">Isr Ret: </label>
+                        <input type="number" class="form-control" formControlName="ret_isr" onchange="calculosConcepto()">
+                    </div>
+                    <!-- </div> -->
+    
+    
+                    <!-- </div> -->
+                    }
+                }
+   
+                <!-- <div class="grid grid-cols-12 gap-4"> -->
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Monto Total:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="total_product" />
+                </div>
+                <div class="col-span-12">
+                    <label class="block form-label">Descripción:</label>
+                    <textarea class="border px-4 py-2 w-full" rows="4" formControlName="description"></textarea>
+                </div>
+            </div>
         </div>
-        <div>
-            <label>Predial:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>cantidad:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Precio:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Descuento:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>ObjetoImp: </label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Monto Total: </label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-
-
-
-        <div class="col-span-3 mb-4">
-            <label class="block">Descripcion</label>
-            <textarea class="border px-4 py-2 w-full" rows="4"></textarea>
-        </div>
-
-
     </form>
-    <div class="flex justify-between mb-4 mt-5">
-        <div class="ms-3">
-            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-                data-hs-overlay="#hs-extralarge-modal3">
 
+    <div class="flex justify-between my-5 p-2 mx-2">
+        <div>
+            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium" (click)="closeModal()"
+                data-hs-overlay="#hs-extralarge-modal3">
                 Cancelar
             </button>
         </div>
-        <div class="mr-3">
-            <button class="ti-btn ti-btn-primary-full text-white !font-medium">
-                Guardar
+        <div>
+            <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="addProduct()">
+                Agregar
             </button>
         </div>
     </div>
-}
+    }
 </div>
+
+
 <div class="flex justify-between mb-4 mt-5">
     @if (isTableActive){
 
