@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormaPagoInterface,
@@ -17,14 +24,18 @@ import { Observable, Subscription } from 'rxjs';
 import { cat_pais } from '../../services/cat_pais.service';
 import { CustomerService } from '../../services/customer.service';
 import { AuthService } from '../../services/auth.service';
-import { CustomerListInterface, CustomerResponseInterface, CustomersInterface } from '../../interfaces/customers.interface';
+import {
+  CustomerListInterface,
+  CustomerResponseInterface,
+  CustomersInterface,
+} from '../../interfaces/customers.interface';
 
 @Component({
   selector: 'app-form-customer',
   templateUrl: './form-customer.component.html',
   styleUrl: './form-customer.component.scss',
 })
-export class FormCustomerComponent implements OnChanges{
+export class FormCustomerComponent implements OnChanges {
   filteredPais$: Observable<any[]> = new Observable();
 
   RFCXAXX: boolean = false;
@@ -60,8 +71,8 @@ export class FormCustomerComponent implements OnChanges{
     email: ['', [Validators.required, Validators.pattern(PATRON_EMAIL)]],
     phone: ['', [Validators.required, Validators.minLength(10)]],
     address: ['', Validators.required],
-    metPago: ['', Validators.required],
-    fomPago: [this.listaFormaPago, [Validators.required]],
+    payment_method: ['', Validators.required],
+    payment_form: [this.listaFormaPago, [Validators.required]],
     residence: ['', Validators.minLength(3)],
   });
 
@@ -71,7 +82,19 @@ export class FormCustomerComponent implements OnChanges{
     this.idCustomer = this.productoHijo.id || 0;
     this.myForm.patchValue(this.productoHijo);
     this.idCustomer != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
-    this.listadoRegimen = this.utilsService.getRegimenSat(this.productoHijo.rfc);
+    if (this.productoHijo.payment_method) {
+      this.listaFormaPago = this.utilsService.getFormaPago(
+        this.productoHijo.payment_method
+      );
+      this.myForm.patchValue({
+        payment_form: this.productoHijo.payment_form,
+      });
+    }
+    this.listadoRegimen = this.utilsService.getRegimenSat(
+      this.productoHijo.rfc
+    );
+    const rfcValue = this.productoHijo.rfc || '';
+    this.onInputRFC({ target: { value: rfcValue } } as any);
   }
   onInputRFC(event: Event): void {
     const el = event.target as HTMLInputElement;
@@ -106,7 +129,7 @@ export class FormCustomerComponent implements OnChanges{
       (response) => {
         if (response && response.data && response.data.cp) {
           this.myForm.patchValue({ cp: response.data.cp });
-          console.log('Código Postal cargado:', response.data.cp); 
+          console.log('Código Postal cargado:', response.data.cp);
         } else {
           console.log('La compañía no tiene código postal.');
         }
@@ -126,10 +149,12 @@ export class FormCustomerComponent implements OnChanges{
   closeModal(): void {
     this.myForm.reset();
     this.buttonTitle = 'Guardar';
+    this.listaFormaPago = [];
+    this.listadoRegimen = [];
   }
   onSubmit(): void {
     this.showLoader = true;
-  
+
     // Verificar si el formulario es válido
     if (this.myForm.invalid) {
       this.showLoader = false;
@@ -137,22 +162,21 @@ export class FormCustomerComponent implements OnChanges{
       console.log('Formulario inválido. Por favor corrija los errores.');
       return;
     }
-  
+
     const formData = this.myForm.value;
     const company_id = this.authService.getUuid();
-  
+
     if (!company_id) {
       console.log('No se pudo obtener el company_id.');
       this.showLoader = false;
       return;
     }
-  
+
     const customerData = { ...formData, company_id };
     console.log('Datos a enviar:', customerData);
-    const submitCustomer =
-      this.idCustomer
-        ? this.customerService.updateCustomer(this.idCustomer, customerData)
-        : this.customerService.createCustomer(customerData);
+    const submitCustomer = this.idCustomer
+      ? this.customerService.updateCustomer(this.idCustomer, customerData)
+      : this.customerService.createCustomer(customerData);
     this.subscription.add(
       submitCustomer.subscribe((response) => {
         this.showLoader = false;
@@ -163,7 +187,6 @@ export class FormCustomerComponent implements OnChanges{
       })
     );
   }
-  
 
   cpSearch(event: Event): void {
     const el = event.target as HTMLInputElement;
@@ -186,7 +209,7 @@ export class FormCustomerComponent implements OnChanges{
     const el = event.target as HTMLInputElement;
     const metodoPago = el.value;
     this.listaFormaPago = [];
-    this.myForm.patchValue({ FomPago: '' });
+    this.myForm.patchValue({ payment_form: '' });
     if (metodoPago === '') return;
     this.listaFormaPago = this.utilsService.getFormaPago(metodoPago);
   }

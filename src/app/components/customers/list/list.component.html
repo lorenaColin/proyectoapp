@@ -64,7 +64,7 @@
             </p>
             <span class="text-[#000000] ml-2">{{ cliente.cp }}</span>
           </div>
-        </div>    
+        </div>
         <div class="flex items-center justify-end">
           <div class="ltr:float-right rtl:float-left text-[0.75rem] font-semibold text-[#000000] text-end">
             <button type="button" (click)="editCustomer(cliente.id)" data-hs-overlay="#hs-extralarge-modal1"
@@ -78,7 +78,8 @@
   </div>
   }
 </div>
-<div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+<div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]"
+  data-hs-overlay-keyboard='false'>
   <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
     <div class="ti-modal-content">
       <div class="ti-modal-header">

@@ -10,6 +10,8 @@ export interface CustomersInterface {
   email?: string;
   phone?: string;
   status: string;
+  payment_form?: string;
+  payment_method?: string;
   company_id: string;
 }
 

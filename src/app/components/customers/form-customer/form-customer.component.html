@@ -83,30 +83,30 @@
         </div>
 
         <div class="col-span-1">
-            <label for="metPago" class="block text-sm font-medium">Método de Pago</label>
-            <select id="metPago" formControlName="metPago" (change)="getFormaPago($event)"
+            <label for="payment_method" class="block text-sm font-medium">Método de Pago</label>
+            <select id="payment_method" formControlName="payment_method" (change)="getFormaPago($event)"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
-                <option value="">Seleccione un método</option>
+                <option value=""disabled selected>Seleccione un método de pago</option>
                 <option *ngFor="let metodo of listaMetodoPago" [value]="metodo.metodo">
                     {{ metodo.descripcion }}
                 </option>
             </select>
-            <span *ngIf="isValidField('metPago')" class="text-[#EE312A]">
-                {{ getFieldError('metPago') }}
+            <span *ngIf="isValidField('payment_method')" class="text-[#EE312A]">
+                {{ getFieldError('payment_method') }}
             </span>
         </div>
 
         <div class="col-span-1">
-            <label for="fomPago" class="block text-sm font-medium">Forma de Pago</label>
-            <select id="fomPago" formControlName="fomPago"
+            <label for="payment_form" class="block text-sm font-medium">Forma de Pago</label>
+            <select id="payment_form" formControlName="payment_form"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm">
-                <option value="" disabled selected>Seleccione una forma</option>
+                <option value="" disabled selected>Seleccione una forma de pago</option>
                 <option *ngFor="let forma of listaFormaPago" [value]="forma.clave">
                     {{ forma.descripcion }}
                 </option>
             </select>
-            <span *ngIf="isValidField('fomPago')" class="text-[#EE312A]">
-                {{ getFieldError('fomPago') }}
+            <span *ngIf="isValidField('payment_form')" class="text-[#EE312A]">
+                {{ getFieldError('payment_form') }}
             </span>
         </div>
 
