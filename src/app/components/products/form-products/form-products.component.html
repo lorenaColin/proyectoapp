@@ -1,87 +1,96 @@
 <div>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6 bg-white rounded-lg">
         <div class="col-span-2">
-            <label for="ClavInterna" class="block text-sm font-medium">Clave interna:</label>
-            <input id="ClavInterna" formControlName="ClavInterna"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="5" 
-                oninput="this.value = this.value.toUpperCase();"/>
-            <span *ngIf="isValidField('ClavInterna')" class="text-[#EE312A]">
-                {{ getFieldError('ClavInterna') }}
+            <label for="internal_key" class="block text-sm font-medium">Clave interna:</label>
+            <input id="internal_key" formControlName="internal_key"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('internal_key')" class="text-[#EE312A]">
+                {{ getFieldError('internal_key') }}
             </span>
         </div>
+
         <div class="col-span-1">
-            <label for="ClavProdSer" class="block text-sm font-medium">Clave Producto Servicio:</label>
-            <input id="ClavProdSer" formControlName="ClavProdSer" (input)="searchClavProdSer()"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="8" 
-                oninput="this.value = this.value.toUpperCase();"/>
-            <span *ngIf="isValidField('ClavProdSer')" class="text-[#EE312A]">
-                {{ getFieldError('ClavProdSer') }}
+            <label for="product_key" class="block text-sm font-medium">Clave Producto Servicio:</label>
+            <input id="product_key" formControlName="product_key" (input)="searchClavProdSer()"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="8"
+                oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('product_key')" class="text-[#EE312A]">
+                {{ getFieldError('product_key') }}
             </span>
         </div>
 
 
         <div class="col-span-1">
-            <label for="clavUnit" class="block text-sm font-medium">Clave Unidad:</label>
-            <input id="clavUnit" formControlName="clavUnit" (input)="searchClavUnidad()"
+            <label for="unit" class="block text-sm font-medium">Clave Unidad:</label>
+            <input id="unit" formControlName="unit" (input)="searchClavUnidad()"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="2" maxlength="3"
                 oninput="this.value = this.value.toUpperCase();" />
-            <span *ngIf="isValidField('clavUnit')" class="text-[#EE312A]">
-                {{ getFieldError('clavUnit') }}
+            <span *ngIf="isValidField('unit')" class="text-[#EE312A]">
+                {{ getFieldError('unit') }}
             </span>
         </div>
 
         <div class="col-span-1">
-            <label for="uniDescripcion" class="block text-sm font-medium">Descripción de unidad:</label>
-            <input type="text" class="form-control" id="uniDescripcion" name="uniDescripcion"
-                formControlName="uniDescripcion" maxlength="20"  
-                 oninput="this.value = this.value.toUpperCase();" />
-            @if (isValidField('uniDescripcion')) {
+            <label for="unit_description" class="block text-sm font-medium">Descripción de unidad:</label>
+            <input type="text" class="form-control" id="unit_description" name="unit_description"
+                formControlName="unit_description" maxlength="20" oninput="this.value = this.value.toUpperCase();" />
+            @if (isValidField('unit_description')) {
             <span class="text-[#EE312A]">
-                {{ getFieldError("uniDescripcion") }}
+                {{ getFieldError("unit_description") }}
             </span>
             }
         </div>
         <div class="col-span-1">
-            <label for="numIdentificacion" class="block text-sm font-medium">Numero de Identificación</label>
-            <input id="numIdentificacion" formControlName="numIdentificacion" type="number"
+            <label for="identifier_number" class="block text-sm font-medium">Numero de Identificación</label>
+            <input id="identifier_number" formControlName="identifier_number" type="number"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="100" />
-            <span *ngIf="isValidField('numIdentificacion')" class="text-[#EE312A]">
-                {{ getFieldError('numIdentificacion') }}
+            <span *ngIf="isValidField('identifier_number')" class="text-[#EE312A]">
+                {{ getFieldError('identifier_number') }}
             </span>
         </div>
 
         <div class="col-span-1">
-            <label for="PrecioUnidad" class="block text-sm font-medium">Precio:</label>
-            <input id="PrecioUnidad" formControlName="PrecioUnidad" type="number"
+            <label for="unit_price" class="block text-sm font-medium">Precio:</label>
+            <input id="unit_price" formControlName="unit_price" type="number"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
-            <span *ngIf="isValidField('PrecioUnidad')" class="text-[#EE312A]">
-                {{ getFieldError('PrecioUnidad') }}
+            <span *ngIf="isValidField('unit_price')" class="text-[#EE312A]">
+                {{ getFieldError('unit_price') }}
             </span>
         </div>
         <div class="col-span-1">
-            <label for="cantidad" class="block text-sm font-medium">Cantidad:</label>
-            <input id="cantidad" formControlName="cantidad" type="number"
+            <label for="quantity" class="block text-sm font-medium">Cantidad:</label>
+            <input id="quantity" formControlName="quantity" type="number"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
-            <span *ngIf="isValidField('cantidad')" class="text-[#EE312A]">
-                {{ getFieldError('cantidad') }}
+            <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
+                {{ getFieldError('quantity') }}
             </span>
         </div>
         <div class="col-span-3">
-            <label for="descripcion" class="block text-sm font-medium">Descripción:</label>
-            <textarea formControlName="descripcion" id="descripcion"
-                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="4" 
-                 oninput="this.value = this.value.toUpperCase();"></textarea>
-            <span *ngIf="isValidField('descripcion')" class="text-[#EE312A]">
-                {{ getFieldError('descripcion') }}
+            <label for="description" class="block text-sm font-medium">Descripción:</label>
+            <textarea formControlName="description" id="description"
+                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="4"
+                oninput="this.value = this.value.toUpperCase();"></textarea>
+            <span *ngIf="isValidField('description')" class="text-[#EE312A]">
+                {{ getFieldError('description') }}
             </span>
         </div>
+        <div class="col-span-4">
+            <label for="status" class="form-label">Status</label>
+            <div class="custom-toggle-switch ms-2">
+                <input id="size-default" name="status" formControlName="status" type="checkbox"
+                    [checked]="myForm.get('status')?.value" />
+                <label for="size-default" class="label-success mb-1"></label>
+            </div>
+        </div>
+
     </form>
 </div>
 
 
 <div class="flex justify-between mb-4 mt-5">
     <div class="ms-3">
-        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium" (click)="closeModal()"
             data-hs-overlay="#hs-extralarge-modal1">
 
             Cancelar
@@ -89,7 +98,10 @@
     </div>
     <div class="mr-3">
         <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
-            Guardar
+            {{buttonTitle}}
         </button>
     </div>
+</div>
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
 </div>

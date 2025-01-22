@@ -47,7 +47,34 @@ export class AuthService {
       this.checkTokenExpiry();
     });
   }
-
+  // getUuid(): string | null {
+  //   const token = this.getToken();
+  //   if (token) {
+  //     try {
+  //       const decoded: any = jwtDecode(token);
+  //       return decoded.company_uuid || null;
+  //     } catch (error) {
+  //       console.error('Error decoding token:', error);
+  //       return null;
+  //     }
+  //   }
+  //   return null;
+  // }
+  getUuid(): string | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        console.log('Token decodificado:', decoded);  // Verifica el contenido del token
+        return decoded.company_uuid || null;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+  
   login(email: string, password: string): Observable<UserResponseInterface> {
     return this.http
       .post<UserResponseInterface>(`${this.apiUrl}/login`, { email, password })

@@ -3,7 +3,7 @@
         <div class="col-span-2">
             <label for="serie" class="block text-sm font-medium">Serie</label>
             <input id="serie" formControlName="serie"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="25"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="25"
                 oninput="this.value = this.value.toUpperCase();" />
             <span *ngIf="isValidField('serie')" class="text-[#EE312A]">
                 {{ getFieldError('serie') }}
@@ -11,8 +11,8 @@
         </div>
         <div class="col-span-1">
             <label for="folio" class="block text-sm font-medium">Folio</label>
-            <input id="folio" formControlName="folio"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="40"
+            <input id="folio" formControlName="folio" type="number" maxlength="5"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
                 oninput="this.value = this.value.toUpperCase();" />
             <span *ngIf="isValidField('folio')" class="text-[#EE312A]">
                 {{ getFieldError('folio') }}
@@ -21,28 +21,29 @@
 
 
         <div class="col-span-2">
-            <label for="folio" class="block text-sm font-medium">Tipo de Comprobante</label>
+            <label for="tipoComprobante" class="block text-sm font-medium">Tipo de Comprobante</label>
             <div class="box custom-box">
                 <div class="box-body">
-                    <ng-select [multiple]="true" [maxSelectedItems]="5" formControlName="selectedCars2">
-                        @for(car of Comprobante;track car.id){   
-                            <ng-option  [value]="car.id"
-                                >{{car.name}}</ng-option>
-                            
-                        }
+                    <ng-select [multiple]="true" [maxSelectedItems]="5" formControlName="tipoComprobante">
+                        <ng-option *ngFor="let car of Comprobante" [value]="car.name">
+                            {{ car.name }}
+                        </ng-option>
                     </ng-select>
-                   
                 </div>
             </div>
-            <span *ngIf="isValidField('selectedCars2')" class="text-[#EE312A]">
-                {{ getFieldError('selectedCars2') }}
+            <span *ngIf="isValidField('tipoComprobante')" class="text-[#EE312A]">
+                {{ getFieldError('tipoComprobante') }}
             </span>
         </div>
 
-
-        
-
-
+        <div class="col-span-4">
+            <label for="status" class="form-label">Status</label>
+            <div class="custom-toggle-switch ms-2">
+                <input id="size-default" name="status" formControlName="status" type="checkbox"
+                    [checked]="myForm.get('status')?.value" />
+                <label for="size-default" class="label-success mb-1"></label>
+            </div>
+        </div>
 
 
 
@@ -52,7 +53,7 @@
 
 <div class="flex justify-between mb-4 mt-5">
     <div class="ms-3">
-        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium" (click)="closeModal()"
             data-hs-overlay="#hs-extralarge-modal1">
 
             Cancelar
@@ -60,7 +61,12 @@
     </div>
     <div class="mr-3">
         <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
-            Guardar
+            {{buttonTitle}}
         </button>
     </div>
+</div>
+
+
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
 </div>
