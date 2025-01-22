@@ -7,6 +7,7 @@ import {
 } from '../../interfaces/customers.interface';
 import { RegimenInterface } from '../../../shared/interfaces/shared.interface';
 import { UtilsService } from '../../../shared/services/utils.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list',
@@ -43,12 +44,49 @@ export class ListComponent {
     });
   }
   responseCustomer(response: CustomerResponseInterface): void {
+    const { message, error, data } = response;
     this.showLoader = true;
-    this.customerService.getCustomers().subscribe((response) => {
-      this.clientes = response.data;
-      this.filteredCustomer = response.data;
+    if (message === 'Validation errors') {
       this.showLoader = false;
-    });
+      const errorText =
+        data?.rfc?.[0] ||
+        data?.phone?.[0] ||
+        data?.email?.[0] ||
+        'Error desconocido.';
+      Swal.fire({
+        title: 'Error de validación',
+        text: errorText,
+        icon: 'error',
+      });
+      return;
+    } else {
+      this.showLoader = false;
+      Swal.fire({
+        title: 'Operación exitosa',
+        text: message,
+        icon: 'success',
+      });
+      this.refreshCustomerList();
+    }
+  }
+
+  refreshCustomerList(): void {
+    this.showLoader = true;
+    this.customerService.getCustomers().subscribe(
+      (response) => {
+        this.clientes = response.data;
+        this.filteredCustomer = response.data;
+        this.showLoader = false;
+      },
+      () => {
+        this.showLoader = false;
+        Swal.fire(
+          'Error',
+          'No se pudo actualizar la lista de clientes.',
+          'error'
+        );
+      }
+    );
   }
 
   applyFilter(event: Event): void {

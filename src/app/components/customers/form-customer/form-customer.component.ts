@@ -74,6 +74,7 @@ export class FormCustomerComponent implements OnChanges {
     payment_method: ['', Validators.required],
     payment_form: [this.listaFormaPago, [Validators.required]],
     residence: ['', Validators.minLength(3)],
+    status: [true],
   });
 
   ngOnInit(): void {}
@@ -147,11 +148,33 @@ export class FormCustomerComponent implements OnChanges {
     return this.validatorsService.isValidField(this.myForm, field);
   }
   closeModal(): void {
-    this.myForm.reset();
+    this.formCustomerReset();
+  }
+
+  formCustomerReset(): void{
+    console.log("resetting");
+    this.myForm.reset(
+      {
+        name:'',
+        rfc: '',
+        regime:'',
+        cp: '',
+        num_reg_id_trib:'',
+        email:'' ,
+        phone:'',
+        address: '',
+        payment_method:'',
+        payment_form:'',
+        residence:'',
+        status: true,
+      }
+    );
     this.buttonTitle = 'Guardar';
+    this.idCustomer = 0;
     this.listaFormaPago = [];
     this.listadoRegimen = [];
   }
+
   onSubmit(): void {
     this.showLoader = true;
 

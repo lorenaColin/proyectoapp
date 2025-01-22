@@ -19,7 +19,7 @@ export interface CustomerResponseInterface {
     message:    string;
     statusCode: number;
     error:      boolean;
-    data:       Data;
+    data:       CustomersInterface;
 }
 
 export interface Data {

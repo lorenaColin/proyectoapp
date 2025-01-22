@@ -47,7 +47,7 @@
               {{ cliente.name }}
             </p>
             <p class="mb-0 text-[.625rem] font-semibold text-[#000000]">
-              {{ cliente.status }}
+              {{ cliente.status === 1 ? 'Activo' : 'Inactivo'  }}
             </p>
           </div>
         </div>

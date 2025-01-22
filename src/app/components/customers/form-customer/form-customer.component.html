@@ -1,5 +1,8 @@
 <div>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6 rounded-lg">
+<pre>
+    {{ myForm.value | json }}
+</pre>
 
         <div class="col-span-3">
             <label for="name" class="block text-sm font-medium">Nombre</label>
@@ -119,7 +122,13 @@
                 {{ getFieldError('address') }}
             </span>
         </div>
-
+        <div class="col-span-1">
+            <label for="status" class="form-label">Status</label>
+            <div class="custom-toggle-switch ms-2">
+              <input id="size-default" name="status" formControlName="status" type="checkbox" checked>
+              <label for="size-default" class="label-success mb-1"></label>
+            </div>
+          </div>
     </form>
 </div>
 
