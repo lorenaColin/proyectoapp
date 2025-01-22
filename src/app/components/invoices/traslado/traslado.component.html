@@ -37,9 +37,11 @@
 
                     <div class="form-check form-switch mb-2" id="agregaCP">
 
-                        <input class="form-check-input" (change)="agregarCartaP($event)" type="checkbox" role="switch"
-                            id="switch-primary">
-                        <label class="form-check-label" for="switch-primary"><b> Complemento Carta Porte </b></label>
+                        <div class="custom-toggle-switch flex items-center mb-4">
+                            <input id="toggleswitchPrimary" name="toggleswitch001" type="checkbox"
+                            (change)="agregarCartaP($event)">
+                            <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3 font-bold">Complemento Carta Porte </span>
+                        </div>
 
                     </div>
 

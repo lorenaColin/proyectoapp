@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { InvoicesService } from '../../services/invoices.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormaPagoService } from '../../services/forma-pago.service';
 import { ConceptsService } from '../../services/concepts.service';
 import { TotalsService } from '../../services/totals.service';
+import { ValidatorsService } from '../../../shared/services/validators.service';
 
 @Component({
   selector: 'app-ingreso',
@@ -15,6 +16,7 @@ export class IngresoComponent implements OnInit {
   private formaPagoService = inject(FormaPagoService);
   private totalsService = inject(TotalsService);
   private conceptsService = inject(ConceptsService);
+  private validatorsService = inject(ValidatorsService);
   formaPagoForm = this.formaPagoService.getFormFormaPago();
   totalsForm = this.totalsService.getFormTotals();
   mostrarCP: boolean = false;
@@ -23,12 +25,12 @@ export class IngresoComponent implements OnInit {
   constructor() {}
 
   formIngreso: FormGroup = this.fb.group({
-    invoice_type: 'I',
-    serie_folio: '',
-    fecha: '',
-    regimen_emisor: '',
-    receptor: '',
-    uso_cfdi: '',
+    invoice_type: ['I', [Validators.required]],
+    serie_folio: ['', [Validators.required]],
+    fecha: ['', [Validators.required]],
+    regimen_emisor: ['', [Validators.required]],
+    receptor: ['', [Validators.required]],
+    uso_cfdi: ['', [Validators.required]],
     ...this.formaPagoForm.controls,
     ...this.totalsForm.controls,
     concepts: this.conceptsService.getProductosFormArray(),
@@ -46,5 +48,19 @@ export class IngresoComponent implements OnInit {
 
   onSubmitIngreso() {
     console.log('Ingreso');
+    if (this.formIngreso.invalid) {
+      this.formIngreso.markAllAsTouched();    
+      return;
+    }
+    console.log(this.formIngreso.value);
   }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.formIngreso, field);
+  }
+  
+  isValidField(field: string): boolean | null {
+    return this.validatorsService.isValidField( this.formIngreso, field );
+  }
+  
 }

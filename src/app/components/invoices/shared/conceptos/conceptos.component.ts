@@ -22,8 +22,9 @@ export class ConceptosComponent implements OnInit {
   //   console.log('change',this.typeProof);
   // }
 
-  addProductToTable(product: any): void {
-    this.rows.push(product); 
+  addProductToTable(product: ConceptInterface): void {
+    const index = this.rows.findIndex(row => row.idTemp === product.idTemp);
+    (index !== -1) ? this.rows[index] = product :  this.rows.push(product);
   }
 
   removeRow(idTemp: number): void {
@@ -40,20 +41,9 @@ export class ConceptosComponent implements OnInit {
   }
 
   editRow(idTemp: number): void {
-    this.concetpEdit = {} as ConceptInterface;
-    console.log('concept', this.concetpEdit);
-    console.log('editRow', idTemp);
     const formArray = this.conceptsService.getProductosFormArray();
-    const formIndex = formArray.controls.findIndex(control => control.value.idTemp === idTemp);  
-    // (formIndex !== -1) ? this.concetpEdit = formArray.at(formIndex).value : console.error('Producto no encontrado en FormArray');
-    if (formIndex !== -1) {
-      console.log("Encontré formulario");
-      this.concetpEdit = formArray.at(formIndex).value;
-      console.log(this.concetpEdit);
-    }else {
-      console.error('Producto no encontrado en FormArray');
+    const formIndex = formArray.controls.findIndex(control => control.value.idTemp === idTemp);
+    (formIndex !== -1) ? this.concetpEdit = Object.assign({}, formArray.at(formIndex).value) : console.error("Producto no encontrado");
   }
-  }
-  
   
 }
