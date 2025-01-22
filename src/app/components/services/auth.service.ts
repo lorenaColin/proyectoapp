@@ -62,6 +62,20 @@ export class AuthService {
       );
   }
 
+  getUuid(): string | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        return decoded.company_uuid || null; 
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null; 
+      }
+    }
+    return null;
+  }
+
   verifyCode(code: string): Observable<VerifyCodeResponseInterface> {
     return this.http.post<VerifyCodeResponseInterface>(
       `${this.apiUrl}/verifycode/`,
