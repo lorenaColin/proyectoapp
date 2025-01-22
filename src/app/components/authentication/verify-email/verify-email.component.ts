@@ -61,23 +61,20 @@ export class VerifyEmailComponent {
     this.banderaLoader = !this.banderaLoader;
 
     const { code } = this.myForm.value;
-    console.log("_daniel")
     this.authService.verifyCode( code ).subscribe({
       next: (response) => {
         const { error, message } = response;
         this.banderaLoader = !this.banderaLoader;
         if(error) {
-          console.log("::::")
           Swal.fire("Mensaje", message, "error");
-          return
+          return;
         }
-        console.log("::::afuera")
+        this.router.navigate(['dashboard'])
+        Swal.fire("Mensaje", message, "success");
       }, 
       error: (error) => {
-        console.log(error.message)
-        console.log(":)))")
         this.banderaLoader =!this.banderaLoader;
-        const { message } = error.message;
+        const { message } = error.error;
         Swal.fire("Mensaje", message, "error");
       }
     });
