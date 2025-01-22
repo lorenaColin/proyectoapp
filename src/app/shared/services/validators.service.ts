@@ -11,7 +11,8 @@ export class ValidatorsService {
     phone: 'El número de teléfono debe ser de 10 o 14 dígitos',
     account_number: 'El número de cuenta debe contener solo letras y números y tener entre 4 y 18 caracteres',
     email: 'Ingrese un correo electrónico válido',
-    password: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial'
+    password: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial',
+    valor_iva: 'El valor debe ser 0 o 16%'
   };
 
   public isValidField(form: FormGroup, field: string): boolean | null {
@@ -34,7 +35,9 @@ export class ValidatorsService {
         case 'generic':
           return 'RFC incorrecto, introduce un RFC válido';
         case 'min':
-          return `El valor no puede ser negativo.`;
+          return `El valor debe ser mayor o igual a ${errors['min'].min}.`;
+        case 'max':
+          return `El valor debe ser menor o igual a ${errors['max'].max}.`;
         case 'notEqual':
           return 'Las contraseñas no coinciden';
       }

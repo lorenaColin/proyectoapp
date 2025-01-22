@@ -1,0 +1,136 @@
+<form [formGroup]="formIngreso" (ngSubmit)="onSubmitIngreso()">
+    <pre> {{ formIngreso.value | json }} </pre>
+
+    <div class="grid grid-cols-12 gap-x-6">
+        <div class="xl:col-span-12 col-span-12">
+            <div class="box mt-4">
+                <div class="box-body">
+                    <div class="contact-header">
+                        <div class="sm:flex block items-center justify-between">
+                            <div class="h5 font-semibold mb-5">Ingreso</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="serieFolio" id="serieFolio" formControlName="serie_folio">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                            <span *ngIf="isValidField('serie_folio')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('serie_folio') }}
+                            </span>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>
+                            <!-- <input type="date" class="form-control" name="fechaEmision" id="fechaEmision" formControlName="fecha"> -->
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="date" placeholder="yyyy-mm-dd" name="dp" mwlFlatpickr formControlName="fecha"/>
+                                <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i class="ri-calendar-line"></i> </div>
+                            </div>
+                            <span *ngIf="isValidField('fecha')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('fecha') }}
+                            </span>
+                        </div>
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" formControlName="regimen_emisor" name="regimenEmisor" id="regimenEmisor">
+                                <option>Selecciona</option>
+                            </select>
+                            <span *ngIf="isValidField('regimen_emisor')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('regimen_emisor') }}
+                            </span>
+                        </div>
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="receptor" id="receptor"
+                                    formControlName="receptor">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal1">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                            <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('receptor') }}
+                            </span>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi" formControlName="uso_cfdi"
+                                id="usoCfdi">
+                                <option>Selecciona</option>
+                            </select>
+                            <span *ngIf="isValidField('uso_cfdi')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('uso_cfdi') }}
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="my-6 border-gray-300">
+                    
+                    <!-- CONCEPTOS -->
+
+                    <app-conceptos [typeProof]="typeProof"></app-conceptos>
+
+                    <hr class="my-6 border-gray-300">
+
+                    <div class="form-check form-switch mb-2" id="agregaCP">
+                        <div class="custom-toggle-switch flex items-center mb-4">
+                            <input id="toggleswitchPrimary" name="toggleswitch001" type="checkbox"
+                            (change)="agregarCartaP($event)">
+                            <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3 font-bold">Complemento Carta Porte </span>
+                        </div>
+                    </div>
+
+                    <hr class="my-6 border-gray-300">
+
+                    @if (mostrarCP) {
+                    <app-complemento-cp />
+                    }
+
+                    <hr class="my-6 border-gray-300">
+                    <!-- <form [formGroup]="forma_pago"> -->
+                        <app-forma-pago></app-forma-pago>
+                    <!-- </form> -->
+                    <div class="flex justify-between my-5 p-2 mx-2">
+                        <div>
+                            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover">
+                                Cancelar
+                            </button>
+                        </div>
+                        <div>
+                            <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
+                                Emitir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<div id="hs-extralarge-modal2" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+        <div class="ti-modal-content">
+            <div class="ti-modal-header">
+                <h6 class="ti-modal-title">Series y Folio</h6>
+            </div>
+            <app-form-invoice-serie />
+        </div>
+    </div>
+</div>
+<div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+        <div class="ti-modal-content">
+            <div class="ti-modal-header">
+                <h6 class="ti-modal-title">Receptor</h6>
+            </div>
+            <app-form-invoice />
+        </div>
+    </div>
+</div>

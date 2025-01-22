@@ -1,0 +1,53 @@
+<form [formGroup]="totalsForm">
+    <div class="table-responsive">
+        <table class="table table-sm text-nowrap mb-0 table-borderless">
+            <tbody>
+                <tr>
+                    <th scope="row">
+                        <div class="font-bold">SubTotal: </div>
+                    </th>
+                    <td class="text-left">
+                        <input type="number" class="form-control form-control-light invoice-amount-input"
+                            name="subtotalGeneral" id="subtotalGeneral" formControlName="subtotal" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div class="font-bold">Descuento: </div>
+                    </th>
+                    <td>
+                        <input type="number" class="form-control form-control-light invoice-amount-input"
+                            name="descuentoGeneral" id="descuentoGeneral" formControlName="descuento" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div class="font-bold">Impuestos:</div>
+                    </th>
+                    <td>
+                        <input type="number" class="form-control form-control-light invoice-amount-input"
+                            name="impuestoGeneral" id="impuestoGeneral" formControlName="traslados" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div class="font-bold">Retenciones: </div>
+                    </th>
+                    <td>
+                        <input type="number" class="form-control form-control-light invoice-amount-input"
+                            name="retencionGeneral" id="retencionGeneral" formControlName="retenciones" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div class="fs-14 font-bold">Total :</div>
+                    </th>
+                    <td>
+                        <input type="number" class="form-control form-control-light invoice-amount-input"
+                            name="totalGeneral" id="totalGeneral" formControlName="total" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>

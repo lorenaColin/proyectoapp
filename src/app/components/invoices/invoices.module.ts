@@ -10,6 +10,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlatpickrDirective, provideFlatpickrDefaults } from 'angularx-flatpickr';
 import { ListComponent } from './list/list.component';
 import { FormInvoicePagosComponent } from './form-invoice-pagos/form-invoice-pagos.component';
+import { IngresoComponent } from './ingreso/ingreso.component';
+import { TrasladoComponent } from './traslado/traslado.component';
+import { DatosCfdiComponent } from './shared/datos-cfdi/datos-cfdi.component';
+import { ConceptosComponent } from './shared/conceptos/conceptos.component';
+import { TotalesComponent } from './shared/totales/totales.component';
+import { ComplementoCpComponent } from './shared/complemento-cp/complemento-cp.component';
+import { FormaPagoComponent } from './shared/forma-pago/forma-pago.component';
+import { EgresoComponent } from './egreso/egreso.component';
+import { RelatedsComponent } from './shared/relateds/relateds.component';
 
 
 
@@ -20,7 +29,16 @@ import { FormInvoicePagosComponent } from './form-invoice-pagos/form-invoice-pag
     FormInvoiceSerieComponent,
     FormInvoiceProductsComponent,
     ListComponent,
-    FormInvoicePagosComponent
+    FormInvoicePagosComponent,
+    IngresoComponent,
+    TrasladoComponent,
+    DatosCfdiComponent,
+    ConceptosComponent,
+    TotalesComponent,
+    ComplementoCpComponent,
+    FormaPagoComponent,
+    EgresoComponent,
+    RelatedsComponent
   ],
   imports: [
     CommonModule,

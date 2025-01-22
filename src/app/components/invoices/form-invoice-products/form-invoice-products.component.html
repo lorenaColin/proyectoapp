@@ -1,15 +1,15 @@
-<div class="flex justify-end mt-6">
+<!-- <div class="flex justify-end mt-6">
     @if (isTableActive){
     <button type="button" class="ti-btn ti-btn-primary p-4 mr-4" (click)="selectTab(false)">
         <i class="ri-add-line"></i>
     </button>
     }
-</div>
+</div> -->
 
 <div class="tab-pane fade show active mb-4" id="tabla-tab-pane" role="tabpanel">
     @if (isTableActive){
     <div class="flex justify-between mb-4 ">
-        <div class="flex items-center space-x-4 ml-4 mb-4" >
+        <div class="flex items-center space-x-4 ml-4 mb-4">
             <input type="text" class="p-2 border rounded-md" placeholder="Buscar..." />
         </div>
 
@@ -40,7 +40,10 @@
                 <td class="px-4 py-2 border border-gray-300">
                     @if (isTableActive)
                     {
-                    <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab(false)">
+                    <!-- <button type="button" class="ti-btn ti-btn-primary mr-7" (click)="selectTab(false)">
+                        <i class="ri-edit-line"></i>
+                    </button> -->
+                    <button type="button" class="ti-btn ti-btn-primary mr-7">
                         <i class="ri-edit-line"></i>
                     </button>
                     }
@@ -56,79 +59,290 @@
             Siguiente
         </button>
     </div>
-}
+    }
 </div>
 
 <div class="tab-pane fade show active" id="crear-tab-pane" role="tabpanel">
-    @if (isCreateActive ) {
-         <button type="button" class="ti-btn ti-btn-primary mr-4 p-4 mt-4" (click)="selectTab(true)"
-        style="float: right;">
-        <i class="ri-arrow-left-line"></i>
-    </button>
-    <form class="grid grid-cols-2 gap-4 p-4">
-        <div class="col-span-1 mb-4">
-            <label class="block">Codigo:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div class="col-span-3 mb-4">
-            <label class="block">Producto/Servicio:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
+    @if (isCreateActive){
+    <!-- <div class="mb-4 flex justify-end me-2">
+        <button type="button" class="ti-btn ti-btn-primary px-4 py-2" (click)="selectTab(true)">
+            <i class="ri-arrow-left-line"></i>
+        </button>
+    </div> -->
 
-        <div>
-            <label>Unidad:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Predial:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>cantidad:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Precio:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Descuento:</label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>ObjetoImp: </label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
-        <div>
-            <label>Monto Total: </label>
-            <input type="text" class="border px-4 py-2 w-full" />
-        </div>
+    <form [formGroup]="formConcepts">
+        <pre> {{ formConcepts.value | json }} </pre>
+        <div class="m-2 p-2">
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 sm:col-span-12 md:col-span-6">
+                    <label class="block form-label">Código:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control"
+                        formControlName="product_service_code" />
+                    <span *ngIf="isValidField('product_service_code')" class="text-[#EE312A]">
+                        {{ getFieldError('product_service_code') }}
+                    </span>
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Producto/Servicio:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product"
+                        readonly />
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Unidad:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value"
+                        readonly />
+                </div>
+                <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Predial:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="predial" />
+                </div> -->
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Cantidad:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="quantity" />
+                    <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
+                        {{ getFieldError('quantity') }}
+                    </span>
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Precio:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price" />
+                    <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
+                        {{ getFieldError('quantity') }}
+                    </span>
+                </div>
+                @if (typeProof !== 'T') {
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Descuento %:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="discount" />
+                </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="form-label" for="objeto">ObjetoImp: </label>
+                    <select class="border px-4 py-2 w-full form-control" formControlName="tax_object">
+                        <option value="01">No objeto de impuesto</option>
+                        <option value="02">Sí objeto de impuesto</option>
+                        <option value="03">Sí objeto de impuesto y no oblig</option>
+                    </select>
+                </div>
+                @if (isTax) {
+                <div class="col-span-12 sm:col-span-12 md:col-span-12">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b text-center">Usar</th>
+                                        <th class="py-2 px-4 border-b text-left">Impuesto</th>
+                                        <th class="py-2 px-4 border-b text-left">Tipo Factor</th>
+                                        <th class="py-2 px-4 border-b text-center">Base</th>
+                                        <th class="py-2 px-4 border-b text-center">Valor</th>
+                                        <th class="py-2 px-4 border-b text-center">Importe</th>
+                                        <!-- <th class="py-2 px-4 border-b text-center">Acc</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_iva">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">IVA</td>
+                                        <td class="py-2 px-4 border-b text-left">
+                                            <label>
+                                                Tasa
+                                                <input type="checkbox" class="form-check-input ms-2"
+                                                    (change)="onCheckChange('tasa')">
+                                            </label>
+                                            <br>
+                                            <label>
+                                                Exento
+                                                <input type="checkbox" class="form-check-input ms-2"
+                                                    (change)="onCheckChange('exento')">
+                                            </label>
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_iva"> </td>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <select class="form-control w-full block mb-1" formControlName="valor_iva">
+                                                <!-- <option value=""></option> -->
+                                                <option value="0.000000">0.000000</option>
+                                                <option value="0.080000">0.080000</option>
+                                                <option value="0.160000">0.160000</option>
+                                            </select>
+                                            <span *ngIf="isValidField('valor_iva')" class="text-[#EE312A]">
+                                                {{ getFieldError('valor_iva') }}
+                                            </span>
+                                        </td>
 
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_iva" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_ieps">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">IEPS</td>
+                                        <td class="py-2 px-4 border-b text-left">
+                                            <label>
+                                                Tasa
+                                                <input type="checkbox" class="form-check-input ms-2"
+                                                    (change)="onCheckChange('tasa')">
+                                            </label>
+                                            <br>
+                                            <label>
+                                                Exento
+                                                <input type="checkbox" class="form-check-input ms-2"
+                                                    (change)="onCheckChange('exento')">
+                                            </label>
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_ieps"> </td>
 
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <select class="form-control w-full block mb-1" formControlName="valor_ieps">
+                                                <option value="0.000000">0.000000</option>
+                                                <option value="0.030000">0.030000</option>
+                                                <option value="0.060000">0.060000</option>
+                                                <option value="0.070000">0.070000</option>
+                                                <option value="0.080000">0.080000</option>
+                                                <option value="0.090000">0.090000</option>
+                                                <option value="0.250000">0.250000</option>
+                                                <option value="0.265000">0.265000</option>
+                                                <option value="0.300000">0.300000</option>
+                                                <option value="0.304000">0.304000</option>
+                                                <option value="0.500000">0.500000</option>
+                                                <option value="0.530000">0.530000</option>
+                                                <option value="0.160000">0.160000</option>
+                                            </select>
+                                            <span *ngIf="isValidField('valor_ieps')" class="text-[#EE312A] text-sm">
+                                                {{ getFieldError('valor_ieps') }}
+                                            </span>
+                                        </td>
 
-        <div class="col-span-3 mb-4">
-            <label class="block">Descripcion</label>
-            <textarea class="border px-4 py-2 w-full" rows="4"></textarea>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_ieps" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_r_iva">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">R. IVA</td>
+                                        <td class="py-2 px-4 border-b text-left">Tasa</td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_r_iva"> </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control block mb-1" formControlName="valor_r_iva">
+                                            <span *ngIf="isValidField('valor_r_iva')" class="text-[#EE312A] text-sm">
+                                                {{ getFieldError('valor_r_iva') }}
+                                            </span>
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_r_iva" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_r_ieps">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">R. IEPS</td>
+                                        <td class="py-2 px-4 border-b text-left">Tasa</td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_r_ieps"> </td>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <select class="form-control w-full block mb-1" formControlName="valor_r_ieps">
+                                                <option value="3">3%</option>
+                                                <option value="6">6%</option>
+                                                <option value="7">7%</option>
+                                                <option value="8">8%</option>
+                                                <option value="9">9%</option>
+                                                <option value="25">25%</option>
+                                                <option value="26.5">26.5%</option>
+                                                <option value="30.4">30.4%</option>
+                                                <option value="50">50%</option>
+                                                <option value="53">53%</option>
+                                                <option value="160">160%</option>
+                                            </select>
+                                            <span *ngIf="isValidField('valor_r_ieps')" class="text-[#EE312A] text-sm">
+                                                {{ getFieldError('valor_r_ieps') }}
+                                            </span>
+                                            </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_r_ieps" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_r_isr">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">R. ISR</td>
+                                        <td class="py-2 px-4 border-b text-left">Tasa</td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_r_isr"> </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control block mb-1" formControlName="valor_r_isr">
+                                                <span *ngIf="isValidField('valor_r_isr')" class="text-[#EE312A] text-sm">
+                                                    {{ getFieldError('valor_r_isr') }}
+                                                </span>
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_r_isr" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <input type="checkbox" class="form-check-input"
+                                                formControlName="validate_ish">
+                                        </td>
+                                        <td class="py-2 px-4 border-b text-left">ISH</td>
+                                        <td class="py-2 px-4 border-b text-left"></td>
+                                        <td class="py-2 px-4 border-b text-center"> <input type="number"
+                                                class="form-control" formControlName="base_ish"> </td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="valor_ish"></td>
+                                        <td class="py-2 px-4 border-b text-center"><input type="number"
+                                                class="form-control" formControlName="importe_ish" readonly></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+                }
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="block form-label">Importe:</label>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="total_product"
+                        readonly />
+                </div>
+                <div class="col-span-12">
+                    <label class="block form-label">Descripción:</label>
+                    <textarea class="border px-4 py-2 w-full" rows="4" formControlName="description"></textarea>
+                    <span *ngIf="isValidField('description')" class="text-[#EE312A]">
+                        {{ getFieldError('description') }}
+                    </span>
+                </div>
+            </div>
         </div>
-
-
     </form>
-    <div class="flex justify-between mb-4 mt-5">
-        <div class="ms-3">
-            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-                data-hs-overlay="#hs-extralarge-modal3">
 
+    <div class="flex justify-between my-5 p-2 mx-2">
+        <div>
+            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover"
+                (click)="closeModal()" data-hs-overlay="#hs-extralarge-modal3">
                 Cancelar
             </button>
         </div>
-        <div class="mr-3">
-            <button class="ti-btn ti-btn-primary-full text-white !font-medium">
-                Guardar
+        <div>
+            <button type="button" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover"
+                (click)="addProduct()">
+                {{ tittleButton }}
             </button>
         </div>
     </div>
-}
+    }
 </div>
+
+
 <div class="flex justify-between mb-4 mt-5">
     @if (isTableActive){
 

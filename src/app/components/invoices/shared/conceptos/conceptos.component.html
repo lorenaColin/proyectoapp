@@ -1,0 +1,69 @@
+<div class="col-span-12 sm:col-span-12 md:col-span-12">
+  <div class="row">
+    <div class="table-responsive">
+      <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b text-left">Código</th>
+            <th class="py-2 px-4 border-b text-left">Descripción</th>
+            <th class="py-2 px-4 border-b text-center">Cantidad</th>
+            <th class="py-2 px-4 border-b text-center">Precio U.</th>
+
+            @if (typeProof !== 'T') {
+            <th class="py-2 px-4 border-b text-center">Descuento</th>
+            <th class="py-2 px-4 border-b text-center">ObjetoImp</th>
+            }
+
+            <th class="py-2 px-4 border-b text-center">Importe</th>
+            <th class="py-2 px-4 border-b text-center">Acc</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows; let i = index">
+            <td class="py-2 px-4 border-b text-left">{{ row.codigo }}</td>
+            <td class="py-2 px-4 border-b text-left">{{ row.descripcion }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.cantidad }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.precioUnitario }}</td>
+
+            @if (typeProof !== 'T') {
+            <td class="py-2 px-4 border-b text-center">{{ row.descuento }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.objetoImp }}</td>
+            }
+
+
+            <td class="py-2 px-4 border-b text-center">{{ row.importe }}</td>
+            <td class="py-2 px-4 border-b text-center">
+              <button type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-secondary !rounded-full ti-btn-wave me-1" data-hs-overlay="#hs-extralarge-modal3"
+                (click)="editRow(row.idTemp)">
+                <i class="ri-edit-line"></i>
+              </button>
+              <button  type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave" (click)="removeRow(row.idTemp)">
+                <i class="ri-delete-bin-line"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button"
+        class="mt-4 flex items-center justify-center w-10 h-10  rounded-full  mx-auto  ti-btn-primary "
+        data-hs-overlay="#hs-extralarge-modal3">
+        <i class="ri-add-line "></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="hs-extralarge-modal3" class="hs-overlay hidden fixed ti-modal [--overlay-backdrop:static]"
+  data-hs-overlay-keyboard="false">
+  <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+    <div class="ti-modal-content">
+      <div class="ti-modal-header">
+        <h6 class="ti-modal-title">Productos/servicios</h6>
+      </div>
+      <app-form-invoice-products [typeProof]="typeProof" (productAdded)="addProductToTable($event)"
+        [productToEdit]="concetpEdit" />
+    </div>
+  </div>
+</div>

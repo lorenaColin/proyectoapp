@@ -1,0 +1,80 @@
+<form [formGroup]="formTraslado" (ngSubmit)="onSubmitTraslado()">
+    <pre> {{ formTraslado.value | json }} </pre>
+    <div class="grid grid-cols-12 gap-x-6">
+        <div class="xl:col-span-12 col-span-12">
+            <div class="box mt-4">
+                <div class="box-body">
+                    <div class="contact-header">
+                        <div class="sm:flex block items-center justify-between">
+                            <div class="h5 font-semibold mb-5">Traslado</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-6">
+                            <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="serieFolio" id="serieFolio" formControlName="serie">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 md:col-span-6">
+                            <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>
+                            <input type="date" class="form-control" name="fechaEmision" id="fechaEmision"
+                                formControlName="date">
+                        </div>
+
+                    </div>
+                    <hr class="my-6 border-gray-300">
+
+                    <!-- CONCEPTOS -->
+                    <app-conceptos [typeProof]="typeProof"></app-conceptos>
+
+                    <hr class="my-6 border-gray-300">
+
+                    <div class="form-check form-switch mb-2" id="agregaCP">
+
+                        <div class="custom-toggle-switch flex items-center mb-4">
+                            <input id="toggleswitchPrimary" name="toggleswitch001" type="checkbox"
+                            (change)="agregarCartaP($event)">
+                            <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3 font-bold">Complemento Carta Porte </span>
+                        </div>
+
+                    </div>
+
+                    <hr class="my-6 border-gray-300">
+
+                    @if (mostrarCP) {
+
+                    <app-complemento-cp />
+
+                    }
+
+                    <hr class="my-6 border-gray-300">
+
+                    <!-- FORMA PAGO -->
+                    <!-- <app-forma-pago></app-forma-pago> -->
+                    <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                        <div class="grid grid-cols-1 col-start-3">
+                            <app-totales></app-totales>
+                        </div>
+                    </div> -->
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="hs-extralarge-modal2" class="hs-overlay hidden ti-modal [--overlay-backdrop:static]">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+        <div class="ti-modal-content">
+            <div class="ti-modal-header">
+                <h6 class="ti-modal-title">Series y Folio</h6>
+            </div>
+            <app-form-invoice-serie />
+        </div>
+    </div>
+</div>
