@@ -1,6 +1,6 @@
 export interface SerietInterface {
-  id: number;
-    serie: number;
+    id: number;
+    serie: string;
     folio: string;
     tipoComprobante?: string;
     uuid_company: string;

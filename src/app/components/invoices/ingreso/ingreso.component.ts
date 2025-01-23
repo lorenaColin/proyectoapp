@@ -5,6 +5,8 @@ import { FormaPagoService } from '../../services/forma-pago.service';
 import { ConceptsService } from '../../services/concepts.service';
 import { TotalsService } from '../../services/totals.service';
 import { ValidatorsService } from '../../../shared/services/validators.service';
+import { SeriesService } from '../../services/serie.service';
+import { SerietInterface } from '../../interfaces/series.interface';
 
 @Component({
   selector: 'app-ingreso',
@@ -17,10 +19,15 @@ export class IngresoComponent implements OnInit {
   private totalsService = inject(TotalsService);
   private conceptsService = inject(ConceptsService);
   private validatorsService = inject(ValidatorsService);
+  private seriesService = inject(SeriesService);
+
+
   formaPagoForm = this.formaPagoService.getFormFormaPago();
   totalsForm = this.totalsService.getFormTotals();
   mostrarCP: boolean = false;
   typeProof: string = 'I';
+  listSeries: SerietInterface[] = [];
+  filteredSeries: SerietInterface[] = []; // Series filtradas por el autocompletado
 
   constructor() {}
 
@@ -28,13 +35,26 @@ export class IngresoComponent implements OnInit {
     invoice_type: ['I', [Validators.required]],
     serie_folio: ['', [Validators.required]],
     fecha: ['', [Validators.required]],
-    regimen_emisor: ['', [Validators.required]],
+    // regimen_emisor: ['', [Validators.required]],
     receptor: ['', [Validators.required]],
     uso_cfdi: ['', [Validators.required]],
     ...this.formaPagoForm.controls,
     ...this.totalsForm.controls,
     concepts: this.conceptsService.getProductosFormArray(),
   });
+
+
+    onInput(event: any): void {
+    const query = event.target.value.toLowerCase();
+    this.filteredSeries = this.listSeries.filter((listSeries) =>
+      listSeries.serie.toLowerCase().includes(query) || listSeries.folio.toString().includes(query)
+    );
+  }
+
+  selectSerie(series: any): void {
+    this.formIngreso.get('serie_folio')?.setValue(`${series.serie} - ${series.folio}`);
+    this.filteredSeries = []; 
+  }
 
   agregarCartaP(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked; 
@@ -43,7 +63,11 @@ export class IngresoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.seriesService.getAllSeries().subscribe((response) => {
+      const { error, data } = response;
+      console.log('Datos recibidos:', data);
+      (!error) ? this.listSeries = data : '';
+    });
   }
 
   onSubmitIngreso() {

@@ -8,7 +8,7 @@ import { SerietInterface, SerietListResponseInterface, SerietResponseInterface }
 @Injectable({
   providedIn: 'any'
 })
-export class series {
+export class SeriesService {
 
 
   private http = inject(HttpClient);

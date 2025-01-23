@@ -1,4 +1,4 @@
-<form [formGroup]="formIngreso" (ngSubmit)="onSubmitIngreso()">
+<form [formGroup]="formIngreso" (ngSubmit)="onSubmitIngreso()" autocomplete="off">
     <pre> {{ formIngreso.value | json }} </pre>
 
     <div class="grid grid-cols-12 gap-x-6">
@@ -14,14 +14,28 @@
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="serieFolio" id="serieFolio" formControlName="serie_folio">
-                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
-                                    <i class="ri-add-line"></i>
-                                </div>
+                              <input 
+                                type="text" 
+                                class="form-control" 
+                                name="serieFolio" 
+                                id="serieFolio" 
+                                formControlName="serie_folio"
+                                (input)="onInput($event)" 
+                                [ngClass]="{'is-invalid': isValidField('serie_folio')}"
+                              >
+                              <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                <i class="ri-add-line"></i>
+                              </div>
                             </div>
                             <span *ngIf="isValidField('serie_folio')" class="text-[#EE312A] text-sm">
-                                {{ getFieldError('serie_folio') }}
+                              {{ getFieldError('serie_folio') }}
                             </span>
+                          
+                            <ul *ngIf="filteredSeries.length > 0" class="absolute bg-white border border-gray-300 rounded-lg mt-2">
+                              <li *ngFor="let series of filteredSeries" (click)="selectSerie(series)">
+                                {{ series.serie }} - {{ series.folio }}
+                              </li>
+                            </ul>
                         </div>
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
@@ -35,7 +49,7 @@
                                 {{ getFieldError('fecha') }}
                             </span>
                         </div>
-                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
                             <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" formControlName="regimen_emisor" name="regimenEmisor" id="regimenEmisor">
                                 <option>Selecciona</option>
@@ -43,7 +57,7 @@
                             <span *ngIf="isValidField('regimen_emisor')" class="text-[#EE312A] text-sm">
                                 {{ getFieldError('regimen_emisor') }}
                             </span>
-                        </div>
+                        </div> -->
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
                             <div class="input-group">
@@ -107,6 +121,11 @@
                             </button>
                         </div>
                     </div>
+                    <!-- <div>
+                        @for (serie of listSeries; track $index) {
+                            {{  serie }}
+                        }
+                    </div> -->
                 </div>
             </div>
 

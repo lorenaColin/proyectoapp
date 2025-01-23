@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorsService } from '../../../shared/services/validators.service';
 import { AuthService } from '../../services/auth.service';
-import { series } from '../../services/serie.service';
+import { SeriesService } from '../../services/serie.service';
 import { SerietInterface } from '../../interfaces/series.interface';
 import Swal from 'sweetalert2';
 
@@ -18,7 +18,7 @@ export class FormSeriesComponent {
   private fb = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
   private authService = inject(AuthService);
-  private series = inject(series)
+  private series = inject(SeriesService)
   showLoader = false;
   buttonTitle: string = 'Crear';
   idSerie = 0;

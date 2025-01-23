@@ -1,0 +1,17 @@
+ul {
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    // width: 100%;
+    z-index: 1000;
+  }
+  
+  li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  li:hover {
+    background-color: #f0f0f0;
+  }
+  
