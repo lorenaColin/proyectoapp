@@ -14,13 +14,14 @@
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
-                              <input 
-                                type="text" 
-                                class="form-control" 
-                                name="serieFolio" 
-                                id="serieFolio" 
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="serieFolio"
+                                id="serieFolio"
                                 formControlName="serie_folio"
-                                (input)="onInput($event)" 
+                                (input)="onInput($event)"
+                                (keydown)="onKeyDown($event)" 
                                 [ngClass]="{'is-invalid': isValidField('serie_folio')}"
                               >
                               <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
@@ -30,13 +31,18 @@
                             <span *ngIf="isValidField('serie_folio')" class="text-[#EE312A] text-sm">
                               {{ getFieldError('serie_folio') }}
                             </span>
-                          
-                            <ul *ngIf="filteredSeries.length > 0" class="absolute bg-white border border-gray-300 rounded-lg mt-2">
-                              <li *ngFor="let series of filteredSeries" (click)="selectSerie(series)">
+                            
+                            <!-- Lista de sugerencias de autocompletado -->
+                            <ul *ngIf="filteredSeries.length > 0" class="absolute dark:bg-white bg-black border-gray-300 rounded-lg mt-2 w-full">
+                              <li *ngFor="let series of filteredSeries; let i = index"
+                                  (click)="selectSerie(series)"
+                                  [ngClass]="{'bg-gray-200': i === selectedIndex}"
+                                  >
                                 {{ series.serie }} - {{ series.folio }}
                               </li>
                             </ul>
-                        </div>
+                          </div>
+                          
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="fechaEmision" class="form-label text-[.875rem] text-black">Fecha:</label>

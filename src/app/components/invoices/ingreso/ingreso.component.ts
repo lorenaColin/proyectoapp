@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { InvoicesService } from '../../services/invoices.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormaPagoService } from '../../services/forma-pago.service';
@@ -28,6 +28,7 @@ export class IngresoComponent implements OnInit {
   typeProof: string = 'I';
   listSeries: SerietInterface[] = [];
   filteredSeries: SerietInterface[] = []; // Series filtradas por el autocompletado
+  selectedIndex: number = -1;   // Índice del elemento seleccionado
 
   constructor() {}
 
@@ -44,18 +45,48 @@ export class IngresoComponent implements OnInit {
   });
 
 
-    onInput(event: any): void {
+  onInput(event: any): void {
     const query = event.target.value.toLowerCase();
-    this.filteredSeries = this.listSeries.filter((listSeries) =>
-      listSeries.serie.toLowerCase().includes(query) || listSeries.folio.toString().includes(query)
-    );
+    if (query.length >= 2) {  // Solo activa el filtro cuando el texto tiene al menos 2 caracteres
+      this.filteredSeries = this.listSeries.filter((listSeries) =>
+        listSeries.serie.toLowerCase().includes(query) || listSeries.folio.toString().includes(query)
+      );
+    } else {
+      this.filteredSeries = []; // Limpiar resultados si no hay suficiente texto
+    }
+  }
+  
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown') {
+      if (this.selectedIndex < this.filteredSeries.length - 1) {
+        this.selectedIndex++;
+      }
+      event.preventDefault();  
+    } else if (event.key === 'ArrowUp') {
+      if (this.selectedIndex > 0) {
+        this.selectedIndex--;
+      }
+      event.preventDefault();  
+    } else if (event.key === 'Enter') {
+      if (this.selectedIndex >= 0) {
+        this.selectSerie(this.filteredSeries[this.selectedIndex]);
+      }
+    }
   }
 
   selectSerie(series: any): void {
     this.formIngreso.get('serie_folio')?.setValue(`${series.serie} - ${series.folio}`);
-    this.filteredSeries = []; 
+    this.filteredSeries = [];  // Limpiar la lista filtrada
+    this.selectedIndex = -1;   // Restablecer el índice seleccionado
   }
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+    if (!targetElement.closest('#serieFolio')) {
+      this.filteredSeries = [];
+    }
+  }
   agregarCartaP(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked; 
     this.mostrarCP = isChecked; 
