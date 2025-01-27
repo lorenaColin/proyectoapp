@@ -7,27 +7,21 @@
             <div class="h5 font-semibold mb-0">Empresas</div>
             <div class="flex sm:mt-0 mt-2 items-center">
               <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control !rounded-s-sm w-full !bg-light !border-0"
-                  placeholder="Buscar empresa"
-                  aria-describedby="search-contact-member"
-                  autocomplete="off"
-                />
-                <button
-                  aria-label="button"
-                  type="button"
-                  class="ti-btn ti-btn-light !rounded-s-none !mb-0"
-                  id="search-contact-member"
-                >
-                  <i
-                    class="ri-search-line text-[#8C9097]"
-                  ></i>
+                <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
+                  placeholder="Buscar empresa" aria-describedby="search-contact-member" (input)="applyFilter($event)"
+                  autocomplete="off" />
+                <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+                  id="search-contact-member">
+                  <i class="ri-search-line text-[#8C9097]"></i>
                 </button>
               </div>
               <div class="hs-tooltip ti-main-tooltip">
-                <button type="button" class="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !ms-2 w-[2.313rem] h-[2.313rem]" data-hs-overlay="#hs-extralarge-modal"><i class="ri-add-line"></i>
-                  <span class="hs-tooltip-content hs-dropdown-toggle ti-main-tooltip-content py-1 px-2 !bg-black !text-xs !font-medium !text-white shadow-sm" role="tooltip">
+                <button type="button"
+                  class="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !ms-2 w-[2.313rem] h-[2.313rem]"
+                  data-hs-overlay="#hs-extralarge-modal"><i class="ri-add-line"></i>
+                  <span
+                    class="hs-tooltip-content hs-dropdown-toggle ti-main-tooltip-content py-1 px-2 !bg-black !text-xs !font-medium !text-white shadow-sm"
+                    role="tooltip">
                     Crear Empresa
                   </span>
                 </button>
@@ -39,37 +33,72 @@
     </div>
   </div>
   @for (empresa of listadoEmpresas; track $index) {
-    <div class="xxl:col-span-4 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
-      <div class="box">
-          <div class="box-body">
-              <div class="flex items-center mb-4">
-                  <span class="avatar avatar-md avatar-rounded me-4">
-                      <img src="./images/faces/1.jpg" alt="" />
-                  </span>
-                  <div>
-                      <p class="mb-0 font-semibold text-[.875rem] text-primary">{{ empresa.rfc }}</p>
-                      <p class="mb-0 text-[.625rem] font-semibold text-[#000000]">{{ empresa.status }}</p>
-                  </div>
-              </div>
-              <div class="mb-4">
-                  <span class="text-[#000000]">{{ empresa.name }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                      <span class="text-[#000000]">Timbres: {{ empresa.tones_incluide }}</span>
-                  </div>
-                  <div class="ltr:float-right rtl:float-left text-[0.75rem] font-semibold text-[#000000] text-end">
-                    <button
-                      type="button"
-                      class="ti-btn ti-btn-primary-full text-[#000000] !font-medium"
-                      (click)="setCompany(empresa.id)"
-                    >
-                      Entrar
-                    </button>
-                  </div>
-              </div>
+  <!-- <div class="xxl:col-span-4 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+    <div class="box">
+      <div class="box-body">
+        <div class="flex items-center mb-4">
+          <span class="avatar avatar-md avatar-rounded me-4">
+            <img src="./images/faces/1.jpg" alt="" />
+          </span>
+          <div>
+            <p class="mb-0 font-semibold text-[.875rem] text-primary">{{ empresa.rfc }}</p>
+            <p class="mb-0 text-[.625rem] font-semibold text-[#000000]">{{ empresa.status }}</p>
           </div>
+        </div>
+        <div class="mb-4">
+          <span class="text-[#000000]">{{ empresa.name }}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <span class="text-[#000000]">Timbres: {{ empresa.tones_incluide }}</span>
+          </div>
+          <div class="ltr:float-right rtl:float-left text-[0.75rem] font-semibold text-[#000000] text-end">
+            <button type="button" class="ti-btn ti-btn-primary-full text-[#000000] !font-medium"
+              (click)="setCompany(empresa.id)">
+              Entrar
+            </button>
+          </div>
+        </div>
       </div>
+    </div>
+  </div> -->
+
+  <div class="xxl:col-span-4 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+    <div class="box group relative">
+      <div class="box-body contact-action">
+        <div class="contact-overlay ">
+        </div>
+        <div class="flex items-start">
+          <div class="flex items-center mb-4">
+            <div class="avatar avatar-md avatar-rounded me-4">
+              <img src="./images/faces/1.jpg" alt="" />
+            </div>
+            <div>
+              <p class="mb-0 font-semibold text-[.875rem] text-primary">{{ empresa.rfc }}</p>
+              <p class="mb-0 text-[.625rem] font-semibold text-[#000000]">{{ empresa.status }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <span class="text-[#000000]">{{ empresa.name }}</span>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <p class="text-black text-[0.875rem]">Timbres: {{ empresa.tones_incluide }}</p>
+        </div>
+        <div class="flex items-center justify-center gap-2 contact-hover-buttons">
+          <button type="button"
+            class="ti-btn btn-sm ti-btn-light contact-hover-btn !py-1 !px-2 !text-[0.75rem] !font-medium"
+            (click)="editCompany(empresa.id)" data-hs-overlay="#hs-extralarge-modal">
+            Ver Detalles
+          </button>
+          <button type="button"
+            class="ti-btn btn-sm ti-btn-light contact-hover-btn !py-1 !px-2 !text-[0.75rem] !font-medium"
+            (click)="setCompany(empresa.id)">
+            Entrar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
   }
 
@@ -79,7 +108,7 @@
         <div class="ti-modal-header">
           <h6 class="ti-modal-title">Crear Empresa</h6>
         </div>
-        <app-company-form (respuestaHijo)="respuesta($event)"></app-company-form>
+        <app-company-form [productoHijo]="empresa" (respuestaHijo)="respuesta($event)"></app-company-form>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 export interface CompanyInterface {
+    id: string;
     name:                  string;
     rfc:                   string;
     curp:                  string;
@@ -46,4 +47,19 @@ export interface CompanyListInterface {
     rfc:            string;
     status:         string;
     tones_incluide: number;
+}
+
+export interface CompanySeals{
+    tones_incluide: number;
+    pac_id: number;
+    fechaco: string;
+    fechaven: string;
+    sta_prod: string;
+    certificate?: string;
+    private_key?: string;
+    password_key?: string;
+    contcert?: string;
+    expiration_date_cert?: string;
+    start_date_cert?:string;
+    company_id:string;
 }

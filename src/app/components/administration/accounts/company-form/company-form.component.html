@@ -1,121 +1,238 @@
-<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-  <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
-    <div class="col-span-12 sm:col-span-12 md:col-span-12">
-      <label for="name" class="form-label">Nombre:</label>
-      <input type="text" class="form-control" id="name" name="name" formControlName="name"
-        oninput="this.value = this.value.toUpperCase();" maxlength="254" />
-      @if (isValidField('name')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("name") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="rfc" class="form-label">RFC:</label>
-      <input type="text" class="form-control" #inputElement id="rfc" name="rfc" formControlName="rfc"
-        oninput="this.value = this.value.toUpperCase();" maxlength="13" (input)="onInputRFC($event)" />
-      @if (isValidField('rfc')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("rfc") }}
-      </span>
-      }
-    </div>
-    @if(banderaFisica){
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="curp" class="form-label">Curp:</label>
-      <input type="text" class="form-control" id="curp" name="curp" formControlName="curp"
-        oninput="this.value = this.value.toUpperCase();" maxlength="18" />
-      @if (isValidField('curp')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("curp") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="employee_registration" class="form-label">Reg. Patronal:</label>
-      <input type="text" class="form-control" id="employee_registration" name="employee_registration"
-        formControlName="employee_registration" max="40" />
-      @if (isValidField('employee_registration')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("employee_registration") }}
-      </span>
-      }
-    </div>
-    }
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="email" class="form-label">Correo:</label>
-      <input type="text" class="form-control" id="email" name="email" formControlName="email" maxlength="75" />
-      @if (isValidField('email')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("email") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="phone" class="form-label">Teléfono:</label>
-      <input type="text" class="form-control" id="phone" name="phone" formControlName="phone" maxlength="13" 
-      pattern="\d*" />
-      @if (isValidField('phone')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("phone") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
-      <label for="cp" class="form-label">Código P:</label>
-      <input type="text" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5"
-        (input)="cpSearch($event)" maxlength="5" />
-      @if (isValidField('cp')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("cp") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-12">
-      <label for="regime" class="form-label">Regimen:</label>
-      <select formControlName="regime" class="form-control">
-        <option value="">Selecciona el tipo</option>
-        @for (item of listadoRegimen; track $index) {
-        <option value="{{ item.RegimenFiscal }}">{{ item.descripcion }}</option>
-        }
-      </select>
-      @if (isValidField('regime')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("regime") }}
-      </span>
-      }
-    </div>
-
-    <div class="col-span-12 sm:col-span-12 md:col-span-12">
-      <label for="address" class="form-label">Dirección:</label>
-      <textarea type="text" class="form-control" id="address" name="address" formControlName="address"></textarea>
-      @if (isValidField('address')) {
-      <span class="text-[#EE312A]">
-        {{ getFieldError("address") }}
-      </span>
-      }
-    </div>
+<div class="box-body">
+  <div class="sm:border-b-2 border-gray-200 dark:border-white/10">
+    <nav class="-mb-0.5 sm:flex sm:space-x-6 rtl:space-x-reverse ">
+      <a class="w-full sm:w-auto hs-tab-active:font-semibold hs-tab-active:border-primary hs-tab-active:text-primary py-4 px-1 inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50 hover:text-primary active"
+        href="javascript:void(0);" id="icon-item-1" data-hs-tab="#icon-1" aria-controls="icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+          style="fill: rgba(0, 0, 0, 1);">
+          <path
+            d="M19 3h-2.25a1 1 0 0 0-1-1h-7.5a1 1 0 0 0-1 1H5c-1.103 0-2 .897-2 2v15c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm0 17H5V5h2v2h10V5h2v15z">
+          </path>
+        </svg>
+        Datos
+      </a>
+      <a class="w-full sm:w-auto hs-tab-active:font-semibold hs-tab-active:border-primary hs-tab-active:text-primary py-4 px-1 inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50 hover:text-primary las la-file-alt"
+        href="javascript:void(0);" id="icon-item-2" data-hs-tab="#icon-2" aria-controls="icon-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+          style="fill: rgba(0, 0, 0, 1);">
+          <path
+            d="M3.433 17.325 3.079 19.8a1 1 0 0 0 1.131 1.131l2.475-.354C7.06 20.524 8 18 8 18s.472.405.665.466c.412.13.813-.274.948-.684L10 16.01s.577.292.786.335c.266.055.524-.109.707-.293a.988.988 0 0 0 .241-.391L12 14.01s.675.187.906.214c.263.03.519-.104.707-.293l1.138-1.137a5.502 5.502 0 0 0 5.581-1.338 5.507 5.507 0 0 0 0-7.778 5.507 5.507 0 0 0-7.778 0 5.5 5.5 0 0 0-1.338 5.581l-7.501 7.5a.994.994 0 0 0-.282.566zM18.504 5.506a2.919 2.919 0 0 1 0 4.122l-4.122-4.122a2.919 2.919 0 0 1 4.122 0z">
+          </path>
+        </svg>
+        Sellos CSD
+      </a>
+    </nav>
   </div>
 
-  <div class="modal-footer flex-container mb-4">
-    <div class="flex justify-between mb-4">
-      <div class="ms-3">
-        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-          data-hs-overlay="#hs-extralarge-modal" (click)="closeModal()">
-          Cancelar
-        </button>
-      </div>
-      <div class="mr-3">
-        <button type="submit" class="ti-btn ti-btn-success-full text-white !font-medium">
-          Crear Empresa
-        </button>
-      </div>
+  <div class="mt-3">
+    <div  id="icon-1" role="tabpanel" aria-labelledby="icon-item-1">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+        <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
+          <div class="col-span-12 sm:col-span-12 md:col-span-12">
+            <label for="name" class="form-label">Nombre:</label>
+            <input type="text" class="form-control" id="name" name="name" formControlName="name"
+              oninput="this.value = this.value.toUpperCase();" maxlength="254" />
+            @if (isValidField('name')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("name") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="rfc" class="form-label">RFC:</label>
+            <input type="text" class="form-control" #inputElement id="rfc" name="rfc" formControlName="rfc"
+              oninput="this.value = this.value.toUpperCase();" maxlength="13" (input)="onInputRFC($event)" />
+            @if (isValidField('rfc')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("rfc") }}
+            </span>
+            }
+          </div>
+          @if(banderaFisica){
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="curp" class="form-label">Curp:</label>
+            <input type="text" class="form-control" id="curp" name="curp" formControlName="curp"
+              oninput="this.value = this.value.toUpperCase();" maxlength="18" />
+            @if (isValidField('curp')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("curp") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="employee_registration" class="form-label">Reg. Patronal:</label>
+            <input type="text" class="form-control" id="employee_registration" name="employee_registration"
+              formControlName="employee_registration" max="40" />
+            @if (isValidField('employee_registration')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("employee_registration") }}
+            </span>
+            }
+          </div>
+          }
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="email" class="form-label">Correo:</label>
+            <input type="text" class="form-control" id="email" name="email" formControlName="email" maxlength="75" />
+            @if (isValidField('email')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("email") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="phone" class="form-label">Teléfono:</label>
+            <input type="text" class="form-control" id="phone" name="phone" formControlName="phone" maxlength="13"
+              pattern="\d*" />
+            @if (isValidField('phone')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("phone") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-4">
+            <label for="cp" class="form-label">Código P:</label>
+            <input type="text" class="form-control" id="cp" name="cp" formControlName="cp" maxlength="5"
+              (input)="cpSearch($event)" maxlength="5" />
+            @if (isValidField('cp')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("cp") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-12">
+            <label for="regime" class="form-label">Regimen:</label>
+            <select formControlName="regime" class="form-control">
+              <option value="">Selecciona el tipo</option>
+              @for (item of listadoRegimen; track $index) {
+              <option value="{{ item.RegimenFiscal }}">{{ item.descripcion }}</option>
+              }
+            </select>
+            @if (isValidField('regime')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("regime") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-12">
+            <label for="address" class="form-label">Dirección:</label>
+            <textarea type="text" class="form-control" id="address" name="address" formControlName="address"></textarea>
+            @if (isValidField('address')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError("address") }}
+            </span>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer flex-container mb-4">
+          <div class="flex justify-between mb-4">
+            <div class="ms-3">
+              <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+                data-hs-overlay="#hs-extralarge-modal" (click)="closeModal()">
+                Cancelar
+              </button>
+            </div>
+            <div class="mr-3">
+              <button type="submit" class="ti-btn ti-btn-success-full text-white !font-medium">
+                Crear Empresa
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- SELLOS -->
+    <div id="icon-2" class="hidden" role="tabpanel" aria-labelledby="icon-item-2" *ngIf="empresaExiste">
+      <form [formGroup]="formularioSellos" (ngSubmit)="onSubmit2()">
+        <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
+          <div class="col-span-12 sm:col-span-12 md:col-span-6">
+            <label class="form-label" for="dateInit">Fecha inicio:</label>
+            <input type="date" class="form-control" name="dateInit" id="dateInit" disabled>
+            @if (isValidField2('dateInit')) {
+            <span class="text-[#EE312A]">
+              {{ getFieldError2("dateInit") }}
+            </span>
+            }
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-6">
+            <div class="col-span-12 sm:col-span-12 md:col-span-12">
+              <label for="dateVig" class="form-label">Fecha vigencia:</label>
+              <input type="date" class="form-control" name="dateVig" id="dateVig" disabled>
+              @if (isValidField2('dateVig')) {
+              <span class="text-[#EE312A]">
+                {{ getFieldError2("dateVig") }}
+              </span>
+              }
+            </div>
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-6">
+            <div class="col-span-12 sm:col-span-12 md:col-span-12">
+              <label class="form-label" for="fileCert">Certificado Sellos:</label>
+              <input type="file" name="fileCert" id="fileCert" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
+                       file:border-0
+                      file:bg-light file:me-4
+                      file:py-3 file:px-4
+                      dark:file:bg-black/20 dark:file:text-white/50" accept=".cer">
+              @if (isValidField2('fileCert')) {
+              <span class="text-[#EE312A]">
+                {{ getFieldError2("fileCert") }}
+              </span>
+              }
+            </div>
+          </div>
+
+          <div class="col-span-12 sm:col-span-12 md:col-span-6">
+            <div class="col-span-12 sm:col-span-12 md:col-span-12">
+              <label class="form-label" for="fileKey">Key Sellos:</label>
+              <input input type="file" name="fileKey" id="fileKey" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
+              file:border-0
+             file:bg-light file:me-4
+             file:py-3 file:px-4
+             dark:file:bg-black/20 dark:file:text-white/50" accept=".key">
+              @if (isValidField2('fileKey')) {
+              <span class="text-[#EE312A]">
+                {{ getFieldError2("fileKey") }}
+              </span>
+              }
+            </div>
+          </div>
+          <div class="col-span-12 sm:col-span-12 md:col-span-6">
+            <div class="col-span-12 sm:col-span-12 md:col-span-12">
+              <label class="form-label" for="passwordSellos">Contraseña de Sellos:</label>
+              <input type="password" class="form-control" id="passwordSellos" placeholder="Contraseña">
+              @if (isValidField2('passwordSellos')) {
+              <span class="text-[#EE312A]">
+                {{ getFieldError2("passwordSellos") }}
+              </span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer flex-container mb-4">
+          <div class="flex justify-between mb-4">
+            <div class="ms-3">
+              <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+                data-hs-overlay="#hs-extralarge-modal" (click)="closeModal2()">
+                Cancelar
+              </button>
+            </div>
+            <div class="mr-3">
+              <button type="submit" class="ti-btn ti-btn-success-full text-white !font-medium">
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-</form>
+</div>
