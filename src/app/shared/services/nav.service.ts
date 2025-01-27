@@ -89,21 +89,36 @@ export class NavService implements OnDestroy {
 
   MENUITEMS: Menu[] = [
     // Dashboard
-    { headTitle: 'Catalogos' },
+    {
+      headTitle: 'Catalogos',
+    },
     {
       title: 'Catalogos',
       icon: 'home',
       type: 'sub',
-      badgeClass:'warning',
-      badgeText:'warning',
-      badgeValue:'3',
-      selected : false,
+      badgeClass: 'warning',
+      badgeText: 'warning',
+      badgeValue: '3',
+      selected: false,
       active: false,
       children: [
         { path: '/customers/', title: 'Clientes', type: 'link' },
         { path: '/products/', title: 'Productos', type: 'link' },
         { path: '/series/', title: 'Series', type: 'link' },
-       
+        {
+          path: '/cartaPorte/',
+          title: 'cartaPorte',
+          type: 'sub', 
+          children: [
+            { path: '/cartaPorte/ubicaciones', title: 'Ubicaciones', type: 'link' },
+            { path: '/cartaPorte/autotrasporte', title: 'Autotransporte', type: 'link' },
+            { path: '/cartaPorte/figuras', title: 'Figuras', type: 'link' },
+            { path: '/cartaPorte/remolques', title: 'Remolques', type: 'link' },
+            { path: '/cartaPorte/seguros', title: 'Seguros', type: 'link' },
+            { path: '/cartaPorte/mercancias', title: 'Mercancías', type: 'link' },
+            { path: '/cartaPorte/productos', title: 'Productos', type: 'link' },
+          ],
+        },
       ],
     },
  

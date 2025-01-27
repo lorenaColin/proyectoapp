@@ -36,9 +36,18 @@ export class FormSeriesComponent {
     return this.validatorsService.isValidField(this.myForm, field);
   }
   closeModal(): void {
-    this.myForm.reset();
+    this.formSerieReset();
     this.idSerie = 0;
     this.buttonTitle = 'Crear';
+
+  }
+  formSerieReset():void{
+    this.myForm.reset({
+      serie:"",
+      folio:"",
+      tipoComprobante:"",
+      status:true
+    })
   }
 
   // ngOnChanges(): void {
@@ -52,11 +61,10 @@ export class FormSeriesComponent {
   // }
   ngOnChanges(): void {
     console.log(this.productoHijo);  
-  
     if (this.productoHijo) {
       this.idSerie = this.productoHijo.id || 0;  
       this.buttonTitle = this.idSerie !== 0 ? 'Actualizar' : 'Crear';  
-  
+      const statusValue = this.idSerie !== 0 ? this.productoHijo.status : true;
       this.myForm.patchValue({
         ...this.productoHijo,  
         status: this.productoHijo.status ?? true,
@@ -102,7 +110,7 @@ export class FormSeriesComponent {
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
-          this.myForm.reset();
+          this.formSerieReset();
           this.showLoader = false;
         },
         error: (err) => {

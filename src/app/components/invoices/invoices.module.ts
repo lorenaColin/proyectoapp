@@ -38,7 +38,7 @@ import { RelatedsComponent } from './shared/relateds/relateds.component';
     ComplementoCpComponent,
     FormaPagoComponent,
     EgresoComponent,
-    RelatedsComponent
+    RelatedsComponent,
   ],
   imports: [
     CommonModule,

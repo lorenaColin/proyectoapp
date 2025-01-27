@@ -11,7 +11,8 @@ import Swal from 'sweetalert2';
 export class ListComponent {
   series: SerietInterface[] = [];
   @Input() serie: SerietInterface = {} as SerietInterface;
-  @Input() buttonTitle: string = 'Crear';
+  @Input() buttonTitle: string = 'Editar';
+
   showLoader = false;
   private seriesServicio = inject(series);
   serieSeleccionado: SerietInterface = {} as SerietInterface;

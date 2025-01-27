@@ -1,0 +1,53 @@
+<div>
+    <form   [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <div class="col-span-1">
+            <label for="tipoRemolque" class="block text-sm font-medium ">Tipo </label>
+            <select id="tipoRemolque" formControlName="tipoRemolque"
+                class="mt-1 block w-full rounded-md ">
+                <option>Selecciona el tipo </option>
+                <option>Civil</option>
+                <option>Ambiente</option>
+                <option>Carga</option>
+
+            </select>
+            <span *ngIf="isValidField('tipoRemolque')" class="text-[#EE312A]">
+                {{ getFieldError('tipoRemolque') }}
+            </span>
+        </div>
+       
+        <div class="col-span-1">
+            <label for="asegura" class="block text-sm font-medium ">Asegura</label>
+            <input type="text" id="asegura" formControlName="asegura"
+                class="mt-1 block w-full rounded-md ">
+                <span *ngIf="isValidField('asegura')" class="text-[#EE312A]">
+                    {{ getFieldError('asegura') }}
+                </span>
+        </div>
+        <div class="col-span-1">
+            <label for="poliza" class="block text-sm font-medium ">Poliza</label>
+            <input type="text" id="poliza" formControlName="poliza"
+                class="mt-1 block w-full rounded-md ">
+                <span *ngIf="isValidField('poliza')" class="text-[#EE312A]">
+                    {{ getFieldError('poliza') }}
+                </span>
+        </div>
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
+            Crear
+        </button>
+    </div>
+</div>
+
+

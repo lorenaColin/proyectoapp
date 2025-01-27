@@ -12,7 +12,7 @@ export class ListComponent {
   @Input() producto: ProductInterface = {} as ProductInterface;
   productos: ProductInterface[] = [];
 
-  @Input() buttonTitle: string = 'Crear';
+  @Input() buttonTitle: string = 'Editar';
   showLoader = false;
 
   private productService = inject(productoServicio);

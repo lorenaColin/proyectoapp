@@ -129,7 +129,7 @@ export class FormProductsComponent {
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
-          this.myForm.reset();
+          this.resetProduct();
           this.showLoader = false;
 
         },
@@ -144,9 +144,22 @@ export class FormProductsComponent {
     }
   }
   closeModal(): void {
-    this.myForm.reset();
+  this.resetProduct();
     this.idProducto = '0';
     this.buttonTitle = 'Crear';
+  }
+  resetProduct():void{
+    this.myForm.reset({
+    product_key:"",
+    unit:"",
+    unit_description:"",
+    unit_price:"",
+    identifier_number:"",
+    internal_key:"",
+    description:"",
+    quantity:"",
+    status:true
+    })
   }
   
 

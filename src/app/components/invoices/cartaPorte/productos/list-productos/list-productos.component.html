@@ -1,0 +1,83 @@
+
+<div class="grid grid-cols-12 gap-x-6">
+    <div class="xl:col-span-12 col-span-12">
+      <div class="box mt-4">
+        <div class="box-body">
+          <div class="contact-header">
+            <div class="sm:flex block items-center justify-between">
+              <div class="h5 font-semibold mb-0">Carta porte -> Productos </div>
+              <div class="flex sm:mt-0 mt-2 items-center">
+                <div class="input-group">
+                  <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
+                    placeholder="Buscar Productos " aria-describedby="search-contact-member" autocomplete="off" />
+                  <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+                    id="search-contact-member">
+                    <i class="ri-search-line text-[#8C9097]"></i>
+                  </button>
+                </div>
+                <div class="hs-tooltip ti-main-tooltip">
+                  <button type="button"
+                    class="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !ms-2 w-[2.313rem] h-[2.313rem]"
+                    data-hs-overlay="#hs-extralarge-modal1">
+                    <i class="ri-add-line"></i>
+                    <span
+                      class="hs-tooltip-content hs-dropdown-toggle ti-main-tooltip-content py-1 px-2 !bg-black !text-xs !font-medium !text-white shadow-sm"
+                      role="tooltip">
+                      Crear Productos 
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+    class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+    <div class="box shadow-md rounded-md overflow-hidden">
+      <div class="box-body p-4 bg-white">
+        <div class="flex items-center gap-4 mb-4">
+          <img class="w-12 h-12 rounded-full" src="./images/faces/1.jpg" alt="Producto" />
+          <div>
+            <p class="text-primary text-sm font-semibold">
+              Productos
+            </p>
+          
+          </div>
+        </div>
+  
+        <div class="mb-4">
+          <span class="text-gray-800 text-sm"> </span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-gray-800 text-sm">
+            <!-- {{ serie.tipoComprobante}} -->
+          </span>
+          <button type="button"  data-hs-overlay="#hs-extralarge-modal1" 
+            class="ti-btn ti-btn-primary-full text-sm font-medium">
+           <!-- {{buttonTitle}} --> ver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  </div>
+  <div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static] fixed" data-hs-overlay-keyboard="false">
+    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+      <div class="ti-modal-content">
+        <div class="ti-modal-header">
+            <h6 class="ti-modal-title">Productos</h6>
+          </div>
+        <app-form-productos/>
+      </div>
+    </div>
+  </div>
+  
+  <!-- <div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
+  </div> -->
+  
+  
+
