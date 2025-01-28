@@ -42,6 +42,7 @@ export class CompanyFormComponent implements OnInit {
   listadoRegimen: RegimenInterface[] = [];
   empresaExiste: boolean = false;
   idCompany = 0;
+  selectedFile: File | null = null;
 
   myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(254)]],
@@ -84,11 +85,12 @@ export class CompanyFormComponent implements OnInit {
   });
 
   formularioSellos: FormGroup = this.fb.group({
+    company_id: [''],
     dateInit: ['', [Validators.required]],
     dateVig: ['', [Validators.required]],
-    fileCert: ['', [Validators.required]],
-    fileKey: ['', [Validators.required]],
-    passwordSellos: ['', [Validators.required, Validators.minLength(5)]],
+    certificate: ['', [Validators.required]],
+    private_key: ['', [Validators.required]],
+    password_key: ['', [Validators.required, Validators.minLength(5)]],
   });
 
   ngOnInit(): void {}
@@ -105,6 +107,9 @@ export class CompanyFormComponent implements OnInit {
     const empresaId = this.productoHijo.id;
     if (empresaId) {
       this.checkEmpresaExistente(empresaId);
+      this.formularioSellos.patchValue({
+        company_id: this.productoHijo.id,
+      });
     }
   }
 
@@ -180,7 +185,17 @@ export class CompanyFormComponent implements OnInit {
       return;
     }
 
-    const formData = this.formularioSellos.value;
+    // const formData = this.formularioSellos.value;
+    const formData = new FormData();
+    formData.append('company_id', this.formularioSellos.value.company_id);
+    formData.append('dateInit', this.formularioSellos.value.dateInit);
+    formData.append('dateVig', this.formularioSellos.value.dateVig);
+    formData.append('certificate', this.formularioSellos.value.certificate);
+    formData.append('private_key', this.formularioSellos.value.private_key);
+    formData.append('password_key', this.formularioSellos.value.password_key);
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
     this.companyService.loadSeals(formData).subscribe((response) => {
       const { error, data, message } = response;
       if (error) {
@@ -190,7 +205,7 @@ export class CompanyFormComponent implements OnInit {
       this.formularioSellos.reset();
     });
   }
-
+  
   closeModal(): void {
     this.formCompanyReset();
   }
@@ -225,9 +240,9 @@ export class CompanyFormComponent implements OnInit {
     this.formularioSellos.reset({
       dateInit: '',
       dateVig: '',
-      fileCert: '',
-      fileKey: '',
-      passwordSellos: '',
+      certificate: '',
+      private_key: '',
+      password_key: '',
     });
     this.formularioSellos.disable();
     this.empresaExiste = false;

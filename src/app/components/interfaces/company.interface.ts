@@ -50,11 +50,11 @@ export interface CompanyListInterface {
 }
 
 export interface CompanySeals{
-    tones_incluide: number;
-    pac_id: number;
-    fechaco: string;
-    fechaven: string;
-    sta_prod: string;
+    // tones_incluide: number;
+    // pac_id: number;
+    // fechaco: string;
+    // fechaven: string;
+    // sta_prod: string;
     certificate?: string;
     private_key?: string;
     password_key?: string;

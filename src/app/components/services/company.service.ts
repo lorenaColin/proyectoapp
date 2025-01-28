@@ -29,7 +29,7 @@ export class CompanyService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  loadSeals(form: CompanySeals) :Observable<CompanyListResponseInterface> {
-    return this.http.post<CompanyListResponseInterface>(`${this.apiUrl}/createUpdateCompany`, form);
+  loadSeals(formData: FormData) :Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/loadSeals`, formData);
   }
 }

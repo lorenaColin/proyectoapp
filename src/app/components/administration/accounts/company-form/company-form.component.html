@@ -25,7 +25,7 @@
   </div>
 
   <div class="mt-3">
-    <div  id="icon-1" role="tabpanel" aria-labelledby="icon-item-1">
+    <div id="icon-1" role="tabpanel" aria-labelledby="icon-item-1">
       <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
         <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
           <div class="col-span-12 sm:col-span-12 md:col-span-12">
@@ -154,7 +154,7 @@
         <div class="ti-modal-body px-4 grid grid-cols-12 gap-4">
           <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <label class="form-label" for="dateInit">Fecha inicio:</label>
-            <input type="date" class="form-control" name="dateInit" id="dateInit" disabled>
+            <input type="date" class="form-control" name="dateInit" formControlName="dateInit" id="dateInit" >
             @if (isValidField2('dateInit')) {
             <span class="text-[#EE312A]">
               {{ getFieldError2("dateInit") }}
@@ -165,7 +165,7 @@
           <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <div class="col-span-12 sm:col-span-12 md:col-span-12">
               <label for="dateVig" class="form-label">Fecha vigencia:</label>
-              <input type="date" class="form-control" name="dateVig" id="dateVig" disabled>
+              <input type="date" class="form-control" name="dateVig" formControlName="dateVig" id="dateVig" >
               @if (isValidField2('dateVig')) {
               <span class="text-[#EE312A]">
                 {{ getFieldError2("dateVig") }}
@@ -176,15 +176,15 @@
 
           <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <div class="col-span-12 sm:col-span-12 md:col-span-12">
-              <label class="form-label" for="fileCert">Certificado Sellos:</label>
-              <input type="file" name="fileCert" id="fileCert" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
+              <label class="form-label" for="certificate">Certificado Sellos:</label>
+              <input type="file" name="certificate" id="certificate" formControlName="certificate" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
                        file:border-0
                       file:bg-light file:me-4
                       file:py-3 file:px-4
                       dark:file:bg-black/20 dark:file:text-white/50" accept=".cer">
-              @if (isValidField2('fileCert')) {
+              @if (isValidField2('certificate')) {
               <span class="text-[#EE312A]">
-                {{ getFieldError2("fileCert") }}
+                {{ getFieldError2("certificate") }}
               </span>
               }
             </div>
@@ -192,26 +192,27 @@
 
           <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <div class="col-span-12 sm:col-span-12 md:col-span-12">
-              <label class="form-label" for="fileKey">Key Sellos:</label>
-              <input input type="file" name="fileKey" id="fileKey" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
+              <label class="form-label" for="private_key">Key Sellos:</label>
+              <input type="file" name="private_key" id="private_key" formControlName="private_key" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
               file:border-0
              file:bg-light file:me-4
              file:py-3 file:px-4
              dark:file:bg-black/20 dark:file:text-white/50" accept=".key">
-              @if (isValidField2('fileKey')) {
+              @if (isValidField2('private_key')) {
               <span class="text-[#EE312A]">
-                {{ getFieldError2("fileKey") }}
+                {{ getFieldError2("private_key") }}
               </span>
               }
             </div>
           </div>
           <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <div class="col-span-12 sm:col-span-12 md:col-span-12">
-              <label class="form-label" for="passwordSellos">Contraseña de Sellos:</label>
-              <input type="password" class="form-control" id="passwordSellos" placeholder="Contraseña">
-              @if (isValidField2('passwordSellos')) {
+              <label class="form-label" for="password_key">Contraseña de Sellos:</label>
+              <input type="password" class="form-control" id="password_key" formControlName="password_key"
+                placeholder="Contraseña">
+              @if (isValidField2('password_key')) {
               <span class="text-[#EE312A]">
-                {{ getFieldError2("passwordSellos") }}
+                {{ getFieldError2("password_key") }}
               </span>
               }
             </div>
