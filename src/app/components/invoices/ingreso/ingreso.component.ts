@@ -69,15 +69,22 @@ export class IngresoComponent implements OnInit {
 
   onInputReceptor(event: any, listType: 'series' | 'receptors'): void {
     const query = event.target.value.toLowerCase();
+    
     if (query.length >= 2) {
       if (listType === 'series') {
         this.filteredSeries = this.listSeries.filter(item =>
           item.serie.toLowerCase().includes(query) || item.folio.toString().includes(query)
         );
+        if (this.filteredSeries.length === 0) {
+          this.formIngreso.get('serie_folio')?.setValue('');
+        }
       } else if (listType === 'receptors') {
         this.filteredReceptors = this.listReceptors.filter(item =>
           item.name.toLowerCase().includes(query)
         );
+        if (this.filteredReceptors.length === 0) {
+          this.formIngreso.get('receptor')?.setValue('');
+        }
       }
     } else {
       if (listType === 'series') {
@@ -88,25 +95,12 @@ export class IngresoComponent implements OnInit {
     }
   }
 
-  // onInput(event: any, list: any[], filterKey: string, filteredList: any[]): void {
-  //   console.log(event);
-  //   console.log(list);
-  //   console.log(filterKey);
-  //   console.log(filteredList);
-  //   const query = event.target.value.toLowerCase();
-  //   console.log(query);
-  //   if (query.length >= 2) {  
-  //     filteredList = list.filter((item) =>
-  //       item.filterKey.toLowerCase().includes(query)
-  //     );
-  //   } else {
-  //     filteredList = []; 
-  //   }
-  // }
+  onKeyDown(event: KeyboardEvent, select: 'selectSerie' | 'selectReceptor', filtered: 'filteredSeries' | 'filteredReceptors'): void {
+    const selectFn = select === 'selectSerie' ? this.selectSerie.bind(this) : this.selectReceptor.bind(this);
+    const filteredList = filtered === 'filteredSeries' ? this.filteredSeries : this.filteredReceptors;
   
-  onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
-      if (this.selectedIndex < this.filteredSeries.length - 1) {
+      if (this.selectedIndex < filteredList.length - 1) {
         this.selectedIndex++;
       }
       event.preventDefault();  
@@ -117,36 +111,20 @@ export class IngresoComponent implements OnInit {
       event.preventDefault();  
     } else if (event.key === 'Enter') {
       if (this.selectedIndex >= 0) {
-        this.selectSerie(this.filteredSeries[this.selectedIndex]);
+        selectFn(filteredList[this.selectedIndex]);
       }
     }
   }
-
-  onKeyDownReceptor(event: KeyboardEvent): void {
-    if (event.key === 'ArrowDown') {
-      if (this.selectedIndex < this.filteredReceptors.length - 1) {
-        this.selectedIndex++;
-      }
-      event.preventDefault();  
-    } else if (event.key === 'ArrowUp') {
-      if (this.selectedIndex > 0) {
-        this.selectedIndex--;
-      }
-      event.preventDefault();  
-    } else if (event.key === 'Enter') {
-      if (this.selectedIndex >= 0) {
-        this.selectSerie(this.filteredReceptors[this.selectedIndex]);
-      }
-    }
-  }
-
+  
   selectSerie(series: any): void {
+    console.log(series);
     this.formIngreso.get('serie_folio')?.setValue(`${series.serie} - ${series.folio}`);
     this.filteredSeries = [];  
     this.selectedIndex = -1;   
   }
 
   selectReceptor(receptor: any): void {
+    console.log(receptor);
     this.formIngreso.get('receptor')?.setValue(`${receptor.name}`);
     this.filteredReceptors = [];  
     this.selectedIndex = -1;   
@@ -155,13 +133,23 @@ export class IngresoComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-    if (!targetElement.closest('#serieFolio')) {
-      this.filteredSeries = [];
-    } else if (!targetElement.closest('#receptor')) {
-      this.filteredReceptors = [];
-      
+  
+    // Verificar fuera del input de serie_folio y receptor
+    if (!targetElement.closest('#serieFolio') && !targetElement.closest('#receptor')) {
+      this.checkAndClearInput('serie_folio', this.listSeries, item => `${item.serie} - ${item.folio}`);
+      this.checkAndClearInput('receptor', this.listReceptors, item => item.name);
     }
   }
+  
+  checkAndClearInput(fieldName: string, list: any[], compareFn: (item: any) => string): void {
+    const inputValue = this.formIngreso.get(fieldName)?.value;
+    const isValid = list.some(item => compareFn(item) === inputValue);
+  
+    if (!isValid) {
+      this.formIngreso.get(fieldName)?.setValue('');  // Limpiar el campo si no está en la lista
+    }
+  }
+  
   agregarCartaP(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked; 
     this.mostrarCP = isChecked; 
