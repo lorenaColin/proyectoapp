@@ -1,0 +1,27 @@
+<div class="autocomplete-wrapper" [formGroup]="formGroup">
+    <label [for]="formControlName" class="form-label text-[.875rem] text-black">
+      {{ formControlName | titlecase }}:
+    </label>
+    <div class="input-group">
+      <input 
+        type="text" 
+        class="form-control" 
+        [formControlName]="formControlName"
+        (input)="onInput($event)"
+        (keydown)="onKeyDown($event)">
+      <div class="input-group-text">
+        <i class="ri-add-line"></i>
+      </div>
+    </div>
+  
+    <ul *ngIf="filteredItems.length > 0" class="absolute bg-white border border-gray-300 rounded-lg mt-2 w-full">
+      <li 
+        *ngFor="let item of filteredItems; let i = index" 
+        (click)="selectItem(item)" 
+        [ngClass]="{'bg-gray-200': i === selectedIndex}" 
+        class="text-black">
+        {{ item.label }}
+      </li>
+    </ul>
+  </div>
+  

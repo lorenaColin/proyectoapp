@@ -19,6 +19,7 @@ import { ComplementoCpComponent } from './shared/complemento-cp/complemento-cp.c
 import { FormaPagoComponent } from './shared/forma-pago/forma-pago.component';
 import { EgresoComponent } from './egreso/egreso.component';
 import { RelatedsComponent } from './shared/relateds/relateds.component';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 
 
 
@@ -38,7 +39,8 @@ import { RelatedsComponent } from './shared/relateds/relateds.component';
     ComplementoCpComponent,
     FormaPagoComponent,
     EgresoComponent,
-    RelatedsComponent
+    RelatedsComponent,
+    AutocompleteComponent
   ],
   imports: [
     CommonModule,
