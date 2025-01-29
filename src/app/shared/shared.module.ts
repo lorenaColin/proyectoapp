@@ -18,6 +18,7 @@ import { AuthenticationLayoutComponent } from './layouts/authentication-layout/a
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { RouterModule } from '@angular/router';
 import { AdministrationLayoutComponent } from './layouts/administration-layout/administration-layout.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { AdministrationLayoutComponent } from './layouts/administration-layout/a
     AuthenticationLayoutComponent,
     ContentLayoutComponent,
     HoverEffectSidebarDirective,
+    // AutocompleteComponent,
   ],
   imports: [
     CommonModule,

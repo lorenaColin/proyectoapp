@@ -1,1 +1,76 @@
-<p>relateds works!</p>
+<div class="form-check form-switch mb-2">
+    <div class="custom-toggle-switch flex items-center mb-4">
+        <input id="toggleswitchPrimary" name="toggleswitch001" type="checkbox" (change)="agregarRel($event)">
+        <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3 font-bold">Agregar relación
+        </span>
+    </div>
+</div>
+@if (mostrarTablaR) {
+<div [formGroup]="formulario">
+    <pre>{{ formulario.value | json }}</pre>
+    <div formArrayName="relaciones">
+        <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b text-left">Relación</th>
+                    <th class="py-2 px-4 border-b text-left">UUIDs</th>
+                    <th class="py-2 px-4 border-b text-center">Acc</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of relaciones.controls; let i = index" [formGroupName]="i">
+                    <td class="py-2 px-4 border-b text-left">
+                        <select formControlName="relacion" class="form-control form-control-sm block">
+                            <option value="">Selecciona una opción</option>
+                            <option value="01">01-Nota de crédito de los documentos relacionados</option>
+                            <option value="02">02-Nota de débito de los documentos relacionados</option>
+                            <option value="03">03-Devolución de mercancía sobre facturas o traslados previos</option>
+                            <option value="04">04-Sustitución de los CFDI previos</option>
+                            <option value="05">05-Traslados de mercancías facturados previamente</option>
+                            <option value="06">06-Factura generada por los traslados previos</option>
+                            <option value="07">07-CFDI por aplicación de anticipo</option>
+                        </select>
+                        <span *ngIf="!isValidField(row, 'relacion')" class="text-[#EE312A] text-sm">
+                            {{ getFieldError(row, 'relacion') }}
+                        </span>
+                    </td>
+                    <td class="py-2 px-4 border-b text-left">
+                        <div formArrayName="uuids">
+                            <div *ngFor="let uuid of getUuids(row).controls; let j = index" [formGroupName]="j"
+                                class="flex items-center gap-2">
+                                <input type="text" formControlName="uuid" class="form-control flex-1">
+                                <span *ngIf="!isValidField(row, 'uuids.' + j + '.uuid')" class="text-[#EE312A] text-sm">
+                                    {{ getFieldError(row, 'uuids.' + j + '.uuid') }}
+                                </span>
+                                <button type="button"
+                                    class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
+                                    (click)="removeUuid(i, j)">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </div>
+                            <button type="button"
+                                class="mt-2 flex items-center justify-center w-10 h-10 rounded-full mx-auto ti-btn-primary"
+                                (click)="addUuid(i)">
+                                <i class="ri-add-line"></i>
+                            </button>
+                        </div>
+                    </td>
+
+
+
+                    <td class="py-2 px-4 border-b text-center">
+                        <button type="button" class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
+                            (click)="removeRow(i)">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="mt-2 flex items-center justify-center w-10 h-10 rounded-full mx-auto ti-btn-primary"
+        (click)="addRow()">
+        <i class="ri-add-line"></i>
+    </button>
+</div>
+}

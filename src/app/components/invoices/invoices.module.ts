@@ -20,6 +20,7 @@ import { FormaPagoComponent } from './shared/forma-pago/forma-pago.component';
 import { EgresoComponent } from './egreso/egreso.component';
 import { RelatedsComponent } from './shared/relateds/relateds.component';
 import { DecimalsDirective } from '../../shared/directives/decimals.directive';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 
 
 
@@ -40,7 +41,8 @@ import { DecimalsDirective } from '../../shared/directives/decimals.directive';
     FormaPagoComponent,
     EgresoComponent,
     RelatedsComponent,
-    DecimalsDirective
+    DecimalsDirective,
+    AutocompleteComponent
   ],
   imports: [
     CommonModule,

@@ -12,7 +12,8 @@ export class ValidatorsService {
     account_number: 'El número de cuenta debe contener solo letras y números y tener entre 4 y 18 caracteres',
     email: 'Ingrese un correo electrónico válido',
     password: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial',
-    valor_iva: 'El valor debe ser 0 o 16%'
+    valor_iva: 'El valor debe ser 0 o 16%',
+    uuid: 'El uuid no cumple con la estructura correcta'
   };
 
   public isValidField(form: FormGroup, field: string): boolean | null {

@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { SerietInterface, SerietResponseInterface } from '../../interfaces/series.interface';
-import { series } from '../../services/serie.service';
+import {SeriesService } from '../../services/serie.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,7 +13,7 @@ export class ListComponent {
   @Input() serie: SerietInterface = {} as SerietInterface;
   @Input() buttonTitle: string = 'Crear';
   showLoader = false;
-  private seriesServicio = inject(series);
+  private seriesServicio = inject(SeriesService);
   serieSeleccionado: SerietInterface = {} as SerietInterface;
   clientes: SerietInterface[] = [];
 
