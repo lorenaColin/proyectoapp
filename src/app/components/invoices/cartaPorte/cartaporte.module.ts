@@ -16,7 +16,7 @@ import { FormFigurasComponent } from './figuras/form-figuras/form-figuras.compon
 import { ListFigurasComponent } from './figuras/list-figuras/list-figuras.component';
 import { FormUbicacionesComponent } from './ubicaciones/form-ubicaciones/form-ubicaciones.component';
 import { FormAutotrasporteComponent } from './autotransporte/form-autotrasporte/form-autotrasporte.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -42,6 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     cartaporteRoutingModule,
     ReactiveFormsModule,
+    FormsModule
 
   ]
 })
