@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 
 import { InvoicesRoutingModule } from './invoices-routing.module';
 import { InvoiceComponent } from './invoice/invoice.component';
@@ -19,6 +19,7 @@ import { ComplementoCpComponent } from './shared/complemento-cp/complemento-cp.c
 import { FormaPagoComponent } from './shared/forma-pago/forma-pago.component';
 import { EgresoComponent } from './egreso/egreso.component';
 import { RelatedsComponent } from './shared/relateds/relateds.component';
+import { DecimalsDirective } from '../../shared/directives/decimals.directive';
 
 
 
@@ -38,7 +39,8 @@ import { RelatedsComponent } from './shared/relateds/relateds.component';
     ComplementoCpComponent,
     FormaPagoComponent,
     EgresoComponent,
-    RelatedsComponent
+    RelatedsComponent,
+    DecimalsDirective
   ],
   imports: [
     CommonModule,
@@ -48,7 +50,9 @@ import { RelatedsComponent } from './shared/relateds/relateds.component';
     
   ],
   providers:[
-    provideFlatpickrDefaults()
+    provideFlatpickrDefaults(),
+    CurrencyPipe,
+    DecimalPipe
   ]
 })
 export class InvoicesModule { }

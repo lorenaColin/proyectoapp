@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LISTADORFCSGENERICOS, LISTADOREGIMEN, LISTADOFORMAPAGO } from '../utils/sat';
-import { FormaPagoInterface,  RegimenInterface } from '../interfaces/shared.interface';
+import { LISTADORFCSGENERICOS, LISTADOREGIMEN, LISTADOFORMAPAGO, TASAOCUOTA } from '../utils/sat';
+import { FormaPagoInterface,  RegimenInterface, tasaOCuotaInterface } from '../interfaces/shared.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -19,5 +19,10 @@ export class UtilsService {
     getCpSat(cp: string): string {
         //TODO: Aca vamos a realizar la logica del codigo postal del emisor y receptor
         return cp;
+    }
+
+
+    getTasaOcuota(impuesto:string): tasaOCuotaInterface[]{
+        return TASAOCUOTA.filter(i => i.impuesto === impuesto);
     }
 }

@@ -4,7 +4,11 @@ import { ConceptsService } from '../../services/concepts.service';
 import { ConceptInterface } from '../../interfaces/concept';
 import { ValidatorsService } from '../../../shared/services/validators.service';
 import { TotalsService } from '../../services/totals.service';
-import { VALOR_IVA_T } from '../../../shared/utils/expressions';
+import Decimal from 'decimal.js';
+import { CurrencyPipe, DecimalPipe } from '@angular/common'
+
+import {  impuestoInterface, } from '../../../shared/interfaces/shared.interface';
+
 
 @Component({
   selector: 'app-form-invoice-products',
@@ -16,6 +20,9 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   private conceptsService = inject(ConceptsService);
   private validatorsService = inject(ValidatorsService);
   private totalsService = inject(TotalsService);
+
+  private cp = inject(CurrencyPipe);
+  private dp = inject(DecimalPipe);
   
   currentTab: number = 1; 
   formConcepts: FormGroup = this.fb.group({});
@@ -24,12 +31,14 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   isTableActive: boolean = false; 
   isCreateActive: boolean = true; 
   isTax: boolean = false;
+  public base: number = 0;
+  formTraslados = this.fb.array([]);
   
   @Input() typeProof!: string; 
   @Output() productAdded = new EventEmitter<any>(); 
   @Input() productToEdit!: ConceptInterface; 
   
-  
+  public formFields: any ={}
   ngOnInit(): void {
     this.createForm();
     this.valueChangesConcepts() 
@@ -54,54 +63,30 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   }
   
   
-
   createForm(): void {
-    const formFields: any = {
-      product_service_code: ['', Validators.required],
+    
+    this.formFields = {
       name_product: [''],
-      description: ['', Validators.required],
-      quantity: [0, [Validators.required, Validators.min( this.typeProof !== 'T' ? 0.000001 : 0)]],
-      unit_value: '',
+      product_service_code: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      description: ['', [Validators.required, Validators.maxLength(1000)]],
+      quantity: [0, [Validators.required, Validators.min( this.typeProof !== 'T' ? 0.000001 : 0)], []],
+      unit_value: [''],
       unit_price: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
-      unit_key: '',
-      identification_number: '',
-      discount: 0,
-      // discount_percentage: 0,
-      // base: 0,
-      total_product: 20,
+      unit_key: [''],
+      identification_number: [''],
+      discount: [0],
+      valorUnitario: [0],
+      base: [this.base],
+      total_product: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
       tax_object: ['01', Validators.required],
+      traslados: this.formTraslados
     };
   
     if (this.typeProof !== 'T') {
-      Object.assign(formFields, {
-        validate_iva: false,
-        validate_ieps: false,
-        validate_r_iva: false,
-        validate_r_ieps: false,
-        validate_r_isr: false,
-        validate_ish: false,
-        base_iva: ['', Validators.required],
-        valor_iva: ['', [Validators.required]],
-        importe_iva: ['', Validators.required],
-        base_ieps: ['', Validators.required],
-        valor_ieps: ['', Validators.required],
-        importe_ieps: ['', Validators.required],
-        base_r_iva: ['', Validators.required],
-        valor_r_iva: ['', [Validators.required, Validators.min(0.000000), Validators.max(0.160000)]],
-        importe_r_iva: ['', Validators.required],
-        base_r_ieps: ['', Validators.required],
-        valor_r_ieps: ['', Validators.required],
-        importe_r_ieps: ['', Validators.required],
-        base_r_isr: ['', Validators.required],
-        valor_r_isr: ['', [Validators.required, Validators.min(0.000000), Validators.max(0.350000)]],
-        importe_r_isr: ['', Validators.required],
-        base_ish: ['', Validators.required],
-        valor_ish: ['', Validators.required],
-        importe_ish: ['', Validators.required],
-      });
+
     }
   
-    this.formConcepts = this.fb.group(formFields);
+    this.formConcepts = this.fb.group(this.formFields);
   }
   closeModal() {
     this.formConceptsReset();
@@ -111,6 +96,75 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
     this.isTableActive = isTable;
     this.isCreateActive = !isTable;
   }
+
+
+  setTraslado(event: any): void{
+    const ischecked = (<HTMLInputElement>event.target).checked
+    let elemento = event.target.id;
+    let trasladosArray = this.formConcepts.get('traslados') as FormArray;
+
+    if(!ischecked){
+      let { value:traslados } = trasladosArray;
+      let transladosTemp: impuestoInterface[] = traslados;
+      trasladosArray.removeAt(transladosTemp.findIndex(x => x.impuesto === elemento ));
+      return;
+    }
+
+    let validations = elemento === "iva" ? [Validators.required, Validators.min(0.000001), Validators.max(0.16000)]: [Validators.required];
+
+
+    let impuestoD = this.fb.group({
+        base: [this.base, [Validators.required]],
+        impuesto: event.target.id,
+        tasaOCuota: [0, [Validators.required]],
+        retencion: [0, validations],
+        importe: 0 
+      });
+
+    trasladosArray.push(impuestoD)
+  }
+
+  get traslados(): FormArray {
+    return this.formConcepts.get('traslados') as FormArray;
+  }
+
+  calculate(){
+
+    let {quantity:cantidad, unit_price, discount:descuento, tax_object, traslados}  = this.formConcepts.value;
+    if( Number(cantidad) === 0 || Number(unit_price) === 0 ) return;
+
+    cantidad = this.dp.transform(new Decimal(cantidad).toString(), '1.6-6')
+    let valorUnitario = new Decimal(cantidad).mul(new Decimal(unit_price)).toString();
+    let base = new Decimal(valorUnitario).sub(descuento).toString();
+    this.base = Number(base);
+    let trasladosTotal = new Decimal(0);
+    let retencionesTotal = new Decimal(0);
+    if(tax_object === "02"){
+      traslados.forEach(( element: impuestoInterface) => {
+        let { tasaOCuota } = element;
+        let tasa = tasaOCuota === "Exento" ? "0.00000": tasaOCuota;
+        let importe = new Decimal(new Decimal(base)).mul(new Decimal(tasa))
+        trasladosTotal = new Decimal(this.calculos(new Decimal(trasladosTotal).toString())).add(new Decimal(importe));
+        
+      });
+    }
+    let total_product =  this.cp.transform((new Decimal(valorUnitario).sub(descuento).add(trasladosTotal)).sub(retencionesTotal).toString(), 'USD', 'symbol', '1.2-2');;
+    this.formConcepts.patchValue({quatiry:cantidad,valorUnitario, base, total_product});
+
+  }
+
+  calculos(valor:string): string{
+    let cadenaNumero = valor.toString();
+    let posicionPunto = cadenaNumero.lastIndexOf('.');
+    let esDecimal = posicionPunto != -1;
+    let numeroEntero  = ( esDecimal ) ? cadenaNumero.substr(0, posicionPunto) : cadenaNumero;
+    let decimales = ( esDecimal ) ? cadenaNumero.substr(posicionPunto + 1 ) : "";
+    decimales = decimales.length > 6 ? decimales.substr( 0, 6 ) : decimales.padEnd(6, "0");
+    numeroEntero = numeroEntero.length === 0 ? "0": numeroEntero;
+    return `${ numeroEntero }.${ decimales }`;
+  }
+
+
 
 
 
@@ -123,7 +177,6 @@ addProduct(): void {
     Object.keys(this.formConcepts.controls).forEach(controlName => {
       const control = this.formConcepts.get(controlName);
       if (control && control.invalid) {
-        console.log(`El campo ${controlName} es inválido.`);
       }
     });
   
@@ -160,36 +213,36 @@ private createProductGroup(productData: any, idTemp: number): any {
     total_product: productData.total_product,
     tax_object: this.typeProof !== 'T' ? productData.tax_object : '01',
     ...(this.typeProof !== 'T' && {
-    validate_iva: productData.validate_iva,
-    validate_ieps: productData.validate_ieps,
-    validate_ish: productData.validate_ish,
-    validate_r_iva: productData.validate_r_iva,
-    validate_r_ieps: productData.validate_r_ieps,
-    validate_r_isr: productData.validate_r_isr,
+    // validate_iva: productData.validate_iva,
+    // validate_ieps: productData.validate_ieps,
+    // validate_ish: productData.validate_ish,
+    // validate_r_iva: productData.validate_r_iva,
+    // validate_r_ieps: productData.validate_r_ieps,
+    // validate_r_isr: productData.validate_r_isr,
     })
   };
    if (this.typeProof !== 'T') {
       productGroup.traslados = this.fb.group({
-       base_iva: productData.base_iva,
-       valor_iva: productData.valor_iva,
-       importe_iva: productData.importe_iva,
-       base_ieps: productData.base_ieps,
-       valor_ieps: productData.valor_ieps,
-       importe_ieps: productData.importe_ieps,
-       base_ish: productData.base_ish,
-       valor_ish: productData.valor_ish,
-       importe_ish: productData.importe_ish
+      //  base_iva: productData.base_iva,
+      //  valor_iva: productData.valor_iva,
+      //  importe_iva: productData.importe_iva,
+      //  base_ieps: productData.base_ieps,
+      //  valor_ieps: productData.valor_ieps,
+      //  importe_ieps: productData.importe_ieps,
+      //  base_ish: productData.base_ish,
+      //  valor_ish: productData.valor_ish,
+      //  importe_ish: productData.importe_ish
       });
       productGroup.retenciones = this.fb.group({
-       base_r_iva: productData.base_r_iva,
-       valor_r_iva: productData.valor_r_iva,
-       importe_r_iva: productData.importe_r_iva,
-       base_r_ieps: productData.base_r_ieps,
-       valor_r_ieps: productData.valor_r_ieps,
-       importe_r_ieps: productData.importe_r_ieps,
-       base_r_isr: productData.base_r_isr,
-       valor_r_isr: productData.valor_r_isr,
-       importe_r_isr: productData.importe_r_isr,
+      //  base_r_iva: productData.base_r_iva,
+      //  valor_r_iva: productData.valor_r_iva,
+      //  importe_r_iva: productData.importe_r_iva,
+      //  base_r_ieps: productData.base_r_ieps,
+      //  valor_r_ieps: productData.valor_r_ieps,
+      //  importe_r_ieps: productData.importe_r_ieps,
+      //  base_r_isr: productData.base_r_isr,
+      //  valor_r_isr: productData.valor_r_isr,
+      //  importe_r_isr: productData.importe_r_isr,
       });
      }
 
@@ -260,6 +313,22 @@ updateProduct(formArray: FormArray, productGroup: any, idTemp: number, productDa
   
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField( this.formConcepts, field );
+  }
+
+  isValidField2(index: number, fieldName: string): boolean {
+    const formArray = this.formConcepts.get('traslados') as FormArray;
+    const control = formArray.at(index)?.get(fieldName);
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
+  getFieldError2(index: number, fieldName: string): string | null {
+    const formArray = this.formConcepts.get('traslados') as FormArray;
+    const control = formArray.at(index)?.get(fieldName);
+
+    if (control && control.errors) {
+      console.log(Object.values(control.errors)[0])
+      return Object.values(control.errors)[0];
+    }
+    return null;
   }
   
   onCheckChange(tasaOCuota: string): void{

@@ -45,9 +45,6 @@ export class InvoiceComponent implements OnInit {
 
   ngOnInit() {
 
-    let x = new Decimal(123.4567)
-    console.log(x);
-
     // flatpickrLanguage
     // console.log(new Date())
     // console.log(new Date(new Date().getDay() - 3))
