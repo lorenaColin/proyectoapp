@@ -1,0 +1,49 @@
+<div>
+    <form  [formGroup]="myForm"  class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <div class="col-span-3">
+            <label for="tipoRemolque" class="block text-sm font-medium ">Tipo de Remolque</label>
+            <select id="tipoRemolque" formControlName="tipoRemolque"
+                class="mt-1 block w-full rounded-md ">
+                <option>Seleccionar Tipo de Remolque</option>
+            </select>
+            <span *ngIf="isValidField('tipoRemolque')" class="text-[#EE312A]">
+                {{ getFieldError('tipoRemolque') }}
+            </span>
+        </div>
+        <div class="col-span-3">
+            <label for="tipoTrasporte" class="block text-sm font-medium ">Tipo de Auto Transporte</label>
+            <select id="tipoTrasporte" formControlName="tipoTrasporte"
+                class="mt-1 block w-full rounded-md ">
+                <option>Seleccionar Tipo de Remolque</option>
+            </select>
+            <span *ngIf="isValidField('tipoTrasporte')" class="text-[#EE312A]">
+                {{ getFieldError('tipoTrasporte') }}
+            </span>
+        </div>
+        <div class="col-span-3">
+            <label for="placavehicular" class="block text-sm font-medium ">Placa Vehicular</label>
+            <input type="text" id="placavehicular" formControlName="placavehicular"
+                class="mt-1 block w-full rounded-md ">
+                <span *ngIf="isValidField('placavehicular')" class="text-[#EE312A]">
+                    {{ getFieldError('placavehicular') }}
+                </span>
+        </div>
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
+            Crear
+        </button>
+    </div>
+</div>
+

@@ -27,6 +27,10 @@ const routes: Routes = [
     path: 'series',
     loadChildren: () => import('./components/series/series.module').then(m => m.SeriesModule),
   },
+  {
+    path: 'cartaPorte',
+    loadChildren: () => import('./components/invoices/cartaPorte/cartaporte.module').then(m =>m.cartaporte),
+  },
   { path: 'dashboard', component: ContentLayoutComponent },
   { path: '**', redirectTo: 'auth' },
   

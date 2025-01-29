@@ -7,6 +7,11 @@ export const PATRON_CURP = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-
 export const VALOR_IVA_T = /^(0|16)$/;
 export const PATRON_UUID = '^[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}$';
 
+
+// Expresiones de carta Porte
+export const PATRON_UBICACION_ORIGEN = /OR[0-9]{6}$/;
+export const PATRON_UBICACION_DESTINO = /DE[0-9]{6}$/;
+
 /*
 const PATRON_REGULAR_20 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}';
 const PATRON_REGULAR_100 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}';

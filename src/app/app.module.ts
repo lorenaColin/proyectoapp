@@ -17,6 +17,7 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
+    
     // FormInvoicePagosComponent
   ],
   imports: [

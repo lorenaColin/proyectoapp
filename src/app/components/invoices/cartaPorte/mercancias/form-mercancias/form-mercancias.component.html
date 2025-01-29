@@ -1,0 +1,51 @@
+<div>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+
+        <div class="col-span-1">
+            <label for="mercancias" class="block text-sm font-medium ">Mercancias</label>
+            <input type="text" id="mercancias" formControlName="mercancias" class="mt-1 block w-full rounded-md ">
+            <span *ngIf="isValidField('mercancias')" class="text-[#EE312A]">
+                {{ getFieldError('mercancias') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="unidad" class="block text-sm font-medium ">Unidad</label>
+            <input type="text" id="unidad" formControlName="unidad" class="mt-1 block w-full rounded-md ">
+            <span *ngIf="isValidField('unidad')" class="text-[#EE312A]">
+                {{ getFieldError('unidad') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="dimensiones" class="block text-sm font-medium ">Dimensiones</label>
+            <input type="text" id="dimensiones" formControlName="dimensiones" class="mt-1 block w-full rounded-md ">
+            <span *ngIf="isValidField('dimensiones')" class="text-[#EE312A]">
+                {{ getFieldError('dimensiones') }}
+            </span>
+        </div>
+        <div class="col-span-3">
+            <label for="descripcion" class="block text-sm font-medium">Descripción</label>
+            <textarea id="descripcion" rows="4" formControlName="descripcion"
+                class="mt-1 block w-full rounded-md "></textarea>
+            <span *ngIf="isValidField('descripcion')" class="text-[#EE312A]">
+                {{ getFieldError('descripcion') }}
+            </span>
+        </div>
+
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
+            Crear
+        </button>
+    </div>
+</div>

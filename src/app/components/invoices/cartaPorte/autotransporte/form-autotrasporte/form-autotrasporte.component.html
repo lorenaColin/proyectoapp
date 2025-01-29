@@ -1,0 +1,59 @@
+<div>
+    <form  [formGroup]="myForm" class="grid grid-cols-4 gap-6 p-6  rounded-lg">
+
+        <div class="col-span-2">
+            <label for="cVehicular" class="block text-sm font-medium ">C. Vehicular</label>
+            <select id="cVehicular"formControlName="cVehicular"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option>Seleccionar Clave</option>
+
+            </select>
+            <span *ngIf="isValidField('cVehicular')" class="text-[#EE312A]">
+                {{ getFieldError('cVehicular') }}
+            </span>
+        </div>
+        <div class="col-span-2">
+            <label for="año" class="block text-sm font-medium ">Año</label>
+            <select id="año" formControlName="año"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option>Selecciona el Año</option>
+
+            </select>
+            <span *ngIf="isValidField('año')" class="text-[#EE312A]">
+                {{ getFieldError('año') }}
+            </span>
+        </div>
+        <div class="col-span-2">
+            <label for="pVehicular" class="block text-sm font-medium ">P. Vehicular</label>
+            <input type="text" id="pVehicular" formControlName="pVehicular"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <span *ngIf="isValidField('pVehicular')" class="text-[#EE312A]">
+                    {{ getFieldError('pVehicular') }}
+                </span>
+        </div>
+        <div class="col-span-2">
+            <label for="peso" class="block text-sm font-medium ">Peso B.</label>
+            <input type="text" id="peso" formControlName="peso"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <span *ngIf="isValidField('peso')" class="text-[#EE312A]">
+                    {{ getFieldError('peso') }}
+                </span>
+        </div>
+    </form>
+</div>
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal1">
+
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
+            Crear
+        </button>
+    </div>
+</div>

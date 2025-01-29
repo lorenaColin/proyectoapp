@@ -1,0 +1,183 @@
+<div>
+    <pre>{{ myForm.value | json }}</pre>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <div class="col-span-3">
+            <label for="NombreRemitenteDestinatario" class="block text-sm font-medium ">Nombre</label>
+            <input type="text" id="NombreRemitenteDestinatario" formControlName="NombreRemitenteDestinatario"
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+            <span *ngIf="isValidField('NombreRemitenteDestinatario')" class="text-[#EE312A]">
+                {{ getFieldError('NombreRemitenteDestinatario') }}
+            </span>
+        </div>
+        <div class="col-span-2">
+            
+            <label for="rfc" class="block text-sm font-medium">RFC</label>
+            <input id="rfc" formControlName="rfc" class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
+                minlength="1" maxlength="25" oninput="this.value = this.value.toUpperCase();" />
+            <span *ngIf="isValidField('rfc')" class="text-[#EE312A]">
+                {{ getFieldError('rfc') }}
+            </span>
+        </div>
+        <div class="col-span-1">
+            <label for="idUbicacion" class="block text-sm font-medium ">Id Ubicacion</label>
+            <input type="text" id="idUbicacion" formControlName="idUbicacion" maxlength="6"
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500" >
+            <span *ngIf="isValidField('idUbicacion')" class="text-[#EE312A]">
+                {{ getFieldError('idUbicacion') }}
+            </span>
+        </div>
+       
+
+        <div class="col-span-1" *ngIf="myForm.get('rfc')?.value === 'XEXX010101000'">
+            <label for="numRegIdTrib" class="block text-sm font-medium ">Num.Reg.Trib</label>
+            <input type="text" id="numRegIdTrib" formControlName="numRegIdTrib"
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+            <span *ngIf="isValidField('numRegIdTrib')" class="text-[#EE312A]">
+                {{ getFieldError('numRegIdTrib') }}
+            </span>
+        </div>
+        <div class="col-span-1" *ngIf="myForm.get('rfc')?.value === 'XEXX010101000'">
+            <label for="residenciaFiscal" class="block text-sm font-medium">Residencia Fiscal</label>
+            <select id="residenciaFiscal" formControlName="residenciaFiscal"
+                class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Selecciona País</option>
+                <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
+            </select>
+            <span *ngIf="isValidField('residenciaFiscal')" class="text-[#EE312A]">
+                {{ getFieldError('residenciaFiscal') }}
+            </span>
+        </div>
+
+
+
+
+        <div class="col-span-1">
+            <input id="domicilio" type="checkbox" (change)="toggleDomicilio()"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="domicilio" class="ml-2 text-sm">Domicilio</label>
+        </div>
+
+        
+        <div *ngIf="isDomicilioChecked" class="col-span-3">
+            <div class="grid grid-cols-3 gap-6">
+                <div class="col-span-1">
+                    <label for="pais" class="block text-sm font-medium">Pais</label>
+                    <select id="pais" formControlName="pais"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Selecciona País</option>
+                        <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
+                    </select>
+                    <span *ngIf="isValidField('pais')" class="text-[#EE312A]">
+                        {{ getFieldError('residenciaFiscal') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="codigoPostal" class="block text-sm font-medium ">C. postal</label>
+                    <input type="text" id="codigoPostal" formControlName="codigoPostal"  (blur)="onCodigoPostalBlur()"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('codigoPostal')" class="text-[#EE312A]">
+                        {{ getFieldError('codigoPostal') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="estado" class="block text-sm font-medium ">Estado</label>
+                    <input type="text" id="estado" formControlName="estado"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('estado')" class="text-[#EE312A]">
+                        {{ getFieldError('estado') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="municipio" class="block text-sm font-medium ">Municipio</label>
+                    <input type="text" id="municipio" formControlName="municipio"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('municipio')" class="text-[#EE312A]">
+                        {{ getFieldError('municipio') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="localidad" class="block text-sm font-medium">Localidad</label>
+                    <select
+                      id="localidad"
+                      formControlName="localidad"
+                      class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option *ngFor="let localidad of localidades" [value]="localidad">
+                        {{ localidad }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-span-1">
+                    <label for="colonia" class="block text-sm font-medium">Colonia</label>
+                    <select
+                      id="colonia"
+                      formControlName="colonia"
+                      class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option *ngFor="let colonia of colonias" [value]="colonia">
+                        {{ colonia }}
+                      </option>
+                    </select>
+                  </div>
+
+                <div class="col-span-1">
+                    <label for="calle" class="block text-sm font-medium ">Calle</label>
+                    <input type="text" id="calle" formControlName="calle"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('calle')" class="text-[#EE312A]">
+                        {{ getFieldError('calle') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="numeroExterior" class="block text-sm font-medium ">Num. Exterior</label>
+                    <input type="text" id="numeroExterior" formControlName="numeroExterior"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('numeroExterior')" class="text-[#EE312A]">
+                        {{ getFieldError('numeroExterior') }}
+                    </span>
+                </div>
+                <div class="col-span-1">
+                    <label for="numeroInterior" class="block text-sm font-medium ">Num. Interior</label>
+                    <input type="text" id="numeroInterior" formControlName="numeroInterior"
+                        class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+                    <span *ngIf="isValidField('numeroInterior')" class="text-[#EE312A]">
+                        {{ getFieldError('numeroInterior') }}
+                    </span>
+                </div>
+              
+                <div class="col-span-3">
+                    <label for="referencia" class="block text-sm font-medium ">Referencia</label>
+                    <textarea id="referencia" formControlName="referencia"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" rows="4"></textarea>
+                    <span *ngIf="isValidField('referencia')" class="text-[#EE312A]">
+                        {{ getFieldError('referencia') }}
+                    </span>
+                </div>
+                
+            </div>
+        </div>
+
+
+
+    </form>
+</div>
+
+
+
+<div class="flex justify-between mb-4 mt-5">
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium" (click)="closeModal()"
+            data-hs-overlay="#hs-extralarge-modal1">
+            Cancelar
+        </button>
+    </div>
+    <div class="mr-3">
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            {{buttonTitle}}
+        </button>
+    </div>
+</div>
+
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
+  </div>
