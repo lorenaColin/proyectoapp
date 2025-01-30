@@ -7,8 +7,8 @@
 </div>
 @if (mostrarTablaR) {
 <div [formGroup]="formulario">
-    <pre>{{ formulario.value | json }}</pre>
     <div formArrayName="relaciones">
+        <!-- <pre>{{ relaciones.value | json }}</pre> -->
         <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
             <thead>
                 <tr>
@@ -30,24 +30,29 @@
                             <option value="06">06-Factura generada por los traslados previos</option>
                             <option value="07">07-CFDI por aplicación de anticipo</option>
                         </select>
-                        <span *ngIf="!isValidField(row, 'relacion')" class="text-[#EE312A] text-sm">
+                        <span *ngIf="isValidField(row, 'relacion')" class="text-[#EE312A] text-sm font-normal">
                             {{ getFieldError(row, 'relacion') }}
                         </span>
                     </td>
                     <td class="py-2 px-4 border-b text-left">
                         <div formArrayName="uuids">
                             <div *ngFor="let uuid of getUuids(row).controls; let j = index" [formGroupName]="j"
-                                class="flex items-center gap-2">
-                                <input type="text" formControlName="uuid" class="form-control flex-1">
-                                <span *ngIf="!isValidField(row, 'uuids.' + j + '.uuid')" class="text-[#EE312A] text-sm">
+                                class="flex flex-col gap-1">
+                                
+                                <div class="flex items-center gap-2">
+                                    <input type="text" formControlName="uuid" class="form-control block flex-1">
+                                    <button type="button"
+                                        class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
+                                        (click)="removeUuid(i, j)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                    
+                                <span *ngIf="isValidField(row, 'uuids.' + j + '.uuid')" class="text-[#EE312A] text-sm font-normal">
                                     {{ getFieldError(row, 'uuids.' + j + '.uuid') }}
                                 </span>
-                                <button type="button"
-                                    class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
-                                    (click)="removeUuid(i, j)">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
                             </div>
+                    
                             <button type="button"
                                 class="mt-2 flex items-center justify-center w-10 h-10 rounded-full mx-auto ti-btn-primary"
                                 (click)="addUuid(i)">
@@ -55,9 +60,6 @@
                             </button>
                         </div>
                     </td>
-
-
-
                     <td class="py-2 px-4 border-b text-center">
                         <button type="button" class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
                             (click)="removeRow(i)">
