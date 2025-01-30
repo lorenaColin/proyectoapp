@@ -29,10 +29,14 @@ export class FormUbicacionesComponent {
   colonias: string[] = [];     
 
   private ubicacionesService = inject(ubicacionesService);
-  myForm! : FormGroup;
+  // myForm! : FormGroup;
+  @Input() myForm!: FormGroup;  // Recibe el formulario desde el padre
+
 
   ngOnChanges(): void {
-    this.myForm = this.ubicacionesService.getFormUbicacion("");
+    if (!this.myForm) {
+      this.myForm = this.ubicacionesService.getFormUbicacion("");  // Si no existe, inicialízalo
+    }
     console.log(this.ubicacionHijo);
     if (this.ubicacionHijo) {
       this.idUbicacion = this.ubicacionHijo.id || 0;

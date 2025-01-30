@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConceptsService } from './concepts.service';
-import { PATRON_RFC } from '../../shared/utils/expressions';
+import { PATRON_RFC, PATRON_UBICACION_DESTINO, PATRON_UBICACION_ORIGEN } from '../../shared/utils/expressions';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
 import { ubicacionInterface, ubicacionResponseInterface } from '../interfaces/ubicaciones.interface';
@@ -13,23 +13,29 @@ import { Observable } from 'rxjs';
 export class ubicacionesService {
     private fb = inject(FormBuilder);
     constructor() { }
-
-
+    validacionOrigen = PATRON_UBICACION_ORIGEN;
+    validacionDestino = PATRON_UBICACION_DESTINO;
+    private http = inject(HttpClient);
+    private apiUrl = `${environment.apiUrl}/ubicacion`;
+    private paisesUrl = `${environment.apiUrl}/paises`;
+    private direccionUrl = `${environment.apiUrl}/direccion`;
+  
+  
 
     getFormUbicacion(tipo: string): FormGroup {
       console.log(tipo);
-        // return this.myForm;
-        return this.fb.group({
+  
+      return this.fb.group({
           rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
-          idUbicacion: ['', [Validators.maxLength(8)]],
+          idUbicacion: ['', tipo === 'ORIGEN' ? [Validators.required] : []], 
           NombreRemitenteDestinatario: ['', [Validators.maxLength(254), Validators.minLength(1)]],
           numRegIdTrib: ['', [Validators.maxLength(40), Validators.minLength(6)]],
           residenciaFiscal: ['', []],
           tipoUbicacion: [tipo, []],
           domicilio: ['', []],
-          pais: ['',  [Validators.required]],
+          pais: ['', [Validators.required]],
           codigoPostal: ['', [Validators.required]],
-          estado: ['', [Validators.required, Validators.maxLength(30) ,Validators.minLength(1)]],
+          estado: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(1)]],
           municipio: ['', []],
           localidad: ['', []],
           colonia: ['', []],
@@ -38,12 +44,8 @@ export class ubicacionesService {
           numeroInterior: ['', []],
           referencia: ['', []],
       });
-    }
-private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/ubicacion`;
-  private paisesUrl = `${environment.apiUrl}/paises`;
-  private direccionUrl = `${environment.apiUrl}/direccion`;
-
+  }
+  
 
 
   getAllubicacion(): Observable<ubicacionResponseInterface> {

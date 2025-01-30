@@ -12,7 +12,7 @@ export class ListUbicacionesComponent {
 
   private ubicacionesService = inject(ubicacionesService);
   // myForm = this.ubicacionesService.getFormUbicacion();
-  myForm!:  FormGroup;
+  ubicacionForm!: FormGroup;  // Agrega esta propiedad
   constructor(private el: ElementRef) { }
   ubicaciones: ubicacionInterface[] = [];
   @Input() ubicacion: ubicacionInterface = {} as ubicacionInterface;
@@ -111,22 +111,11 @@ export class ListUbicacionesComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.myForm.patchValue({
-        //   tipoUbicacion: "origen"
-        // })
-        this.myForm = this.ubicacionesService.getFormUbicacion("ORIGEN");
-
-        this.openModal();
-        console.log('Seleccionaste Origen');
+        this.ubicacionForm = this.ubicacionesService.getFormUbicacion("ORIGEN"); 
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // this.myForm.patchValue({
-        //   tipoUbicacion: "destino"
-        // })
-        this.myForm = this.ubicacionesService.getFormUbicacion("DESTINO");
-
-        this.openModal();
-        console.log('Seleccionaste Destino');
+        this.ubicacionForm = this.ubicacionesService.getFormUbicacion("DESTINO"); 
       }
+      this.openModal();
     });
   }
   // showUbicaciones() {
