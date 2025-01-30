@@ -14,30 +14,28 @@ export class ubicacionesService {
     private fb = inject(FormBuilder);
     constructor() { }
 
+    myForm: FormGroup = this.fb.group({
+        rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
+        idUbicacion: ['', [Validators.pattern(/^(OR|DE)[0-9]*$/)]], 
+        NombreRemitenteDestinatario: ['', [Validators.maxLength(254), Validators.minLength(1)]],
+        numRegIdTrib: ['', [Validators.maxLength(40), Validators.minLength(6)]],
+        residenciaFiscal: ['', []],
+        tipoUbicacion: ['', []],
+        domicilio: ['', []],
+        pais: ['',  []],
+        codigoPostal: ['', []],
+        estado: ['', [ Validators.maxLength(30) ,Validators.minLength(1)]],
+        municipio: ['', []],
+        localidad: ['', []],
+        colonia: ['', []],
+        calle: ['', []],
+        numeroExterior: ['', []],
+        numeroInterior: ['', []],
+        referencia: ['', []],
+    });
 
-
-    getFormUbicacion(tipo: string): FormGroup {
-      console.log(tipo);
-        // return this.myForm;
-        return this.fb.group({
-          rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
-          idUbicacion: ['', [Validators.maxLength(8)]],
-          NombreRemitenteDestinatario: ['', [Validators.maxLength(254), Validators.minLength(1)]],
-          numRegIdTrib: ['', [Validators.maxLength(40), Validators.minLength(6)]],
-          residenciaFiscal: ['', []],
-          tipoUbicacion: [tipo, []],
-          domicilio: ['', []],
-          pais: ['',  [Validators.required]],
-          codigoPostal: ['', [Validators.required]],
-          estado: ['', [Validators.required, Validators.maxLength(30) ,Validators.minLength(1)]],
-          municipio: ['', []],
-          localidad: ['', []],
-          colonia: ['', []],
-          calle: ['', []],
-          numeroExterior: ['', []],
-          numeroInterior: ['', []],
-          referencia: ['', []],
-      });
+    getFormUbicacion(): FormGroup {
+        return this.myForm;
     }
 private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ubicacion`;

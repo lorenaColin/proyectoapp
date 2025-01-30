@@ -29,10 +29,9 @@ export class FormUbicacionesComponent {
   colonias: string[] = [];     
 
   private ubicacionesService = inject(ubicacionesService);
-  myForm! : FormGroup;
+  myForm = this.ubicacionesService.getFormUbicacion();
 
   ngOnChanges(): void {
-    this.myForm = this.ubicacionesService.getFormUbicacion("");
     console.log(this.ubicacionHijo);
     if (this.ubicacionHijo) {
       this.idUbicacion = this.ubicacionHijo.id || 0;
@@ -52,8 +51,8 @@ export class FormUbicacionesComponent {
     return ubicacion;
   }
 
-
-
+  
+  
   onSubmit(): void {
     if (this.myForm.valid) {
       this.showLoader = true;
@@ -102,12 +101,19 @@ export class FormUbicacionesComponent {
     this.isDomicilioChecked = !this.isDomicilioChecked;
     if (this.isDomicilioChecked) {
       this.myForm.get('pais')?.setValidators([Validators.required]);
-      this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
       this.myForm.get('estado')?.setValidators([Validators.required]);
+      this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
+
+
+  
     } else {
       this.myForm.get('pais')?.clearValidators();
       this.myForm.get('codigoPostal')?.clearValidators();
       this.myForm.get('estado')?.clearValidators();
+
+
+
+     
     }
     this.myForm.get('pais')?.updateValueAndValidity();
     this.myForm.get('codigoPostal')?.updateValueAndValidity();
@@ -126,6 +132,7 @@ export class FormUbicacionesComponent {
         referencia: '',
       });
     }
+    
   }
 
   resetUbicacion(): void {
@@ -157,14 +164,22 @@ export class FormUbicacionesComponent {
       error: (err) => {
       },
     });
-    this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
-      if (pais === 'México') {
-        this.myForm.get('estado')?.disable();
-      } else {
-        this.myForm.get('estado')?.enable();
-      }
-    });
+   
+    // this.myForm.get('pais')?.valueChanges.subscribe((paisValue: string) => {
+    //   if (paisValue === 'México') {
+    //     this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
+    //     this.myForm.get('estado')?.setValidators([Validators.required]);
 
+    //     this.myForm.get('codigoPostal')?.updateValueAndValidity();
+    //     this.myForm.get('estado')?.updateValueAndValidity();
+
+    //   } else {
+    //     this.myForm.get('codigoPostal')?.clearValidators();
+    //     this.myForm.get('codigoPostal')?.updateValueAndValidity();
+    //     this.myForm.get('estado')?.clearValidators();
+    //     this.myForm.get('estado')?.updateValueAndValidity();
+    //   }
+    // });
     this.myForm.get('rfc')?.valueChanges.subscribe((rfcValue: string) => {
       if (rfcValue === 'XEXX010101000') {
         this.myForm.get('numRegIdTrib')?.setValidators([Validators.required, Validators.maxLength(40), Validators.minLength(6)]);
@@ -183,16 +198,19 @@ export class FormUbicacionesComponent {
   }
 
 
+
   onCodigoPostalBlur(): void {
     const codigoPostal = this.myForm.get('codigoPostal')?.value;
-    if (codigoPostal) {
+    const pais = this.myForm.get('pais')?.value;
+  
+    if (pais === 'México' && codigoPostal) {
       this.showLoader = true;
       this.ubicacionesService.getDireccion(codigoPostal).subscribe({
         next: (data) => {
           this.showLoader = false;
           this.localidades = data.localidades || [];
           this.colonias = data.colonias || [];
-
+  
           this.myForm.patchValue({
             estado: data.estado || '',
             municipio: data.municipio || '',
@@ -205,6 +223,5 @@ export class FormUbicacionesComponent {
           Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
         },
       });
-    }
-  }
+    }}
 }

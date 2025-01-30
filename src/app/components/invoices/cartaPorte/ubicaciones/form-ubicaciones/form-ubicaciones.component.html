@@ -10,7 +10,7 @@
             </span>
         </div>
         <div class="col-span-2">
-            
+
             <label for="rfc" class="block text-sm font-medium">RFC</label>
             <input id="rfc" formControlName="rfc" class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
                 minlength="1" maxlength="25" oninput="this.value = this.value.toUpperCase();" />
@@ -20,13 +20,13 @@
         </div>
         <div class="col-span-1">
             <label for="idUbicacion" class="block text-sm font-medium ">Id Ubicacion</label>
-            <input type="text" id="idUbicacion" formControlName="idUbicacion" maxlength="6"
-                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500" >
+            <input type="text" id="idUbicacion" formControlName="idUbicacion"
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
             <span *ngIf="isValidField('idUbicacion')" class="text-[#EE312A]">
                 {{ getFieldError('idUbicacion') }}
             </span>
         </div>
-       
+
 
         <div class="col-span-1" *ngIf="myForm.get('rfc')?.value === 'XEXX010101000'">
             <label for="numRegIdTrib" class="block text-sm font-medium ">Num.Reg.Trib</label>
@@ -57,7 +57,7 @@
             <label for="domicilio" class="ml-2 text-sm">Domicilio</label>
         </div>
 
-        
+
         <div *ngIf="isDomicilioChecked" class="col-span-3">
             <div class="grid grid-cols-3 gap-6">
                 <div class="col-span-1">
@@ -68,12 +68,12 @@
                         <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
                     </select>
                     <span *ngIf="isValidField('pais')" class="text-[#EE312A]">
-                        {{ getFieldError('residenciaFiscal') }}
+                        {{ getFieldError('pais') }}
                     </span>
                 </div>
                 <div class="col-span-1">
                     <label for="codigoPostal" class="block text-sm font-medium ">C. postal</label>
-                    <input type="text" id="codigoPostal" formControlName="codigoPostal"  (blur)="onCodigoPostalBlur()"
+                    <input type="text" id="codigoPostal" formControlName="codigoPostal" (blur)="onCodigoPostalBlur()"
                         class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
                     <span *ngIf="isValidField('codigoPostal')" class="text-[#EE312A]">
                         {{ getFieldError('codigoPostal') }}
@@ -95,34 +95,52 @@
                         {{ getFieldError('municipio') }}
                     </span>
                 </div>
+                <!-- <div class="col-span-1">
+                    <label for="localidad" class="block text-sm font-medium">Localidad</label>
+                    <select id="localidad" formControlName="localidad"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option *ngFor="let localidad of localidades" [value]="localidad">
+                            {{ localidad }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-span-1">
+                    <label for="colonia" class="block text-sm font-medium">Colonia</label>
+                    <select id="colonia" formControlName="colonia"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option *ngFor="let colonia of colonias" [value]="colonia">
+                            {{ colonia }}
+                        </option>
+                    </select>
+                </div> -->
                 <div class="col-span-1">
                     <label for="localidad" class="block text-sm font-medium">Localidad</label>
-                    <select
-                      id="localidad"
-                      formControlName="localidad"
-                      class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option *ngFor="let localidad of localidades" [value]="localidad">
-                        {{ localidad }}
-                      </option>
+                    <input *ngIf="myForm.get('pais')?.value !== 'México'" type="text" id="localidad"
+                        formControlName="localidad"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                    <select *ngIf="myForm.get('pais')?.value === 'México'" id="localidad" formControlName="localidad"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option *ngFor="let localidad of localidades" [value]="localidad">
+                            {{ localidad }}
+                        </option>
                     </select>
-                  </div>
-                  <div class="col-span-1">
-                    <label for="colonia" class="block text-sm font-medium">Colonia</label>
-                    <select
-                      id="colonia"
-                      formControlName="colonia"
-                      class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option *ngFor="let colonia of colonias" [value]="colonia">
-                        {{ colonia }}
-                      </option>
-                    </select>
-                  </div>
+                </div>
 
                 <div class="col-span-1">
+                    <label for="colonia" class="block text-sm font-medium">Colonia</label>
+                    <input *ngIf="myForm.get('pais')?.value !== 'México'" type="text" id="colonia"
+                        formControlName="colonia"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                    <select *ngIf="myForm.get('pais')?.value === 'México'" id="colonia" formControlName="colonia"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option *ngFor="let colonia of colonias" [value]="colonia">
+                            {{ colonia }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-span-1">
                     <label for="calle" class="block text-sm font-medium ">Calle</label>
-                    <input type="text" id="calle" formControlName="calle"
+                    <input type="text" id="calle"
                         class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
                     <span *ngIf="isValidField('calle')" class="text-[#EE312A]">
                         {{ getFieldError('calle') }}
@@ -144,16 +162,17 @@
                         {{ getFieldError('numeroInterior') }}
                     </span>
                 </div>
-              
+
                 <div class="col-span-3">
                     <label for="referencia" class="block text-sm font-medium ">Referencia</label>
                     <textarea id="referencia" formControlName="referencia"
-                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" rows="4"></textarea>
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        rows="4"></textarea>
                     <span *ngIf="isValidField('referencia')" class="text-[#EE312A]">
                         {{ getFieldError('referencia') }}
                     </span>
                 </div>
-                
+
             </div>
         </div>
 
@@ -180,4 +199,4 @@
 
 <div id="loader" *ngIf="showLoader">
     <img src="images/loader.svg" alt="" />
-  </div>
+</div>

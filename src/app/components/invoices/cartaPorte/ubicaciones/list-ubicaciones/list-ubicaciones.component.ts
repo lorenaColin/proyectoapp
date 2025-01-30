@@ -2,7 +2,6 @@ import { Component, ElementRef, inject, Input } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ubicacionesService } from '../../../../services/ubicaciones.service';
 import { ubicacionInterface, ubicacionResponseInterface } from '../../../../interfaces/ubicaciones.interface';
-import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-list-ubicaciones',
   templateUrl: './list-ubicaciones.component.html',
@@ -11,8 +10,7 @@ import { FormGroup } from '@angular/forms';
 export class ListUbicacionesComponent {
 
   private ubicacionesService = inject(ubicacionesService);
-  // myForm = this.ubicacionesService.getFormUbicacion();
-  myForm!:  FormGroup;
+  myForm = this.ubicacionesService.getFormUbicacion();
   constructor(private el: ElementRef) { }
   ubicaciones: ubicacionInterface[] = [];
   @Input() ubicacion: ubicacionInterface = {} as ubicacionInterface;
@@ -87,7 +85,7 @@ export class ListUbicacionesComponent {
         icon: 'success',
       });
     } else {
-      // Serie es nueva, se agrega
+     
       this.ubicaciones.push(data);
       Swal.fire({
         title: 'ubicacion creada exitosamente',
@@ -99,7 +97,6 @@ export class ListUbicacionesComponent {
     const button = this.el.nativeElement.querySelector('.hs-tooltip-toggle');
     button.click();
   }
-
   showUbicaciones() {
     Swal.fire({
       title: '¿Qué tipo de ubicación deseas crear?',
@@ -110,25 +107,47 @@ export class ListUbicacionesComponent {
       cancelButtonText: 'Destino',
       reverseButtons: true
     }).then((result) => {
+      const idUbicacion = this.myForm.get('idUbicacion')?.value || '';
       if (result.isConfirmed) {
-        // this.myForm.patchValue({
-        //   tipoUbicacion: "origen"
-        // })
-        this.myForm = this.ubicacionesService.getFormUbicacion("ORIGEN");
-
-        this.openModal();
-        console.log('Seleccionaste Origen');
+        this.myForm.patchValue({
+          tipoUbicacion: "origen",
+          idUbicacion: idUbicacion ? `OR${idUbicacion}` : ''
+        });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // this.myForm.patchValue({
-        //   tipoUbicacion: "destino"
-        // })
-        this.myForm = this.ubicacionesService.getFormUbicacion("DESTINO");
-
-        this.openModal();
-        console.log('Seleccionaste Destino');
+        this.myForm.patchValue({
+          tipoUbicacion: "destino",
+          idUbicacion: idUbicacion ? `DE${idUbicacion}` : ''
+        });
       }
+      this.openModal();
     });
   }
+  
+  // showUbicaciones() {
+  //   Swal.fire({
+  //     title: '¿Qué tipo de ubicación deseas crear?',
+  //     text: 'Selecciona si es origen o destino.',
+  //     icon: 'question',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Origen',
+  //     cancelButtonText: 'Destino',
+  //     reverseButtons: true
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.myForm.patchValue({
+  //         tipoUbicacion: "origen"
+  //       })
+  //       this.openModal();
+  //       console.log('Seleccionaste Origen');
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       this.myForm.patchValue({
+  //         tipoUbicacion: "destino"
+  //       })
+  //       this.openModal();
+  //       console.log('Seleccionaste Destino');
+  //     }
+  //   });
+  // }
   // showUbicaciones() {
   //   Swal.fire({
   //     title: '¿Qué tipo de ubicación deseas crear?',
