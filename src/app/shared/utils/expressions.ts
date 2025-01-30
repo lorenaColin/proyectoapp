@@ -11,7 +11,8 @@ export const PATRON_UUID = '^[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-
 // Expresiones de carta Porte
 export const PATRON_UBICACION_ORIGEN = /OR[0-9]{6}$/;
 export const PATRON_UBICACION_DESTINO = /DE[0-9]{6}$/;
-
+export const PATRON_PLACAVM = /[^(?!.*\s)-]{5,7}/; 
+export const PATRON_ANIO = /^[0-9]{4}$/; 
 /*
 const PATRON_REGULAR_20 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}';
 const PATRON_REGULAR_100 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}';
@@ -31,7 +32,6 @@ const PATRON_DECIMAL = /^[0-9]+[.]*[0-9]*$/;
 const PATRON_RAZON_SOCIAL = /^[^\|]{1,254}$/;
 const PATRON_NUMERO_PEDIMENTO = /^[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}$/;
 const PATRON_USUARIO = /^[a-zA-Z0-9._@-]+$/;
-const PATRON_PLACAVM = /[^(?!.*\s)-]{5,7}/; --
-const PATRON_ANIO = /^[0-9]{4}$/; --
+
 
 */
