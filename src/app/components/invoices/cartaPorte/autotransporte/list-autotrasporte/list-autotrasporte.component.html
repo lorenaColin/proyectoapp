@@ -8,7 +8,8 @@
             <div class="flex sm:mt-0 mt-2 items-center">
               <div class="input-group">
                 <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
-                  placeholder="Buscar Auto Trasporte " aria-describedby="search-contact-member" autocomplete="off" />
+                  placeholder="Buscar Auto Trasporte " aria-describedby="search-contact-member" autocomplete="off" 
+                  (input)="applyFilter($event)"/>
                 <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
                   id="search-contact-member">
                   <i class="ri-search-line text-[#8C9097]"></i>
@@ -32,42 +33,50 @@
       </div>
     </div>
   </div>
-  @for (auto of listadoAutos; track $index) {
-  <div class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
-    <div class="box shadow-md rounded-md overflow-hidden">
-      <div class="box-body p-4 bg-white">
-        <div class="flex items-center mb-4">
-          <span class="avatar avatar-md avatar-rounded me-4">
-            <img src="./images/faces/1.jpg" alt="" />
-          </span>
-          <div>
-            <p class="mb-0 font-semibold text-[.875rem] text-primary">
-              {{ auto.placaVM }}
-            </p>
-            <p class="mb-0 text-[.625rem] font-semibold text-[#000000]">
-              {{ auto.configVehicular }}
-            </p>
+  @for (auto of filteredAutotransports; track $index) {
+    <div class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+      <div class="box shadow-md rounded-md overflow-hidden bg-white">
+        <div class="box-body p-4">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="avatar avatar-md avatar-rounded">
+              <img src="./images/faces/1.jpg" alt="Avatar" />
+            </span>
+            <div>
+              <p class="font-semibold text-[0.875rem] text-primary">
+                Placa: {{ auto.placaVM }}
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="mb-4 flex items-center justify-between">
-          <div class="flex items-center">
-            <p class="mb-0 font-semibold text-[#000000]">
-              Año:
-            </p>
-            <span class="text-[#000000] ml-2">{{ auto.anioModeloVM }}</span>
-          </div>
-        </div>
-        <div class="flex items-center justify-end">
-          <div class="ltr:float-right rtl:float-left text-[0.75rem] font-semibold text-[#000000] text-end">
+          <ul class="list-none divide-y divide-gray-300 mb-4">
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Clave:</p>
+              <span class="ml-2 text-gray-700">{{ auto.configVehicular }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Año:</p>
+              <span class="ml-2 text-gray-700">{{ auto.anioModeloVM }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Aseguradora:</p>
+              <span class="ml-2 text-gray-700">{{ auto.aseguraRespCivil }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Póliza:</p>
+              <span class="ml-2 text-gray-700">{{ auto.polizaRespCivil }}</span>
+            </li>
+          </ul>
+          
+
+          <div class="flex justify-end">
             <button type="button" (click)="editAutotransport(auto.id)" data-hs-overlay="#hs-extralarge-modal1"
-              class="ti-btn ti-btn-primary-full text-[#000000] !font-medium">
+              class="ti-btn ti-btn-primary-full text-white !font-medium">
               Ver
             </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    
   }
 </div>
 <div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static] fixed"

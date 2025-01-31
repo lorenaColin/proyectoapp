@@ -23,6 +23,7 @@ export class ListAutotrasporteComponent {
     this.showLoader = true;
     this.autotransportService.getAutotransports().subscribe((response) => {
       this.showLoader = false;
+      this.listadoAutos = response.data;
       this.filteredAutotransports = response.data;
 
       let { error, data } = response;
@@ -80,5 +81,18 @@ export class ListAutotrasporteComponent {
         );
       }
     );
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.filteredAutotransports = this.listadoAutos.filter(
+      (auto) =>
+        auto.placaVM.toLowerCase().includes(filterValue) ||
+        auto.aseguraRespCivil.toLowerCase().includes(filterValue) ||
+        auto.configVehicular.toLowerCase().includes(filterValue)
+    );
+    console.log(this.filteredAutotransports);
   }
 }
