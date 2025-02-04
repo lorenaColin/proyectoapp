@@ -76,7 +76,7 @@ export class ListAutotrasporteComponent {
         this.showLoader = false;
         Swal.fire(
           'Error',
-          'No se pudo actualizar la lista de clientes.',
+          'No se pudo actualizar la lista de autotransportes.',
           'error'
         );
       }
