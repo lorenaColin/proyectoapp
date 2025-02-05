@@ -24,10 +24,13 @@ export class ubicacionesService {
 
     getFormUbicacion(tipo: string): FormGroup {
       console.log(tipo);
-  
+      const idUbicacionPattern = tipo === 'ORIGEN' ? PATRON_UBICACION_ORIGEN : PATRON_UBICACION_DESTINO;
       return this.fb.group({
           rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
-          idUbicacion: ['', tipo === 'ORIGEN' ? [Validators.required] : []], 
+          // idUbicacion: ['', tipo === 'ORIGEN' ? [Validators.required] : []], 
+          idUbicacion: ['', 
+            [ Validators.pattern(idUbicacionPattern)]
+          ], 
           NombreRemitenteDestinatario: ['', [Validators.maxLength(254), Validators.minLength(1)]],
           numRegIdTrib: ['', [Validators.maxLength(40), Validators.minLength(6)]],
           residenciaFiscal: ['', []],
