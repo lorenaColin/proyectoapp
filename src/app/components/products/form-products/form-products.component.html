@@ -31,10 +31,10 @@
 
             </div>
 
-            <span *ngIf="myForm.get('product_key')?.hasError('notFound') && myForm.get('product_key')?.touched"
+            <!-- <span *ngIf="myForm.get('product_key')?.hasError('notFound') && myForm.get('product_key')?.touched"
                 class="text-[#EE312A] text-sm">
                 Este código de producto no se encuentra en el catálogo.
-            </span>
+            </span> -->
             <span *ngIf="isValidField('product_key')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('product_key') }}
             </span>

@@ -38,7 +38,7 @@ export interface ProductInterface {
     data: catproducto[];  
   }
   export interface catUnidad {
-    c_claveunidad: string;
+    c_claveunidad: number;
     nombre: string;
   }
   export interface ApiResponseUnidad {

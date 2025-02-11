@@ -165,10 +165,69 @@ export class FormProductsComponent {
       }
     });
   }
+  // onInput(event: any): void {
+  //   const query = event.target.value.toLowerCase();
+  //   console.log('Texto ingresado:', query);
+  //   if (query.length >= 4) {
+  //     this.showLoader = true;
+  //     setTimeout(() => {
+  //       if (Array.isArray(this.listProducto)) {
+  //         this.filteredProducto = this.listProducto.filter((mercancia) =>
+  //           mercancia.c_ClaveProdServ.toLowerCase().includes(query) || 
+  //           mercancia.descripcion.toLowerCase().includes(query)
+  //         );
+  //         console.log('Mercancia filtradas:', this.filteredProducto);
+  //       }
+  //       this.showLoader = false;
+  //     }, 1000);  
+  //   } else {
+  //     this.filteredProducto = [];
+  //     this.showLoader = false;  
+  //   }
+  // }
+  // onInput(event: any): void {
+  //   const query = event.target.value.toLowerCase();
+  //   console.log('Texto ingresado:', query);
+  
+  //   if (query.length >= 4) {
+  //     this.showLoader = true;
+  //     setTimeout(() => {
+  //       if (Array.isArray(this.listProducto)) {
+  //         this.filteredProducto = this.listProducto.filter((Producto) => {
+  //           const clave = Producto.c_ClaveProdServ.toString();
+  //           const descripcion = Producto.descripcion.toLowerCase();
+  //           return clave.includes(query) || descripcion.includes(query);
+  //         });
+  //         console.log('Productos filtrados:', this.filteredProducto);
+  
+  //         if (this.filteredProducto.length === 0) {
+  //           this.myForm.get('product_key')?.setErrors({ notFound: true });
+  //         } else {
+  //           this.myForm.get('product_key')?.setErrors(null);
+  //         }
+  
+  //         const value = this.myForm.get('product_key')?.value;
+  //         const productExists = this.filteredProducto.some(product => 
+  //           product.c_ClaveProdServ.toString() === value
+  //         );
+          
+  //         if (this.filteredProducto.length === 0) {
+  //           this.myForm.get('product_key')?.setErrors({ notFound: true });
+  //         } else {
+  //           this.myForm.get('product_key')?.setErrors(null);
+  //         }
+  //       }
+  //       this.showLoader = false;
+  //     }, 1000);
+  //   } else {
+  //     this.filteredProducto = [];
+  //     this.showLoader = false;
+  //     this.myForm.get('product_key')?.setErrors(null);
+  //   }
+  // }
   onInput(event: any): void {
     const query = event.target.value.toLowerCase();
     console.log('Texto ingresado:', query);
-  
     if (query.length >= 4) {
       this.showLoader = true;
       setTimeout(() => {
@@ -179,23 +238,14 @@ export class FormProductsComponent {
             return clave.includes(query) || descripcion.includes(query);
           });
           console.log('Productos filtrados:', this.filteredProducto);
-  
-          if (this.filteredProducto.length === 0) {
-            this.myForm.get('product_key')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('product_key')?.setErrors(null);
-          }
-  
           const value = this.myForm.get('product_key')?.value;
-          const productExists = this.filteredProducto.some(product => 
+          const selectedProduct = this.filteredProducto.find(product =>
             product.c_ClaveProdServ.toString() === value
           );
-          
-          if (this.filteredProducto.length === 0) {
-            this.myForm.get('product_key')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('product_key')?.setErrors(null);
+          if (selectedProduct) {
+            this.claveProdServDescription = selectedProduct.descripcion;
           }
+          this.myForm.get('product_key')?.setErrors(this.filteredProducto.length === 0 ? { notFound: true } : null);
         }
         this.showLoader = false;
       }, 1000);
@@ -205,7 +255,6 @@ export class FormProductsComponent {
       this.myForm.get('product_key')?.setErrors(null);
     }
   }
-  
   
 
 
@@ -307,7 +356,7 @@ export class FormProductsComponent {
       setTimeout(() => {
         if (Array.isArray(this.listUnidad)) {
           this.filteredUnidad = this.listUnidad.filter((unidad) => {
-            const clave = unidad.c_claveunidad.toLowerCase();
+            const clave = unidad.c_claveunidad.toString();
             const descripcion = unidad.nombre.toLowerCase();
             return clave.includes(query) || descripcion.includes(query);
           });
