@@ -1,27 +1,52 @@
 <div>
+    <pre>{{ myForm.value | json }}</pre>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
 
         <div class="col-span-1">
-            <label for="mercancias" class="block text-sm font-medium ">Mercancias</label>
-            <input type="text" id="mercancias" formControlName="mercancias" class="mt-1 block w-full rounded-md ">
-            <span *ngIf="isValidField('mercancias')" class="text-[#EE312A]">
-                {{ getFieldError('mercancias') }}
+            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto" 
+                    formControlName="claveProdServCP"  [value]="claveProdServDescription" maxlength="8" (input)="onInput($event)"
+                    (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('claveProdServCP')}">
+
+            </div>
+            <span *ngIf="isValidField('claveProdServCP')" class="text-[#EE312A] text-sm">
+                {{ getFieldError('claveProdServCP') }}
             </span>
+            <ul *ngIf="filteredMercancia.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let mercancia of filteredMercancia; let i = index" (click)="selectMercancia(mercancia)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ mercancia.c_ClaveProdServ }} - {{ mercancia.descripcion }}
+                </li>
+            </ul>
         </div>
+
         <div class="col-span-1">
-            <label for="unidad" class="block text-sm font-medium ">Unidad</label>
-            <input type="text" id="unidad" formControlName="unidad" class="mt-1 block w-full rounded-md ">
-            <span *ngIf="isValidField('unidad')" class="text-[#EE312A]">
+            <label for="claveUnidades" class="form-label text-[.875rem] text-black"> Clave Unidad:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="claveUnidades" id="claveUnidades"
+                    formControlName="unidad" [value]="claveUnidadDescription" (input)="onInput1($event)"
+                    (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('unidad')}">
+            </div>
+            <span *ngIf="isValidField('unidad')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('unidad') }}
             </span>
+            <ul *ngIf="filteredClave.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let clave of filteredClave; let i = index" (click)="selectClave(clave)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ clave.nombre }} - {{ clave.c_claveunidad }}
+                </li>
+            </ul>
         </div>
+
         <div class="col-span-1">
-            <label for="dimensiones" class="block text-sm font-medium ">Dimensiones</label>
-            <input type="text" id="dimensiones" formControlName="dimensiones" class="mt-1 block w-full rounded-md ">
+            <label for="dimensiones" class="block text-sm font-medium">Dimensiones</label>
+            <input type="text" id="dimensiones" formControlName="dimensiones" class="mt-1 block w-full rounded-md">
             <span *ngIf="isValidField('dimensiones')" class="text-[#EE312A]">
-                {{ getFieldError('dimensiones') }}
+                El formato de la dimensión no es válido: ejemplo (60/60/60plg)
             </span>
         </div>
+
         <div class="col-span-3">
             <label for="descripcion" class="block text-sm font-medium">Descripción</label>
             <textarea id="descripcion" rows="4" formControlName="descripcion"
@@ -30,22 +55,83 @@
                 {{ getFieldError('descripcion') }}
             </span>
         </div>
-
+        @if(bandera){
+            <div class="col-span-1">
+                <label for="domicilio" class="ml-2 text-sm">Material Peligroso</label>
+                <input id="domicilio" type="checkbox"
+                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                       formControlName="materialPeligroso" (change)="onMaterialPeligrosoChange($event)">
+              </div>
+              
+              <div class="col-span-3">
+                <!-- Clave Material Peligroso -->
+                <div class="col-span-1">
+                  <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Clave Material Peligroso:</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto"
+                           formControlName="cveMaterialPeligroso" [value]="matPeligrosoDescription" maxlength="8" (input)="onInput2($event)"
+                           (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('cveMaterialPeligroso')}">
+                  </div>
+                  <span *ngIf="isValidField('cveMaterialPeligroso')" class="text-[#EE312A] text-sm">
+                    {{ getFieldError('cveMaterialPeligroso') }}
+                  </span>
+                  <ul *ngIf="filteredMatPeligroso.length > 0" class="absolute rounded-lg mt-2 w-full">
+                    <li *ngFor="let matPeligroso of filteredMatPeligroso; let i = index"
+                        (click)="selectMatPeligroso(matPeligroso)" [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                      {{ matPeligroso.clave }} - {{ matPeligroso.descripcion }}
+                    </li>
+                  </ul>
+                </div>
+              
+                <!-- Embalaje -->
+                <div class="col-span-1">
+                  <label for="embalajes" class="form-label text-[.875rem] text-black">Embalaje:</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="embalaje" id="embalajes" formControlName="embalaje" [value]="embalajeDescription" 
+                           maxlength="8" (input)="onInput4($event)" (keydown)="onKeyDown($event)"
+                           [ngClass]="{'is-invalid': isValidField('embalaje')}">
+                  </div>
+                  <span *ngIf="isValidField('embalaje')" class="text-[#EE312A] text-sm">
+                    {{ getFieldError('embalaje') }}
+                  </span>
+                  <ul *ngIf="filteredEmbalaje.length > 0" class="absolute rounded-lg mt-2 w-full">
+                    <li *ngFor="let embalaje of filteredEmbalaje; let i = index" (click)="selectEmbalaje(embalaje)"
+                        [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                      {{ embalaje.clave }} - {{ embalaje.descripcion }}
+                    </li>
+                  </ul>
+                </div>
+              
+                <div class="col-span-1">
+                  <label for="descripEmbalaje" class="block text-sm font-medium ">Descripción</label>
+                  <input type="text" id="descripEmbalaje" formControlName="descripEmbalaje"
+                         class="mt-1 block w-full rounded-md ">
+                  <span *ngIf="isValidField('descripEmbalaje')" class="text-[#EE312A]">
+                    {{ getFieldError('descripEmbalaje') }}
+                  </span>
+                </div>
+              </div>
+              
+        }
     </form>
 </div>
 
 
 <div class="flex justify-between mb-4 mt-5">
     <div class="ms-3">
-        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium" (click)="closeModal()"
             data-hs-overlay="#hs-extralarge-modal1">
 
             Cancelar
         </button>
     </div>
     <div class="mr-3">
-        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
-            Crear
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            {{buttonTitle}}
         </button>
     </div>
+</div>
+
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
 </div>
