@@ -1,4 +1,6 @@
 <div>
+    <pre>{{ myForm.value | json }}</pre>
+
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6 bg-white rounded-lg">
         <div class="col-span-2">
             <label for="internal_key" class="block text-sm font-medium">Clave interna:</label>
@@ -10,7 +12,7 @@
             </span>
         </div>
 
-        <div class="col-span-1">
+        <!-- <div class="col-span-1">
             <label for="product_key" class="block text-sm font-medium">Clave Producto Servicio:</label>
             <input id="product_key" formControlName="product_key" (input)="searchClavProdSer()"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="8"
@@ -18,18 +20,73 @@
             <span *ngIf="isValidField('product_key')" class="text-[#EE312A]">
                 {{ getFieldError('product_key') }}
             </span>
+        </div> -->
+        <div class="col-span-1">
+            <label for="product_keys" class="form-label text-[.875rem] text-black">Clave Producto Servicio:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="product_keys" id="product_keys"
+                    formControlName="product_key" [value]="claveProdServDescription" (input)="onInput($event)"
+                    (keydown)="onKeyDown($event)"
+                    [ngClass]="{'is-invalid': myForm.get('product_key')?.hasError('notFound') && myForm.get('product_key')?.touched}">
+
+            </div>
+
+            <span *ngIf="myForm.get('product_key')?.hasError('notFound') && myForm.get('product_key')?.touched"
+                class="text-[#EE312A] text-sm">
+                Este código de producto no se encuentra en el catálogo.
+            </span>
+            <span *ngIf="isValidField('product_key')" class="text-[#EE312A] text-sm">
+                {{ getFieldError('product_key') }}
+            </span>
+
+            <ul *ngIf="filteredProducto.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let producto of filteredProducto; let i = index" (click)="selectProducto(producto)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ producto.c_ClaveProdServ }} - {{ producto.descripcion }}
+                </li>
+            </ul>
         </div>
 
 
+        <!-- 
         <div class="col-span-1">
             <label for="unit" class="block text-sm font-medium">Clave Unidad:</label>
-            <input id="unit" formControlName="unit" (input)="searchClavUnidad()"
+            <input id="unit" formControlName="unit" 
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="2" maxlength="3"
                 oninput="this.value = this.value.toUpperCase();" />
             <span *ngIf="isValidField('unit')" class="text-[#EE312A]">
                 {{ getFieldError('unit') }}
             </span>
+        </div> -->
+        <div class="col-span-1">
+            <label for="unidad" class="form-label text-[.875rem] text-black">Clave Unidad:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad" maxlength="8" 
+                formControlName="unit"
+                    (input)="onInput1($event)" (keydown)="onKeyDown($event)"
+                    [ngClass]="{'is-invalid': isValidField('unit')}">
+            </div>
+
+            <!-- Mensaje de error -->
+            <span *ngIf="myForm.get('unit')?.hasError('notFound') && myForm.get('unit')?.touched"
+                class="text-[#EE312A] text-sm">
+                Este código de unidad no se encuentra en el catálogo.
+            </span>
+            <span *ngIf="isValidField('unit')" class="text-[#EE312A] text-sm">
+                {{ getFieldError('unit') }}
+            </span>
+
+            <ul *ngIf="filteredUnidad.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let unidad of filteredUnidad; let i = index" (click)="selectUnidad(unidad)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ unidad.c_claveunidad}} - {{ unidad.nombre }}
+                </li>
+            </ul>
         </div>
+
+
+
+
 
         <div class="col-span-1">
             <label for="unit_description" class="block text-sm font-medium">Descripción de unidad:</label>

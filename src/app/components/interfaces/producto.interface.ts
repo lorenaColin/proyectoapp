@@ -25,3 +25,27 @@ export interface ProductInterface {
     error: boolean;
     data: ProductInterface[];
   }
+
+  export interface catproducto {
+    c_ClaveProdServ: string;
+    descripcion: string;
+    PalabrasSimilares:string;
+  }
+  export interface ApiResponseProducto {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: catproducto[];  
+  }
+  export interface catUnidad {
+    c_claveunidad: string;
+    nombre: string;
+  }
+  export interface ApiResponseUnidad {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: catUnidad[];  
+  }
+
+  
