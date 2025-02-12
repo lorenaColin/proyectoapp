@@ -1,59 +1,110 @@
 <div>
-    <form  [formGroup]="myForm" class="grid grid-cols-4 gap-6 p-6  rounded-lg">
+    <pre>
+        {{ myForm.value | json }}
+    </pre>
+    <form [formGroup]="myForm" class="grid grid-cols-4 gap-6 p-6 rounded-lg">
 
-        <div class="col-span-2">
-            <label for="cVehicular" class="block text-sm font-medium ">C. Vehicular</label>
-            <select id="cVehicular"formControlName="cVehicular"
+        <div class="col-span-4">
+            <label for="configVehicular" class="block text-sm font-medium ">C. Vehicular</label>
+            <select id="configVehicular" formControlName="configVehicular"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option>Seleccionar Clave</option>
-
+                <option value="" selected disabled>Seleccione una clave</option>
+                <option *ngFor="let config of configVehicularList" [value]="config.nomenclature">
+                    {{ config.nomenclature }} - {{ config.description }}
+                </option>
             </select>
-            <span *ngIf="isValidField('cVehicular')" class="text-[#EE312A]">
-                {{ getFieldError('cVehicular') }}
+            <span *ngIf="isValidField('configVehicular')" class="text-[#EE312A]">
+                {{ getFieldError('configVehicular') }}
             </span>
         </div>
-        <div class="col-span-2">
-            <label for="año" class="block text-sm font-medium ">Año</label>
-            <select id="año" formControlName="año"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option>Selecciona el Año</option>
 
+        <div class="col-span-4 grid grid-cols-3 gap-6">
+            <div>
+                <label for="anioModeloVM" class="block text-sm font-medium">Año</label>
+                <input type="text" id="anioModeloVM" formControlName="anioModeloVM"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    maxlength="4">
+                <span *ngIf="isValidField('anioModeloVM')" class="text-[#EE312A]">
+                    {{ getFieldError('anioModeloVM') }}
+                </span>
+            </div>
+            <div>
+                <label for="placaVM" class="block text-sm font-medium">P. Vehicular</label>
+                <input type="text" id="placaVM" formControlName="placaVM"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    minlength="5" maxlength="7">
+                <span *ngIf="isValidField('placaVM')" class="text-[#EE312A]">
+                    {{ getFieldError('placaVM') }}
+                </span>
+            </div>
+            <div>
+                <label for="pesoBrutoVehicular" class="block text-sm font-medium">Peso B</label>
+                <input type="text" id="pesoBrutoVehicular" formControlName="pesoBrutoVehicular"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <span *ngIf="isValidField('pesoBrutoVehicular')" class="text-[#EE312A]">
+                    {{ getFieldError('pesoBrutoVehicular') }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-span-2">
+            <label for="permSCT" class="block text-sm font-medium">Permiso SCT</label>
+            <select id="permSCT" formControlName="permSCT"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="" selected disabled>Seleccionar el Permiso</option>
+                <option *ngFor="let permiso of permisosList" [value]="permiso.permission">
+                    {{ permiso.permission }} - {{ permiso.description }}
+                </option>
             </select>
-            <span *ngIf="isValidField('año')" class="text-[#EE312A]">
-                {{ getFieldError('año') }}
+            <span *ngIf="isValidField('permSCT')" class="text-[#EE312A]">
+                {{ getFieldError('permSCT') }}
             </span>
         </div>
+
         <div class="col-span-2">
-            <label for="pVehicular" class="block text-sm font-medium ">P. Vehicular</label>
-            <input type="text" id="pVehicular" formControlName="pVehicular"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <span *ngIf="isValidField('pVehicular')" class="text-[#EE312A]">
-                    {{ getFieldError('pVehicular') }}
-                </span>
+            <label for="numPermisoSCT" class="block text-sm font-medium">Número de Permiso SCT</label>
+            <input type="text" id="numPermisoSCT" formControlName="numPermisoSCT"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="1" maxlength="50">
+            <span *ngIf="isValidField('numPermisoSCT')" class="text-[#EE312A]">
+                {{ getFieldError('numPermisoSCT') }}
+            </span>
         </div>
+
         <div class="col-span-2">
-            <label for="peso" class="block text-sm font-medium ">Peso B.</label>
-            <input type="text" id="peso" formControlName="peso"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <span *ngIf="isValidField('peso')" class="text-[#EE312A]">
-                    {{ getFieldError('peso') }}
-                </span>
+            <label for="aseguraRespCivil" class="block text-sm font-medium">Seguro</label>
+            <input type="text" id="aseguraRespCivil" formControlName="aseguraRespCivil"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="3" maxlength="50">
+            <span *ngIf="isValidField('aseguraRespCivil')" class="text-[#EE312A]">
+                {{ getFieldError('aseguraRespCivil') }}
+            </span>
         </div>
+
+        <div class="col-span-2">
+            <label for="polizaRespCivil" class="block text-sm font-medium">Número de Poliza</label>
+            <input type="text" id="polizaRespCivil" formControlName="polizaRespCivil"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="3" maxlength="30">
+            <span *ngIf="isValidField('polizaRespCivil')" class="text-[#EE312A]">
+                {{ getFieldError('polizaRespCivil') }}
+            </span>
+        </div>
+
     </form>
 </div>
-
 
 <div class="flex justify-between mb-4 mt-5">
     <div class="ms-3">
         <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-            data-hs-overlay="#hs-extralarge-modal1">
-
+            data-hs-overlay="#hs-extralarge-modal1" (click)="closeModal()">
             Cancelar
         </button>
     </div>
     <div class="mr-3">
-        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
-            Crear
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            {{buttonTitle}}
         </button>
     </div>
+</div>
+
+<div id="loader" *ngIf="showLoader">
+    <img src="./images/loader.svg" alt="" />
 </div>

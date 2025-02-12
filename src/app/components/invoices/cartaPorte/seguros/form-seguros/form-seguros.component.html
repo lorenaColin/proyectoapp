@@ -1,35 +1,34 @@
 <div>
-    <form   [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+    <pre>
+        {{ myForm.value | json }}
+    </pre>
+    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
         <div class="col-span-1">
-            <label for="tipoRemolque" class="block text-sm font-medium ">Tipo </label>
-            <select id="tipoRemolque" formControlName="tipoRemolque"
-                class="mt-1 block w-full rounded-md ">
-                <option>Selecciona el tipo </option>
-                <option>Civil</option>
-                <option>Ambiente</option>
-                <option>Carga</option>
+            <label for="type" class="block text-sm font-medium ">Tipo </label>
+            <select id="type" formControlName="type" class="mt-1 block w-full rounded-md ">
+                <option value="" selected disabled>Selecciona el seguro </option>
+                <option value="Ambiental">Ambiental</option>
+                <option value="Carga">Carga</option>
 
             </select>
-            <span *ngIf="isValidField('tipoRemolque')" class="text-[#EE312A]">
-                {{ getFieldError('tipoRemolque') }}
+            <span *ngIf="isValidField('type')" class="text-[#EE312A]">
+                {{ getFieldError('type') }}
             </span>
         </div>
-       
+
         <div class="col-span-1">
-            <label for="asegura" class="block text-sm font-medium ">Asegura</label>
-            <input type="text" id="asegura" formControlName="asegura"
-                class="mt-1 block w-full rounded-md ">
-                <span *ngIf="isValidField('asegura')" class="text-[#EE312A]">
-                    {{ getFieldError('asegura') }}
-                </span>
+            <label for="asegure" class="block text-sm font-medium ">Asegura</label>
+            <input type="text" id="asegure" formControlName="asegure" class="mt-1 block w-full rounded-md "  minlength="3" maxlength="50">
+            <span *ngIf="isValidField('asegure')" class="text-[#EE312A]">
+                {{ getFieldError('asegure') }}
+            </span>
         </div>
         <div class="col-span-1">
-            <label for="poliza" class="block text-sm font-medium ">Poliza</label>
-            <input type="text" id="poliza" formControlName="poliza"
-                class="mt-1 block w-full rounded-md ">
-                <span *ngIf="isValidField('poliza')" class="text-[#EE312A]">
-                    {{ getFieldError('poliza') }}
-                </span>
+            <label for="polize" class="block text-sm font-medium ">Poliza</label>
+            <input type="text" id="polize" formControlName="polize" class="mt-1 block w-full rounded-md " minlength="3" maxlength="30">
+            <span *ngIf="isValidField('polize')" class="text-[#EE312A]">
+                {{ getFieldError('polize') }}
+            </span>
         </div>
     </form>
 </div>
@@ -38,16 +37,17 @@
 <div class="flex justify-between mb-4 mt-5">
     <div class="ms-3">
         <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-            data-hs-overlay="#hs-extralarge-modal1">
-
+            data-hs-overlay="#hs-extralarge-modal1" (click)="closeModal()">
             Cancelar
         </button>
     </div>
     <div class="mr-3">
-        <button class="ti-btn ti-btn-primary-full text-white !font-medium">
-            Crear
+        <button class="ti-btn ti-btn-primary-full text-white !font-medium" (click)="onSubmit()">
+            {{buttonTitle}}
         </button>
     </div>
 </div>
 
-
+<div id="loader" *ngIf="showLoader">
+    <img src="./images/loader.svg" alt="" />
+</div>

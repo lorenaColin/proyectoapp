@@ -1,82 +1,96 @@
-
 <div class="grid grid-cols-12 gap-x-6">
-    <div class="xl:col-span-12 col-span-12">
-      <div class="box mt-4">
-        <div class="box-body">
-          <div class="contact-header">
-            <div class="sm:flex block items-center justify-between">
-              <div class="h5 font-semibold mb-0">Carta porte -> Auto Trasporte </div>
-              <div class="flex sm:mt-0 mt-2 items-center">
-                <div class="input-group">
-                  <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
-                    placeholder="Buscar Auto Trasporte " aria-describedby="search-contact-member" autocomplete="off" />
-                  <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
-                    id="search-contact-member">
-                    <i class="ri-search-line text-[#8C9097]"></i>
-                  </button>
-                </div>
-                <div class="hs-tooltip ti-main-tooltip">
-                  <button type="button"
-                    class="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !ms-2 w-[2.313rem] h-[2.313rem]"
-                    data-hs-overlay="#hs-extralarge-modal1">
-                    <i class="ri-add-line"></i>
-                    <span
-                      class="hs-tooltip-content hs-dropdown-toggle ti-main-tooltip-content py-1 px-2 !bg-black !text-xs !font-medium !text-white shadow-sm"
-                      role="tooltip">
-                      Crear Auto Trasporte 
-                    </span>
-                  </button>
-                </div>
+  <div class="xl:col-span-12 col-span-12">
+    <div class="box mt-4">
+      <div class="box-body">
+        <div class="contact-header">
+          <div class="sm:flex block items-center justify-between">
+            <div class="h5 font-semibold mb-0">Carta porte -> Auto Trasporte </div>
+            <div class="flex sm:mt-0 mt-2 items-center">
+              <div class="input-group">
+                <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
+                  placeholder="Buscar Auto Trasporte " aria-describedby="search-contact-member" autocomplete="off" 
+                  (input)="applyFilter($event)"/>
+                <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
+                  id="search-contact-member">
+                  <i class="ri-search-line text-[#8C9097]"></i>
+                </button>
+              </div>
+              <div class="hs-tooltip ti-main-tooltip">
+                <button type="button"
+                  class="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !ms-2 w-[2.313rem] h-[2.313rem]"
+                  data-hs-overlay="#hs-extralarge-modal1">
+                  <i class="ri-add-line"></i>
+                  <span
+                    class="hs-tooltip-content hs-dropdown-toggle ti-main-tooltip-content py-1 px-2 !bg-black !text-xs !font-medium !text-white shadow-sm"
+                    role="tooltip">
+                    Crear Auto Trasporte
+                  </span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div
-    class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
-    <div class="box shadow-md rounded-md overflow-hidden">
-      <div class="box-body p-4 bg-white">
-        <div class="flex items-center gap-4 mb-4">
-          <img class="w-12 h-12 rounded-full" src="./images/faces/1.jpg" alt="Producto" />
-          <div>
-            <p class="text-primary text-sm font-semibold">
-              Auto Transporte
-            </p>
+  </div>
+  @for (auto of filteredAutotransports; track $index) {
+    <div class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+      <div class="box shadow-md rounded-md overflow-hidden bg-white">
+        <div class="box-body p-4">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="avatar avatar-md avatar-rounded">
+              <img src="./images/faces/1.jpg" alt="Avatar" />
+            </span>
+            <div>
+              <p class="font-semibold text-[0.875rem] text-primary">
+                Placa: {{ auto.placaVM }}
+              </p>
+            </div>
+          </div>
+          <ul class="list-none divide-y divide-gray-300 mb-4">
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Clave:</p>
+              <span class="ml-2 text-gray-700">{{ auto.configVehicular }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Año:</p>
+              <span class="ml-2 text-gray-700">{{ auto.anioModeloVM }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Aseguradora:</p>
+              <span class="ml-2 text-gray-700">{{ auto.aseguraRespCivil }}</span>
+            </li>
+            <li class="flex items-center py-2">
+              <p class="font-semibold text-gray-800">Póliza:</p>
+              <span class="ml-2 text-gray-700">{{ auto.polizaRespCivil }}</span>
+            </li>
+          </ul>
           
+
+          <div class="flex justify-end">
+            <button type="button" (click)="editAutotransport(auto.id)" data-hs-overlay="#hs-extralarge-modal1"
+              class="ti-btn ti-btn-primary-full text-white !font-medium">
+              Ver
+            </button>
           </div>
-        </div>
-  
-        <div class="mb-4">
-          <span class="text-gray-800 text-sm"> </span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-gray-800 text-sm">
-            <!-- {{ serie.tipoComprobante}} -->
-          </span>
-          <button type="button"  data-hs-overlay="#hs-extralarge-modal1" 
-            class="ti-btn ti-btn-primary-full text-sm font-medium">
-           <!-- {{buttonTitle}} --> ver
-          </button>
         </div>
       </div>
     </div>
-  </div>
-  
-  </div>
-  <div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static] fixed" data-hs-overlay-keyboard="false">
-    <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
-      <div class="ti-modal-content">
-        <div class="ti-modal-header">
-            <h6 class="ti-modal-title">Auto Transporte</h6>
-          </div>
-        <app-form-autotrasporte/>
+    
+  }
+</div>
+<div id="hs-extralarge-modal1" class="hs-overlay hidden ti-modal [--overlay-backdrop:static] fixed"
+  data-hs-overlay-keyboard="false">
+  <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+    <div class="ti-modal-content">
+      <div class="ti-modal-header">
+        <h6 class="ti-modal-title">Auto Transporte</h6>
       </div>
+      <app-form-autotrasporte [productoHijo]="auto" (respuesta)="responseAutotransport($event)" />
     </div>
   </div>
-  
-  <!-- <div id="loader" *ngIf="showLoader">
+</div>
+
+<div id="loader" *ngIf="showLoader">
     <img src="images/loader.svg" alt="" />
-  </div> -->
-  
-  
+  </div>

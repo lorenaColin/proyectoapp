@@ -13,7 +13,9 @@ export class ValidatorsService {
     email: 'Ingrese un correo electrónico válido',
     password: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial',
     valor_iva: 'El valor debe ser 0 o 16%',
-    uuid: 'El uuid no cumple con la estructura correcta'
+    uuid: 'El uuid no cumple con la estructura correcta',
+    placaVM: 'La placa no es válida, no debe contener espacios, guiones o caracteres especiales',
+    anioModeloVM: 'El año no es valido'
   };
 
   public isValidField(form: FormGroup, field: string): boolean | null {
