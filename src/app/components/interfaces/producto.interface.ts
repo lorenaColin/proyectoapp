@@ -1,6 +1,7 @@
 export interface ProductInterface {
     id:string
     product_key: string;
+    // descripcion_producto:string;
     unit: string;
     unit_description?: string;
     unit_price: number;
@@ -38,7 +39,7 @@ export interface ProductInterface {
     data: catproducto[];  
   }
   export interface catUnidad {
-    c_claveunidad: number;
+    c_claveunidad: string;
     nombre: string;
   }
   export interface ApiResponseUnidad {

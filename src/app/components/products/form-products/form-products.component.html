@@ -21,7 +21,7 @@
                 {{ getFieldError('product_key') }}
             </span>
         </div> -->
-        <div class="col-span-1">
+        <div class="col-span-3">
             <label for="product_keys" class="form-label text-[.875rem] text-black">Clave Producto Servicio:</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="product_keys" id="product_keys"
@@ -31,10 +31,10 @@
 
             </div>
 
-            <!-- <span *ngIf="myForm.get('product_key')?.hasError('notFound') && myForm.get('product_key')?.touched"
+            <span *ngIf="myForm.get('product_key')?.hasError('notFound') "
                 class="text-[#EE312A] text-sm">
                 Este código de producto no se encuentra en el catálogo.
-            </span> -->
+            </span>
             <span *ngIf="isValidField('product_key')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('product_key') }}
             </span>
@@ -61,9 +61,8 @@
         <div class="col-span-1">
             <label for="unidad" class="form-label text-[.875rem] text-black">Clave Unidad:</label>
             <div class="input-group">
-                <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad" maxlength="8" 
-                formControlName="unit"
-                    (input)="onInput1($event)" (keydown)="onKeyDown($event)"
+                <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad"
+                    maxlength="8" formControlName="unit" (input)="onInput1($event)" (keydown)="onKeyDown($event)"
                     [ngClass]="{'is-invalid': isValidField('unit')}">
             </div>
 
