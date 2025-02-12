@@ -29,9 +29,14 @@ export class FormUbicacionesComponent {
   colonias: string[] = [];     
 
   private ubicacionesService = inject(ubicacionesService);
-  myForm = this.ubicacionesService.getFormUbicacion();
+  // myForm! : FormGroup;
+  @Input() myForm!: FormGroup;  // Recibe el formulario desde el padre
+
 
   ngOnChanges(): void {
+    if (!this.myForm) {
+      this.myForm = this.ubicacionesService.getFormUbicacion("");  // Si no existe, inicialízalo
+    }
     console.log(this.ubicacionHijo);
     if (this.ubicacionHijo) {
       this.idUbicacion = this.ubicacionHijo.id || 0;
@@ -87,6 +92,7 @@ export class FormUbicacionesComponent {
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.myForm, field);
   }
+ 
 
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField(this.myForm, field);

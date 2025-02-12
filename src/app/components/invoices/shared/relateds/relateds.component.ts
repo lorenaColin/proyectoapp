@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PATRON_UUID } from '../../../../shared/utils/expressions';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
+import { RelatedsService } from '../../../services/relateds.service';
 
 @Component({
   selector: 'app-relateds',
@@ -9,9 +10,10 @@ import { ValidatorsService } from '../../../../shared/services/validators.servic
   styleUrl: './relateds.component.scss'
 })
 export class RelatedsComponent {
+  private relacionService = inject(RelatedsService);
   mostrarTablaR: boolean = false;
-  formulario: FormGroup;
-  private validatorsService = inject(ValidatorsService);
+  formulario = this.relacionService.getFormRelateds();
+  // private validatorsService = inject(ValidatorsService);
 
   agregarRel(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked; 
@@ -20,9 +22,7 @@ export class RelatedsComponent {
   }
 
   constructor(private fb: FormBuilder) {
-    this.formulario = this.fb.group({
-      relaciones: this.fb.array([]),
-    });
+
   }
 
   get relaciones(): FormArray {
@@ -83,11 +83,10 @@ export class RelatedsComponent {
   
   public isValidField(form: AbstractControl, field: string): boolean | null {
     const groupControl = form.get(field);
-    if (!(groupControl instanceof FormGroup)) {
-      return false;
-    }
+    if (!groupControl) return false;
     return groupControl.touched && groupControl.errors ? true : false;
-  }
+}
+
   
   
 }

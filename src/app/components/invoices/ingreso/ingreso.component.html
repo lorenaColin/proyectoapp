@@ -1,5 +1,5 @@
 <form [formGroup]="formIngreso"  autocomplete="off">
-    <pre> {{ formIngreso.value | json }} </pre>
+    <!-- <pre> {{ formIngreso.value | json }} </pre> -->
 
     <div class="grid grid-cols-12 gap-x-6">
         <div class="xl:col-span-12 col-span-12">
@@ -104,14 +104,21 @@
                         </div>
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
-                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
-                                formControlName="uso_cfdi" id="usoCfdi">
-                                <option>Selecciona</option>
+                            <select 
+                                class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" 
+                                name="usoCfdi"
+                                formControlName="uso_cfdi" 
+                                id="usoCfdi">
+                                <option value="">Selecciona</option>
+                                <option *ngFor="let cfdi of listaCfdi" [value]="cfdi.uso">
+                                    {{ cfdi.nombre }}
+                                </option>
                             </select>
                             <span *ngIf="isValidField('uso_cfdi')" class="text-[#EE312A] text-sm">
                                 {{ getFieldError('uso_cfdi') }}
                             </span>
                         </div>
+                        
                     </div>
                     <hr class="my-6 border-gray-300">
 
@@ -152,7 +159,7 @@
                             </button>
                         </div>
                         <div>
-                            <button type="submit"
+                            <button type="submit" (click)="onSubmitIngreso()"
                                 class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
                                 Emitir
                             </button>

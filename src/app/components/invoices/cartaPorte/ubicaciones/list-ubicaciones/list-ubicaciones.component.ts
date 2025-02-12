@@ -2,6 +2,7 @@ import { Component, ElementRef, inject, Input } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ubicacionesService } from '../../../../services/ubicaciones.service';
 import { ubicacionInterface, ubicacionResponseInterface } from '../../../../interfaces/ubicaciones.interface';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-list-ubicaciones',
   templateUrl: './list-ubicaciones.component.html',
@@ -10,7 +11,9 @@ import { ubicacionInterface, ubicacionResponseInterface } from '../../../../inte
 export class ListUbicacionesComponent {
 
   private ubicacionesService = inject(ubicacionesService);
-  myForm = this.ubicacionesService.getFormUbicacion();
+  // myForm = this.ubicacionesService.getFormUbicacion();
+  // myForm = this.ubicacionesService.getFormUbicacion();
+  ubicacionForm!: FormGroup;  // Agrega esta propiedad
   constructor(private el: ElementRef) { }
   ubicaciones: ubicacionInterface[] = [];
   @Input() ubicacion: ubicacionInterface = {} as ubicacionInterface;
@@ -107,17 +110,10 @@ export class ListUbicacionesComponent {
       cancelButtonText: 'Destino',
       reverseButtons: true
     }).then((result) => {
-      const idUbicacion = this.myForm.get('idUbicacion')?.value || '';
       if (result.isConfirmed) {
-        this.myForm.patchValue({
-          tipoUbicacion: "origen",
-          idUbicacion: idUbicacion ? `OR${idUbicacion}` : ''
-        });
+        this.ubicacionForm = this.ubicacionesService.getFormUbicacion("ORIGEN"); 
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        this.myForm.patchValue({
-          tipoUbicacion: "destino",
-          idUbicacion: idUbicacion ? `DE${idUbicacion}` : ''
-        });
+        this.ubicacionForm = this.ubicacionesService.getFormUbicacion("DESTINO"); 
       }
       this.openModal();
     });

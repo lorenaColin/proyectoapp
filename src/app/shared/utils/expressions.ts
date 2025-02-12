@@ -16,6 +16,9 @@ export const PATRON_UBICACION_ORIGEN = /OR[0-9]{6}$/;
 export const PATRON_UBICACION_DESTINO = /DE[0-9]{6}$/;
 export const PATRON_PLACAVM = /[^(?!.*\s)-]{5,7}/; 
 export const PATRON_ANIO = /^[0-9]{4}$/; 
+export const DIMENSIONES_REGEX = /^([0-9]{1,3}\/){2}[0-9]{1,3}(cm|plg)$/;
+
+
 /*
 const PATRON_REGULAR_20 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}';
 const PATRON_REGULAR_100 = '([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}';

@@ -1,6 +1,5 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { InvoicesService } from '../../services/invoices.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormaPagoService } from '../../services/forma-pago.service';
 import { ConceptsService } from '../../services/concepts.service';
 import { TotalsService } from '../../services/totals.service';
@@ -9,6 +8,8 @@ import { SeriesService } from '../../services/serie.service';
 import { SerietInterface } from '../../interfaces/series.interface';
 import { CustomersInterface } from '../../interfaces/customers.interface';
 import { CustomerService } from '../../services/customer.service';
+import { RelatedsService } from '../../services/relateds.service';
+import { LISTADOUSOCFDI } from '../../../shared/utils/sat';
 
 @Component({
   selector: 'app-ingreso',
@@ -23,9 +24,11 @@ export class IngresoComponent implements OnInit {
   private validatorsService = inject(ValidatorsService);
   private seriesService = inject(SeriesService);
   private customerService = inject(CustomerService);
+  private relatedsService = inject(RelatedsService);
 
-
+  listaCfdi = LISTADOUSOCFDI;
   formaPagoForm = this.formaPagoService.getFormFormaPago();
+  relacionForm = this.relatedsService.getFormRelateds();
   totalsForm = this.totalsService.getFormTotals();
   mostrarCP: boolean = false;
   typeProof: string = 'I';
@@ -47,6 +50,7 @@ export class IngresoComponent implements OnInit {
     uso_cfdi: ['', [Validators.required]],
     ...this.formaPagoForm.controls,
     ...this.totalsForm.controls,
+    relaciones: this.relacionForm.get('relaciones') as FormArray,
     concepts: this.conceptsService.getProductosFormArray(),
   });
 
@@ -66,6 +70,19 @@ export class IngresoComponent implements OnInit {
   //     this.filteredSeries = []; 
   //   }
   // }
+  ngOnInit(): void {
+    console.log(this.listaCfdi);
+    this.seriesService.getAllSeries().subscribe((response) => {
+      const { error, data } = response;
+      console.log('Datos recibidos:', data);
+      (!error) ? this.listSeries = data : '';
+    });
+    this.customerService.getCustomers().subscribe((response) => {
+      const { error, data } = response;
+      console.log('Datos recibidos:', data);
+      (!error) ? this.listReceptors = data : '';
+    });
+  }
 
   onInputReceptor(event: any, listType: 'series' | 'receptors'): void {
     const query = event.target.value.toLowerCase();
@@ -125,6 +142,7 @@ export class IngresoComponent implements OnInit {
 
   selectReceptor(receptor: any): void {
     console.log(receptor);
+    console.log(receptor.regime);
     this.formIngreso.get('receptor')?.setValue(`${receptor.name}`);
     this.filteredReceptors = [];  
     this.selectedIndex = -1;   
@@ -154,19 +172,6 @@ export class IngresoComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked; 
     this.mostrarCP = isChecked; 
     console.log('Checkbox is:', isChecked ? 'Checked' : 'Unchecked');
-  }
-
-  ngOnInit(): void {
-    this.seriesService.getAllSeries().subscribe((response) => {
-      const { error, data } = response;
-      console.log('Datos recibidos:', data);
-      (!error) ? this.listSeries = data : '';
-    });
-    this.customerService.getCustomers().subscribe((response) => {
-      const { error, data } = response;
-      console.log('Datos recibidos:', data);
-      (!error) ? this.listReceptors = data : '';
-    });
   }
 
   onSubmitIngreso() {
