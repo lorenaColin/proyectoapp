@@ -39,7 +39,7 @@
             </div>
             <div>
                 <label for="pesoBrutoVehicular" class="block text-sm font-medium">Peso B</label>
-                <input type="text" id="pesoBrutoVehicular" formControlName="pesoBrutoVehicular"
+                <input type="number" step="0.01" id="pesoBrutoVehicular" formControlName="pesoBrutoVehicular"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 <span *ngIf="isValidField('pesoBrutoVehicular')" class="text-[#EE312A]">
                     {{ getFieldError('pesoBrutoVehicular') }}

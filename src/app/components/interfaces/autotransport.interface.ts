@@ -1,9 +1,9 @@
 export interface AutotransportInterface {
     id: number;
     configVehicular: string,
-    anioModeloVM: number,
+    anioModeloVM: string,
     placaVM: string,
-    pesoBrutoVehicular: number,
+    pesoBrutoVehicular: string,
     permSCT: string,
     numPermisoSCT: string,
     aseguraRespCivil: string,

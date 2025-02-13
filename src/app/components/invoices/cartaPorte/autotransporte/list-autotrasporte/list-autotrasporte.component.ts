@@ -46,7 +46,16 @@ export class ListAutotrasporteComponent {
     this.showLoader = true;
     if (message === 'Validation errors') {
       this.showLoader = false;
-      const errorText = data?.placaVM?.[0] || 'Error desconocido.';
+      const errorText =
+      data?.placaVM?.[0] ||
+      data?.configVehicular?.[0] ||
+      data?.aseguraRespCivil?.[0] ||
+      data?.permSCT?.[0] ||
+      data?.numPermisoSCT?.[0] ||
+      data?.polizaRespCivil?.[0] ||
+      data?.anioModeloVM?.[0] || 
+      data?.pesoBrutoVehicular?.[0] ||
+      'Error desconocido.';
       Swal.fire({
         title: 'Error de validación',
         text: errorText,

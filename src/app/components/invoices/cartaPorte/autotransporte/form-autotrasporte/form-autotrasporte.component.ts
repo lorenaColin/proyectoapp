@@ -136,8 +136,10 @@ export class FormAutotrasporteComponent implements OnChanges {
           this.showLoader = false;
           this.respuesta.emit(response);
           console.log('Respuesta del servidor:', response);
-          this.myForm.reset();
-          this.closeModal();
+          if (!response.error) {
+            this.myForm.reset();
+            this.closeModal();
+          } 
         },
         (error) => {
           console.error('Error al enviar los datos del autotransporte', error);
