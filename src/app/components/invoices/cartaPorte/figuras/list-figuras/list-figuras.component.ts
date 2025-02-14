@@ -11,7 +11,7 @@ import { MercanciaResponseInterface } from '../../../../interfaces/mercancias.in
 })
 export class ListFigurasComponent {
 private figurasService = inject(figurasService);
-figuras: FigurasInterface[] = [];
+// figuras: FigurasInterface[] = [];
 @Input() figura: FigurasInterface = {} as FigurasInterface;
 @Input() buttonTitle: string = 'Editar';
 showLoader = false;
@@ -57,40 +57,86 @@ editFigura(id: number): void {
 
     });
   }
-
-  responseFigura(response: FigurasInterface): void {
-      const adaptedResponse: FigurasResponseInterface = {
-        message: response.tipoFigura? 'figura procesada' : 'Error al procesar la serie',
-        statusCode: response.id ? 200 : 500,
-        error: !response.rfcFigura,
-        data: response
-      };
-  
-      const { message, data, error } = adaptedResponse;
-  
+  responseFigura(response: FigurasResponseInterface): void {
+      const { message, error, data } = response;
+      this.showLoader = true;
       if (error) {
+        this.showLoader = false;
+        const errorText = data?.rfcFigura?.[0] || 'Error desconocido.';
         Swal.fire({
-          title: data.rfcFigura || data.tipoFigura || 'Error desconocido',
+          title: 'Error de validación',
+          text: errorText,
           icon: 'error',
         });
         return;
-      }
-  
-      const indice = this.figuras.findIndex((ubi) => ubi.id === data.id);
-      if (indice !== -1) {
-        this.figuras[indice] = data;
+      } 
+
+        this.showLoader = false;
         Swal.fire({
-          title: 'Figura actualizada exitosamente',
+          title: 'Operación exitosa',
+          text: message,
           icon: 'success',
         });
-      } else {
-        // Serie es nueva, se agrega
-        this.figuras.push(data);
-        Swal.fire({
-          title: 'Figura creada exitosamente',
-          icon: 'success',
-        });
-      }
+        this.refreshInsuranceList();
+      
     }
+public listadoSeguros: FigurasInterface[] = [];
+public figuras: FigurasInterface[] = [];
+
+filteredInsurances: any[] = [];
+  
+    refreshInsuranceList(): void {
+      this.showLoader = true;
+      this.figurasService.getInsurance().subscribe(
+        (response) => {
+          this.figuras = response.data;
+          this.filteredInsurances = response.data;
+          this.showLoader = false;
+        },
+        () => {
+          this.showLoader = false;
+          Swal.fire(
+            'Error',
+            'No se pudo actualizar la lista de seguros.',
+            'error'
+          );
+        }
+      );
+    }
+  // responseFigura(response: FigurasInterface): void {
+  //   console.log({response})
+  //     const adaptedResponse: FigurasResponseInterface = {
+  //       message: response.tipoFigura? 'figura procesada' : 'Error al procesar la serie',
+  //       statusCode: response.id ? 200 : 500,
+  //       error: !response.tipoFigura || !response.numRegIdTribFigura, 
+  //       data: response
+  //     };
+  
+  //     const { message, data, error } = adaptedResponse;
+  
+  //     if (error) {
+  //       Swal.fire({
+  //         title: data.rfcFigura || data.tipoFigura || 'Error desconocido',
+  //         icon: 'error',
+  //       });
+  //       return;
+  //     }
+  
+  //     const indice = this.figuras.findIndex((ubi) => ubi.id === data.id);
+  //     if (indice !== -1) {
+  //       this.figuras[indice] = data;
+  //       Swal.fire({
+  //         title: 'Figura actualizada exitosamente',
+  //         icon: 'success',
+  //       });
+  //     } else {
+  //       // Serie es nueva, se agrega
+  //       this.figuras.push(data);
+  //       Swal.fire({
+  //         title: 'Figura creada exitosamente',
+  //         icon: 'success',
+  //       });
+  //     }
+  //   }
   
 }

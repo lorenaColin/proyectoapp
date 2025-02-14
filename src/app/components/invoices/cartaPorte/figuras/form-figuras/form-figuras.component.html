@@ -4,7 +4,8 @@
 
         <div class="col-span-1">
             <label for="tipoFigura" class="block text-sm font-medium">Tipo</label>
-            <select id="tipoFigura" formControlName="tipoFigura" class="mt-1 block w-full rounded-md" (change)="onTipoFiguraChange($event)">
+            <select id="tipoFigura" formControlName="tipoFigura" class="mt-1 block w-full rounded-md"
+                (change)="onTipoFiguraChange($event)">
                 <option>Seleccionar Operador</option>
                 <option>Operador</option>
                 <option>Proprietario</option>
@@ -16,17 +17,19 @@
                 {{ getFieldError('tipoFigura') }}
             </span>
         </div>
-        <div class="col-span-1">
-            <label for="rfcFigura" class="block text-sm font-medium ">RFC</label>
-            <input type="text" id="rfcFigura" formControlName="rfcFigura" class="mt-1 block w-full rounded-md ">
+        <div *ngIf="showRfcFigura" class="col-span-1">
+            <label for="rfcFigura" class="block text-sm font-medium " >RFC</label>
+            <input type="text" id="rfcFigura" formControlName="rfcFigura" 
+            class="mt-1 block w-full rounded-md " maxlength="13">
             <span *ngIf="isValidField('rfcFigura')" class="text-[#EE312A]">
                 {{ getFieldError('rfcFigura') }}
             </span>
         </div>
-       
+
         <div *ngIf="isOperadorSelected" class="col-span-1">
             <label for="numLicencia" class="block text-sm font-medium">Num. Licencia</label>
-            <input type="text" id="numLicencia" formControlName="numLicencia" maxlength="16" minlength="6" class="mt-1 block w-full rounded-md">
+            <input type="text" id="numLicencia" formControlName="numLicencia" maxlength="16" minlength="6"
+                class="mt-1 block w-full rounded-md">
             <span *ngIf="isValidField('numLicencia')" class="text-[#EE312A]">
                 {{ getFieldError('numLicencia') }}
             </span>
@@ -39,7 +42,7 @@
                 {{ getFieldError('nombreFigura') }}
             </span>
         </div>
-        <div class="col-span-1" *ngIf="myForm.get('rfcFigura')?.value === 'XEXX010101000'">
+        <div  *ngIf="showNumRegIdTribFigura" class="col-span-1">
             <label for="numRegIdTribFigura" class="block text-sm font-medium ">Num.Reg.Trib</label>
             <input type="text" id="numRegIdTribFigura" formControlName="numRegIdTribFigura"
                 class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
@@ -47,7 +50,7 @@
                 {{ getFieldError('numRegIdTribFigura') }}
             </span>
         </div>
-        <div class="col-span-1" *ngIf="myForm.get('rfcFigura')?.value === 'XEXX010101000'">
+        <!-- <div class="col-span-1">
             <label for="residenciaFiscalFigura" class="block text-sm font-medium">Residencia Fiscal</label>
             <select id="residenciaFiscalFigura" formControlName="residenciaFiscalFigura"
                 class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
@@ -57,6 +60,30 @@
             <span *ngIf="isValidField('residenciaFiscalFigura')" class="text-[#EE312A]">
                 {{ getFieldError('residenciaFiscalFigura') }}
             </span>
+        </div> -->
+        <div *ngIf="showResidenciaFiscalFigura" class="col-span-1 relative">
+            <label for="residenciaFiscalFiguras" class="form-label text-[.875rem] text-black">Residencia Fiscal:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="residenciaFiscalFiguras" id="residenciaFiscalFiguras"
+                    formControlName="residenciaFiscalFigura" [value]="clavepaisDescription2" (input)="onInput1($event)"
+                    (keydown)="onKeyDown($event)"
+                    [ngClass]="{'is-invalid': myForm.get('residenciaFiscalFigura')?.hasError('notFound') && myForm.get('residenciaFiscalFigura')?.touched}">
+
+            </div>
+
+            <span *ngIf="myForm.get('residenciaFiscalFigura')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                Este código de producto no se encuentra en el catálogo.
+            </span>
+            <span *ngIf="isValidField('residenciaFiscalFigura')" class="text-[#EE312A] text-sm">
+                {{ getFieldError('residenciaFiscalFigura') }}
+            </span>
+
+            <ul *ngIf="filteredPais.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let pais of filteredPais; let i = index" (click)="selectPais2(pais)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ pais.c_pais }} - {{ pais.descripcion }}
+                </li>
+            </ul>
         </div>
 
         <div class="col-span-1">
@@ -68,7 +95,7 @@
 
         <div *ngIf="isDomicilioChecked" class="col-span-3">
             <div class="grid grid-cols-3 gap-6">
-                <div class="col-span-1">
+                <!-- <div class="col-span-1">
                     <label for="pais" class="block text-sm font-medium">Pais</label>
                     <select id="pais" formControlName="pais"
                         class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
@@ -76,8 +103,32 @@
                         <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
                     </select>
                     <span *ngIf="isValidField('pais')" class="text-[#EE312A]">
-                        {{ getFieldError('residenciaFiscal') }}
+                        {{ getFieldError('pais') }}
                     </span>
+                </div> -->
+                <div class="col-span-3 relative">
+                    <label for="product_keys" class="form-label text-[.875rem] text-black">pais:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="product_keys" id="product_keys"
+                            formControlName="pais" [value]="clavepaisDescription" (input)="onInput($event)"
+                            (keydown)="onKeyDown($event)"
+                            [ngClass]="{'is-invalid': myForm.get('pais')?.hasError('notFound') && myForm.get('pais')?.touched}">
+
+                    </div>
+
+                    <span *ngIf="myForm.get('pais')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                        Este código de producto no se encuentra en el catálogo.
+                    </span>
+                    <span *ngIf="isValidField('pais')" class="text-[#EE312A] text-sm">
+                        {{ getFieldError('pais') }}
+                    </span>
+
+                    <ul *ngIf="filteredPais.length > 0" class="absolute rounded-lg mt-2 w-full">
+                        <li *ngFor="let pais of filteredPais; let i = index" (click)="selectPais(pais)"
+                            [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                            {{ pais.c_pais }} - {{ pais.descripcion }}
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-span-1">
                     <label for="codigoPostal" class="block text-sm font-medium ">C. postal</label>
@@ -105,16 +156,23 @@
                 </div>
                 <div class="col-span-1">
                     <label for="localidad" class="block text-sm font-medium">Localidad</label>
-                    <select id="localidad" formControlName="localidad"
+                    <input *ngIf="myForm.get('pais')?.value !== 'MEX'" type="text" id="localidad"
+                        formControlName="localidad"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                    <select *ngIf="myForm.get('pais')?.value === 'MEX'" id="localidad" formControlName="localidad"
                         class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
                         <option *ngFor="let localidad of localidades" [value]="localidad">
                             {{ localidad }}
                         </option>
                     </select>
                 </div>
+
                 <div class="col-span-1">
                     <label for="colonia" class="block text-sm font-medium">Colonia</label>
-                    <select id="colonia" formControlName="colonia"
+                    <input *ngIf="myForm.get('pais')?.value !== 'MEX'" type="text" id="colonia"
+                        formControlName="colonia"
+                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                    <select *ngIf="myForm.get('pais')?.value === 'MEX'" id="colonia" formControlName="colonia"
                         class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
                         <option *ngFor="let colonia of colonias" [value]="colonia">
                             {{ colonia }}

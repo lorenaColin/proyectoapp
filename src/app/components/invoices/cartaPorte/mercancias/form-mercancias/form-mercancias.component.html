@@ -3,7 +3,7 @@
 
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
 
-        <div class="col-span-1">
+        <!-- <div class="col-span-1">
             <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto" 
@@ -20,18 +20,47 @@
                     {{ mercancia.c_ClaveProdServ }} - {{ mercancia.descripcion }}
                 </li>
             </ul>
+        </div> -->
+        <div class="col-span-3 relative">
+            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Clave Producto
+                Servicio:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto"
+                    formControlName="claveProdServCP" [value]="claveProdServDescription" maxlength="8"
+                    (input)="onInput($event)" (keydown)="onKeyDown($event)"
+                    [ngClass]="{'is-invalid': myForm.get('claveProdServCP')?.hasError('notFound') && myForm.get('claveProdServCP')?.touched}">
+
+            </div>
+
+            <span *ngIf="myForm.get('claveProdServCP')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                Este código de mercancia no se encuentra en el catálogo.
+            </span>
+            <span *ngIf="isValidField('claveProdServCP')" class="text-[#EE312A] text-sm">
+                {{ getFieldError('claveProdServCP') }}
+            </span>
+
+            <ul *ngIf="filteredMercancia.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let mercancia of filteredMercancia; let i = index" (click)="selectMercancia(mercancia)"
+                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                    {{ mercancia.c_ClaveProdServ }} - {{ mercancia.descripcion }}
+                </li>
+            </ul>
         </div>
 
-        <div class="col-span-1">
+        <div class="col-span-2 relative">
             <label for="claveUnidades" class="form-label text-[.875rem] text-black"> Clave Unidad:</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="claveUnidades" id="claveUnidades"
-                    formControlName="unidad" [value]="claveUnidadDescription" (input)="onInput1($event)"
-                    (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('unidad')}">
+                <input type="text" class="form-control" name="claveUnidades" id="claveUnidades" formControlName="unidad"
+                    [value]="claveUnidadDescription" (input)="onInput1($event)" (keydown)="onKeyDown($event)"
+                    [ngClass]="{'is-invalid': isValidField('unidad')}">
             </div>
+            <span *ngIf="myForm.get('unidad')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                Este código de mercancia no se encuentra en el catálogo.
+            </span>
             <span *ngIf="isValidField('unidad')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('unidad') }}
             </span>
+
             <ul *ngIf="filteredClave.length > 0" class="absolute rounded-lg mt-2 w-full">
                 <li *ngFor="let clave of filteredClave; let i = index" (click)="selectClave(clave)"
                     [ngClass]="{'bg-gray-200': i === selectedIndex}">
@@ -57,62 +86,71 @@
             </span>
         </div>
         @if(bandera){
-            <div class="col-span-1">
-                <label for="domicilio" class="ml-2 text-sm">Material Peligroso</label>
-                <input id="domicilio" type="checkbox"
-                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                       formControlName="materialPeligroso" (change)="onMaterialPeligrosoChange($event)">
-              </div>
-              
-              <div class="col-span-3">
-                <!-- Clave Material Peligroso -->
-                <div class="col-span-1">
-                  <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Clave Material Peligroso:</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto"
-                           formControlName="cveMaterialPeligroso" [value]="matPeligrosoDescription" maxlength="8" (input)="onInput2($event)"
-                           (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('cveMaterialPeligroso')}">
-                  </div>
-                  <span *ngIf="isValidField('cveMaterialPeligroso')" class="text-[#EE312A] text-sm">
+        <div class="col-span-1">
+            <label for="domicilio" class="ml-2 text-sm">Material Peligroso</label>
+            <input id="domicilio" type="checkbox"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                formControlName="materialPeligroso" (change)="onMaterialPeligrosoChange($event)">
+        </div>
+
+        <div class="col-span-3 ">
+            <!-- Clave Material Peligroso -->
+            <div class="col-span-1 relative">
+                <label for="descripcionMatPeligroso" class="form-label text-[.875rem] text-black">Clave Material
+                    Peligroso:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="descripcionMatPeligroso" id="descripcionMatPeligroso"
+                        formControlName="cveMaterialPeligroso" [value]="matPeligrosoDescription" maxlength="8"
+                        (input)="onInput2($event)" (keydown)="onKeyDown($event)"
+                        [ngClass]="{'is-invalid': isValidField('cveMaterialPeligroso')}">
+                </div>
+        
+                <span *ngIf="myForm.get('cveMaterialPeligroso')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                    Este código de mercancia no se encuentra en el catálogo.
+                </span>
+                <span *ngIf="isValidField('cveMaterialPeligroso')" class="text-[#EE312A] text-sm">
                     {{ getFieldError('cveMaterialPeligroso') }}
-                  </span>
-                  <ul *ngIf="filteredMatPeligroso.length > 0" class="absolute rounded-lg mt-2 w-full">
+                </span>
+                <ul *ngIf="filteredMatPeligroso.length > 0" class="absolute rounded-lg mt-2 w-full">
                     <li *ngFor="let matPeligroso of filteredMatPeligroso; let i = index"
                         (click)="selectMatPeligroso(matPeligroso)" [ngClass]="{'bg-gray-200': i === selectedIndex}">
-                      {{ matPeligroso.clave }} - {{ matPeligroso.descripcion }}
+                        {{ matPeligroso.clave }} - {{ matPeligroso.descripcion }}
                     </li>
-                  </ul>
+                </ul>
+            </div>
+
+            <!-- Embalaje -->
+            <div class="col-span-1 relative">
+                <label for="embalajes" class="form-label text-[.875rem] text-black">Embalaje:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="embalaje" id="embalajes" formControlName="embalaje"
+                        [value]="embalajeDescription" maxlength="8" (input)="onInput4($event)"
+                        (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('embalaje')}">
                 </div>
-              
-                <!-- Embalaje -->
-                <div class="col-span-1">
-                  <label for="embalajes" class="form-label text-[.875rem] text-black">Embalaje:</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" name="embalaje" id="embalajes" formControlName="embalaje" [value]="embalajeDescription" 
-                           maxlength="8" (input)="onInput4($event)" (keydown)="onKeyDown($event)"
-                           [ngClass]="{'is-invalid': isValidField('embalaje')}">
-                  </div>
-                  <span *ngIf="isValidField('embalaje')" class="text-[#EE312A] text-sm">
+                <span *ngIf="myForm.get('embalaje')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                    Este código de mercancia no se encuentra en el catálogo.
+                </span>
+                <span *ngIf="isValidField('embalaje')" class="text-[#EE312A] text-sm">
                     {{ getFieldError('embalaje') }}
-                  </span>
-                  <ul *ngIf="filteredEmbalaje.length > 0" class="absolute rounded-lg mt-2 w-full">
+                </span>
+                <ul *ngIf="filteredEmbalaje.length > 0" class="absolute rounded-lg mt-2 w-full">
                     <li *ngFor="let embalaje of filteredEmbalaje; let i = index" (click)="selectEmbalaje(embalaje)"
                         [ngClass]="{'bg-gray-200': i === selectedIndex}">
-                      {{ embalaje.clave }} - {{ embalaje.descripcion }}
+                        {{ embalaje.clave }} - {{ embalaje.descripcion }}
                     </li>
-                  </ul>
-                </div>
-              
-                <div class="col-span-1">
-                  <label for="descripEmbalaje" class="block text-sm font-medium ">Descripción</label>
-                  <input type="text" id="descripEmbalaje" formControlName="descripEmbalaje"
-                         class="mt-1 block w-full rounded-md ">
-                  <span *ngIf="isValidField('descripEmbalaje')" class="text-[#EE312A]">
+                </ul>
+            </div>
+
+            <div class="col-span-1">
+                <label for="descripEmbalaje" class="block text-sm font-medium ">Descripción</label>
+                <input type="text" id="descripEmbalaje" formControlName="descripEmbalaje"
+                    class="mt-1 block w-full rounded-md ">
+                <span *ngIf="isValidField('descripEmbalaje')" class="text-[#EE312A]">
                     {{ getFieldError('descripEmbalaje') }}
-                  </span>
-                </div>
-              </div>
-              
+                </span>
+            </div>
+        </div>
+
         }
     </form>
 </div>

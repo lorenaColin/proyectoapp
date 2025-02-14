@@ -4,7 +4,7 @@ import { ConceptsService } from './concepts.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
 import { Observable } from 'rxjs';
-import { FigurasInterface, FigurasResponseInterface } from '../interfaces/figuras.interface';
+import { ApiResponsepais, FigurasInterface, FigurasListResponseInterface, FigurasResponseInterface } from '../interfaces/figuras.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -18,11 +18,29 @@ export class figurasService {
   
 
    
-
+    createInsurance(
+      insurance: FigurasInterface
+    ): Observable<FigurasResponseInterface> {
+      return this.http.post<FigurasResponseInterface>(this.apiUrl, insurance);
+    }
+  
+    updateInsurance(
+      id: number,
+      formData: FigurasInterface
+    ): Observable<FigurasResponseInterface> {
+      return this.http.put<FigurasResponseInterface>(
+        `${this.apiUrl}/${id}`,
+        formData
+      );
+    }
 
   getAllFiguras(): Observable<FigurasResponseInterface> {
     return this.http.get<FigurasResponseInterface>(this.apiUrl);
   }
+  
+    getInsurance(): Observable<FigurasListResponseInterface> {
+      return this.http.get<FigurasListResponseInterface>(this.apiUrl);
+    }
   createfiguras(figuras: FigurasInterface): Observable<FigurasResponseInterface> {
     return this.http.post<FigurasResponseInterface>(this.apiUrl, figuras);
   }
@@ -33,9 +51,9 @@ export class figurasService {
     return this.http.put<FigurasResponseInterface>(`${this.apiUrl}/${id}`, figuras);
   }
  
-  getPaises(): Observable<string[]> {
-    return this.http.get<string[]>(this.paisesUrl); 
-}
+//   getPaises(): Observable<string[]> {
+//     return this.http.get<string[]>(this.paisesUrl); 
+// }
 
   deletefiguras(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
@@ -43,6 +61,10 @@ export class figurasService {
   getDireccion(codigoPostal: string): Observable<any> {
     return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
   }
+
+   getAllPais(): Observable<ApiResponsepais> {
+      return this.http.get<ApiResponsepais>(this.paisesUrl);
+    }
 
 
 }

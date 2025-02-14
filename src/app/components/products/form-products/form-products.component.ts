@@ -241,8 +241,6 @@ export class FormProductsComponent {
     }
   }
 
-
-
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
@@ -296,13 +294,45 @@ export class FormProductsComponent {
     });
   }
 
-  onInput1(event: any): void {
-    const query = event.target.value.toLowerCase();
-    console.log('Texto ingresado:', query);
+  // onInput1(event: any): void {
+  //   const query = event.target.value.toLowerCase();
+  //   console.log('Texto ingresado:', query);
 
+  //   if (query.length >= 4) {
+  //     this.showLoader = true;
+
+  //     setTimeout(() => {
+  //       if (Array.isArray(this.listUnidad)) {
+  //         this.filteredUnidad = this.listUnidad.filter((unidad) => {
+  //           const clave = unidad.c_claveunidad.toLowerCase();
+  //           const descripcion = unidad.nombre.toLowerCase();
+  //           return clave.includes(query) || descripcion.includes(query);
+  //         });
+  //         console.log('Unidades filtradas:', this.filteredUnidad);
+
+  //         if (this.filteredUnidad.length === 0) {
+  //           this.myForm.get('unit')?.setErrors({ notFound: true });
+
+  //         } else {
+  //           this.myForm.get('unit')?.setErrors(null);
+  //         }
+  //       }
+
+  //       this.showLoader = false;
+  //     }, 1000);
+  //   } else {
+  //     this.filteredUnidad = [];
+  //     this.showLoader = false;
+  //     this.myForm.get('unit')?.setErrors(null);
+  //   }
+  // }
+
+  onInput1(event: any): void {
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Texto ingresado:', query);
+  
     if (query.length >= 4) {
       this.showLoader = true;
-
       setTimeout(() => {
         if (Array.isArray(this.listUnidad)) {
           this.filteredUnidad = this.listUnidad.filter((unidad) => {
@@ -310,16 +340,19 @@ export class FormProductsComponent {
             const descripcion = unidad.nombre.toLowerCase();
             return clave.includes(query) || descripcion.includes(query);
           });
-          console.log('Unidades filtradas:', this.filteredUnidad);
-
-          if (this.filteredUnidad.length === 0) {
+          console.log('clave filtrados:', this.filteredUnidad);
+  
+          const exactMatch = this.listUnidad.some(uni =>
+            uni.c_claveunidad.toLowerCase() === query ||
+            uni.nombre.toLowerCase() === query
+          );
+  
+          if (!exactMatch ) {
             this.myForm.get('unit')?.setErrors({ notFound: true });
-
           } else {
             this.myForm.get('unit')?.setErrors(null);
           }
         }
-
         this.showLoader = false;
       }, 1000);
     } else {
@@ -329,32 +362,63 @@ export class FormProductsComponent {
     }
   }
 
+  onKeyDown2(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown') {
+      if (this.selectedIndex < this.filteredUnidad.length - 1) {
+        this.selectedIndex++;
+      }
+      event.preventDefault();
+    } else if (event.key === 'ArrowUp') {
+      if (this.selectedIndex > 0) {
+        this.selectedIndex--;
+      }
+      event.preventDefault();
+    } else if (event.key === 'Enter') {
+      if (this.selectedIndex >= 0) {
+        this.selectUnidad(this.filteredUnidad[this.selectedIndex]);
 
 
 
+      }
+    }
+  }
 
 
+  // claveProdServUnidad: string = '';
+
+  // selectUnidad(unidad: catUnidad): void {
+  //   console.log(unidad);
+  //   let { c_claveunidad, nombre } = unidad;
+  //   this.myForm.get('unidad')?.setValue(c_claveunidad);
+  //   this.claveProdServUnidad = nombre;
+  //   this.filteredUnidad = [];
+  //   this.selectedIndex = -1;
+  // }
   claveProdServUnidad: string = '';
-
   selectUnidad(unidad: catUnidad): void {
-    console.log(unidad);
-    let { c_claveunidad, nombre } = unidad;
-    this.myForm.get('unidad')?.setValue(c_claveunidad);
-    this.claveProdServUnidad = nombre;
+    this.claveProdServUnidad = unidad.nombre;
+    this.myForm.get('unit')?.setValue(unidad.c_claveunidad);
     this.filteredUnidad = [];
     this.selectedIndex = -1;
+    
+    this.myForm.get('unit')?.setErrors(null);
+    const inputElement = document.getElementById('unidad') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = this.claveProdServUnidad;
+    }
   }
 
 
 
 
 
+ 
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside1(event: MouseEvent): void {
+ @HostListener('document:click', ['$event'])
+  onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-    if (!targetElement.closest('#unidad')) {
-      this.filteredProducto = [];
+    if (!targetElement.closest('#unit')) {
+      this.filteredUnidad = [];
     }
   }
 

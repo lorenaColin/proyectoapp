@@ -12,15 +12,6 @@
             </span>
         </div>
 
-        <!-- <div class="col-span-1">
-            <label for="product_key" class="block text-sm font-medium">Clave Producto Servicio:</label>
-            <input id="product_key" formControlName="product_key" (input)="searchClavProdSer()"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="8"
-                oninput="this.value = this.value.toUpperCase();" />
-            <span *ngIf="isValidField('product_key')" class="text-[#EE312A]">
-                {{ getFieldError('product_key') }}
-            </span>
-        </div> -->
         <div class="col-span-3 relative">
             <label for="product_keys" class="form-label text-[.875rem] text-black">Clave Producto Servicio:</label>
             <div class="input-group">
@@ -58,23 +49,22 @@
                 {{ getFieldError('unit') }}
             </span>
         </div> -->
-        <div class="col-span-1">
+        <div class="col-span-3z relative" >
             <label for="unidad" class="form-label text-[.875rem] text-black">Clave Unidad:</label>
             <div class="input-group">
                 <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad"
-                    maxlength="8" formControlName="unit" (input)="onInput1($event)" (keydown)="onKeyDown($event)"
+                    maxlength="8" formControlName="unit" (input)="onInput1($event)" (keydown)="onKeyDown2($event)"
                     [ngClass]="{'is-invalid': isValidField('unit')}">
             </div>
 
             <!-- Mensaje de error -->
-            <span *ngIf="myForm.get('unit')?.hasError('notFound') && myForm.get('unit')?.touched"
+            <span *ngIf="myForm.get('unit')?.hasError('notFound') "
                 class="text-[#EE312A] text-sm">
-                Este código de unidad no se encuentra en el catálogo.
+                Este código de producto no se encuentra en el catálogo.
             </span>
             <span *ngIf="isValidField('unit')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('unit') }}
             </span>
-
             <ul *ngIf="filteredUnidad.length > 0" class="absolute rounded-lg mt-2 w-full">
                 <li *ngFor="let unidad of filteredUnidad; let i = index" (click)="selectUnidad(unidad)"
                     [ngClass]="{'bg-gray-200': i === selectedIndex}">

@@ -26,12 +26,21 @@ export interface FigurasResponseInterface {
     statusCode: number;
     error: boolean;
     data: FigurasInterface;
-    paises?: string[];
 }
 
 export interface FigurasListResponseInterface {
     message: string;
     statusCode: number;
     error: boolean;
-    data: FigurasInterface[];
+    data: any[];
 }
+export interface catpais {
+    c_pais: string;
+    descripcion: string;
+  }
+  export interface ApiResponsepais {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: catpais[];  
+  }
