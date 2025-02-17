@@ -48,6 +48,7 @@ export class FormUbicacionesComponent {
       });
 
     }
+    this.onValueChanges()
   }
 
 
@@ -171,7 +172,9 @@ export class FormUbicacionesComponent {
   selectedIndex: number = -1;
   ngOnInit(): void {
     this.loadPais();
+    this.loadPais2();
     this.onValueChanges(); 
+    
     this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
       if (pais === 'MEX') {
         this.myForm.get('estado')?.disable();
@@ -184,14 +187,11 @@ export class FormUbicacionesComponent {
   }
   
   onValueChanges(): void {
-   console.log("entrando a onvalue")
     this.myForm.get('rfc')?.setValidators([Validators.required]);
   
     this.myForm.get('rfc')?.valueChanges.subscribe((rfcValue) => {
-      console.log('RFC ingresado:', rfcValue); 
   
       if (rfcValue === 'XEXX010101000') {
-        console.log('RFC especial detectado, mostrando campos');
         this.showResidenciaFiscal = true;
         this.showNumRegIdTrib = true;
   
@@ -201,7 +201,6 @@ export class FormUbicacionesComponent {
         this.myForm.get('numRegIdTrib')?.updateValueAndValidity({ emitEvent: false });
         this.myForm.get('residenciaFiscal')?.updateValueAndValidity({ emitEvent: false });
       } else {
-        console.log('RFC diferente, ocultando campos');
         this.showResidenciaFiscal = false;
         this.showNumRegIdTrib = false;
   
@@ -295,10 +294,6 @@ export class FormUbicacionesComponent {
       if (this.selectedIndex >= 0) {
         this.selectPais(this.filteredPais[this.selectedIndex]);
         this.selectPais2(this.filteredPais[this.selectedIndex]);
-
-
-
-
       }
     }
   }
@@ -328,6 +323,29 @@ export class FormUbicacionesComponent {
     }
   }
   // -------------------------------------
+
+  listPais2: catpais[] = [];
+  filteredPais2: catpais[] = []; 
+  
+  loadPais2(): void {
+    this.ubicaciones.getAllPais().subscribe({
+      next: (response: ApiResponsepais) => {
+        console.log('Datos recibidos desde el servicio:', response);
+        if (Array.isArray(response.data)) {
+          this.listPais2 = response.data;
+          console.log('listPais:', this.listPais2);
+        } else {
+          console.error('La respuesta no contiene un array en "data":', response.data);
+          this.listPais = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos:', err);
+        this.showLoader = false;
+      }
+    });
+  }
+
    onInput1(event: any): void {
       const query = (event.target.value || '').trim().toLowerCase();
       console.log('Texto ingresado:', query);
@@ -335,15 +353,15 @@ export class FormUbicacionesComponent {
       if (query.length >= 2) {
         this.showLoader = true;
         setTimeout(() => {
-          if (Array.isArray(this.listPais)) {
-            this.filteredPais = this.listPais.filter((Pais) => {
+          if (Array.isArray(this.listPais2)) {
+            this.filteredPais2 = this.listPais2.filter((Pais) => {
               const clave = Pais.c_pais.toString().toLowerCase();
               const descripcion = Pais.descripcion.toLowerCase();
               return clave.includes(query) || descripcion.includes(query);
             });
-            console.log('Paiss filtrados:', this.filteredPais);
+            console.log('Paiss filtrados:', this.filteredPais2);
   
-            const exactMatch = this.listPais.some(product =>
+            const exactMatch = this.listPais2.some(product =>
               product.c_pais.toString().toLowerCase() === query ||
               product.descripcion.toLowerCase() === query
             );
@@ -381,13 +399,29 @@ export class FormUbicacionesComponent {
       }
     }
   
-  
+    onKeyDown2(event: KeyboardEvent): void {
+      if (event.key === 'ArrowDown') {
+        if (this.selectedIndex < this.filteredPais2.length - 1) {
+          this.selectedIndex++;
+        }
+        event.preventDefault();
+      } else if (event.key === 'ArrowUp') {
+        if (this.selectedIndex > 0) {
+          this.selectedIndex--;
+        }
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        if (this.selectedIndex >= 0) {
+          this.selectPais2(this.filteredPais2[this.selectedIndex]);
+        }
+      }
+    }
   
     @HostListener('document:click', ['$event'])
     onClickOutside2(event: MouseEvent): void {
       const targetElement = event.target as HTMLElement;
       if (!targetElement.closest('#residenciaFiscal')) {
-        this.filteredPais = [];
+        this.filteredPais2 = [];
       }
     }
     onCodigoPostalBlur(): void {
