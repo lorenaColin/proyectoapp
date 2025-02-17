@@ -100,7 +100,28 @@ export class ListUbicacionesComponent {
     const button = this.el.nativeElement.querySelector('.hs-tooltip-toggle');
     button.click();
   }
+  // showUbicaciones() {
+  //   Swal.fire({
+  //     title: '¿Qué tipo de ubicación deseas crear?',
+  //     text: 'Selecciona si es origen o destino.',
+  //     icon: 'question',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Origen',
+  //     cancelButtonText: 'Destino',
+  //     reverseButtons: true
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.ubicacionForm = this.ubicacionesService.getFormUbicacion("ORIGEN"); 
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       this.ubicacionForm = this.ubicacionesService.getFormUbicacion("DESTINO"); 
+  //     }
+  //     this.openModal();
+  //   });
+  // }
   showUbicaciones() {
+    this.ubicacion = {} as ubicacionInterface;
+    this.ubicacionForm = this.ubicacionesService.getFormUbicacion("");
+  
     Swal.fire({
       title: '¿Qué tipo de ubicación deseas crear?',
       text: 'Selecciona si es origen o destino.',
@@ -118,6 +139,7 @@ export class ListUbicacionesComponent {
       this.openModal();
     });
   }
+  
   
   // showUbicaciones() {
   //   Swal.fire({
