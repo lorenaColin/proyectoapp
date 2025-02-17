@@ -4,7 +4,7 @@ import { ConceptsService } from './concepts.service';
 import { PATRON_RFC, PATRON_UBICACION_DESTINO, PATRON_UBICACION_ORIGEN } from '../../shared/utils/expressions';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
-import { ubicacionInterface, ubicacionResponseInterface } from '../interfaces/ubicaciones.interface';
+import { ApiResponsepais, ubicacionInterface, ubicacionResponseInterface } from '../interfaces/ubicaciones.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -36,9 +36,9 @@ export class ubicacionesService {
       residenciaFiscal: ['', []],
       tipoUbicacion: [tipo, []],
       domicilio: ['', []],
-      pais: ['', [Validators.required]],
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(1)]],
+      pais: ['', []],
+      codigoPostal: ['', []],
+      estado: ['', [ Validators.maxLength(30), Validators.minLength(1)]],
       municipio: ['', []],
       localidad: ['', []],
       colonia: ['', []],
@@ -69,9 +69,18 @@ export class ubicacionesService {
   deleteubicacion(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  getDireccion(codigoPostal: string): Observable<any> {
-    return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
-  }
+  // getDireccion(codigoPostal: string): Observable<any> {
+  //   return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
+  // }
 
 
+
+
+   getDireccion(codigoPostal: string): Observable<any> {
+      return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
+    }
+  
+     getAllPais(): Observable<ApiResponsepais> {
+        return this.http.get<ApiResponsepais>(this.paisesUrl);
+      }
 }

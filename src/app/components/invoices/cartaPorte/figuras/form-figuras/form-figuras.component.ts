@@ -72,9 +72,9 @@ export class FormFigurasComponent {
     numRegIdTribFigura: ['', [Validators.minLength(6), Validators.maxLength(40)]],
     residenciaFiscalFigura: ['', []],
     domicilio: ['', []],
-    pais: ['', [Validators.required]],
-    codigoPostal: ['', [Validators.required]],
-    estado: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(1)]],
+    pais: ['', []],
+    codigoPostal: ['', []],
+    estado: ['', [ Validators.maxLength(30), Validators.minLength(1)]],
     municipio: ['', []],
     localidad: ['', []],
     colonia: ['', []],
@@ -200,18 +200,26 @@ export class FormFigurasComponent {
     this.isDomicilioChecked = !this.isDomicilioChecked;
     if (this.isDomicilioChecked) {
       this.myForm.get('pais')?.setValidators([Validators.required]);
-      this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
       this.myForm.get('estado')?.setValidators([Validators.required]);
+      this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
+
+
+
     } else {
       this.myForm.get('pais')?.clearValidators();
       this.myForm.get('codigoPostal')?.clearValidators();
       this.myForm.get('estado')?.clearValidators();
+
+
+
+
     }
     this.myForm.get('pais')?.updateValueAndValidity();
     this.myForm.get('codigoPostal')?.updateValueAndValidity();
     this.myForm.get('estado')?.updateValueAndValidity();
     if (!this.isDomicilioChecked) {
       this.myForm.patchValue({
+
         pais: '',
         codigoPostal: '',
         estado: '',
@@ -224,8 +232,8 @@ export class FormFigurasComponent {
         referencia: '',
       });
     }
-  }
 
+  }
 
 
 

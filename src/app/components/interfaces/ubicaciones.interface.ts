@@ -35,3 +35,14 @@ export interface ubicacionListResponseInterface {
     error: boolean;
     data: ubicacionInterface[];
 }
+
+export interface catpais {
+    c_pais: string;
+    descripcion: string;
+  }
+  export interface ApiResponsepais {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: catpais[];  
+  }
