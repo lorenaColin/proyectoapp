@@ -47,6 +47,7 @@ export class FormUbicacionesComponent {
       });
       
     }
+    this.inputChange();
   }
 
 
@@ -63,16 +64,17 @@ export class FormUbicacionesComponent {
       this.showLoader = true;
       const uuidCompany = this.authService.getUuid();
       console.log('UUID de la empresa:', uuidCompany);
-
+      console.log(this.myForm.value);
+  
       const formData = {
         ...this.myForm.value,
         uuid_company: uuidCompany || '',
       };
-
+  
       const action = this.idUbicacion !== 0
         ? this.ubicaciones.updateubicacion(this.idUbicacion, formData)
         : this.ubicaciones.createUbicacion(formData);
-
+  
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
@@ -85,9 +87,18 @@ export class FormUbicacionesComponent {
         },
       });
     } else {
+      console.log(this.myForm.value);
       this.myForm.markAllAsTouched();
+      
+      Object.keys(this.myForm.controls).forEach((controlName) => {
+        const control = this.myForm.get(controlName);
+        if (control?.invalid && control?.touched) {
+          console.log(`Campo inválido: ${controlName}`, control.errors);
+        }
+      });
     }
   }
+  
 
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.myForm, field);
@@ -110,16 +121,11 @@ export class FormUbicacionesComponent {
       this.myForm.get('estado')?.setValidators([Validators.required]);
       this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
 
-
-  
     } else {
       this.myForm.get('pais')?.clearValidators();
       this.myForm.get('codigoPostal')?.clearValidators();
       this.myForm.get('estado')?.clearValidators();
 
-
-
-     
     }
     this.myForm.get('pais')?.updateValueAndValidity();
     this.myForm.get('codigoPostal')?.updateValueAndValidity();
@@ -171,22 +177,13 @@ export class FormUbicacionesComponent {
       },
     });
    
-    // this.myForm.get('pais')?.valueChanges.subscribe((paisValue: string) => {
-    //   if (paisValue === 'México') {
-    //     this.myForm.get('codigoPostal')?.setValidators([Validators.required]);
-    //     this.myForm.get('estado')?.setValidators([Validators.required]);
 
-    //     this.myForm.get('codigoPostal')?.updateValueAndValidity();
-    //     this.myForm.get('estado')?.updateValueAndValidity();
+  }
 
-    //   } else {
-    //     this.myForm.get('codigoPostal')?.clearValidators();
-    //     this.myForm.get('codigoPostal')?.updateValueAndValidity();
-    //     this.myForm.get('estado')?.clearValidators();
-    //     this.myForm.get('estado')?.updateValueAndValidity();
-    //   }
-    // });
+  inputChange() {
+    console.log("rfc");
     this.myForm.get('rfc')?.valueChanges.subscribe((rfcValue: string) => {
+      console.log("rfc cambiante", rfcValue);
       if (rfcValue === 'XEXX010101000') {
         this.myForm.get('numRegIdTrib')?.setValidators([Validators.required, Validators.maxLength(40), Validators.minLength(6)]);
         this.myForm.get('residenciaFiscal')?.setValidators([Validators.required]);
@@ -202,7 +199,7 @@ export class FormUbicacionesComponent {
       this.myForm.get('residenciaFiscal')?.updateValueAndValidity();
     });
   }
-
+  
 
 
   onCodigoPostalBlur(): void {

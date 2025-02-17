@@ -13,7 +13,7 @@
 
             <label for="rfc" class="block text-sm font-medium">RFC</label>
             <input id="rfc" formControlName="rfc" class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
-                minlength="1" maxlength="25" oninput="this.value = this.value.toUpperCase();" />
+                minlength="1" maxlength="25" oninput="this.value = this.value.toUpperCase();"  (input)="inputChange()"/>
             <span *ngIf="isValidField('rfc')" class="text-[#EE312A]">
                 {{ getFieldError('rfc') }}
             </span>
