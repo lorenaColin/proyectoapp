@@ -66,16 +66,17 @@ export class FormUbicacionesComponent {
       this.showLoader = true;
       const uuidCompany = this.authService.getUuid();
       console.log('UUID de la empresa:', uuidCompany);
-
+      console.log(this.myForm.value);
+  
       const formData = {
         ...this.myForm.value,
         uuid_company: uuidCompany || '',
       };
-
+  
       const action = this.idUbicacion !== 0
         ? this.ubicaciones.updateubicacion(this.idUbicacion, formData)
         : this.ubicaciones.createUbicacion(formData);
-
+  
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
@@ -88,9 +89,18 @@ export class FormUbicacionesComponent {
         },
       });
     } else {
+      console.log(this.myForm.value);
       this.myForm.markAllAsTouched();
+      
+      Object.keys(this.myForm.controls).forEach((controlName) => {
+        const control = this.myForm.get(controlName);
+        if (control?.invalid && control?.touched) {
+          console.log(`Campo inválido: ${controlName}`, control.errors);
+        }
+      });
     }
   }
+  
 
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.myForm, field);
