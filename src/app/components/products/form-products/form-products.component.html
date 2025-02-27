@@ -1,5 +1,4 @@
 <div>
-    <pre>{{ myForm.value | json }}</pre>
 
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6 bg-white rounded-lg">
         <div class="col-span-2">
@@ -49,7 +48,7 @@
                 {{ getFieldError('unit') }}
             </span>
         </div> -->
-        <div class="col-span-3z relative" >
+        <div class="col-span-3 relative" >
             <label for="unidad" class="form-label text-[.875rem] text-black">Clave Unidad:</label>
             <div class="input-group">
                 <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad"

@@ -7,6 +7,7 @@ import { ApiResponsepais, catpais, ubicacionInterface } from '../../../../interf
 import { AuthService } from '../../../../services/auth.service';
 import { LISTADORFCSGENERICOS } from '../../../../../shared/utils/sat';
 import Swal from 'sweetalert2';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-form-ubicaciones',
@@ -195,7 +196,7 @@ export class FormUbicacionesComponent {
         this.showResidenciaFiscal = true;
         this.showNumRegIdTrib = true;
   
-        this.myForm.get('numRegIdTrib')?.setValidators([Validators.required]);
+        this.myForm.get('numRegIdTrib')?.setValidators([Validators.required, Validators.minLength(6),Validators.maxLength(40)]);
         this.myForm.get('residenciaFiscal')?.setValidators([Validators.required]);
   
         this.myForm.get('numRegIdTrib')?.updateValueAndValidity({ emitEvent: false });
@@ -244,39 +245,51 @@ export class FormUbicacionesComponent {
 
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Texto ingresado:', query);
-
-    if (query.length >= 2) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listPais)) {
-          this.filteredPais = this.listPais.filter((Pais) => {
-            const clave = Pais.c_pais.toString().toLowerCase();
-            const descripcion = Pais.descripcion.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('Paiss filtrados:', this.filteredPais);
-
-          const exactMatch = this.listPais.some(product =>
-            product.c_pais.toString().toLowerCase() === query ||
-            product.descripcion.toLowerCase() === query
-          );
-
-          if (!exactMatch) {
-            this.myForm.get('pais')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('pais')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
+    // console.log('Texto ingresado:', query);
+    const control = this.myForm.get('pais');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
       this.filteredPais = [];
       this.showLoader = false;
-      this.myForm.get('pais')?.setErrors(null);
+      return;
     }
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredPais = [];
+      this.showLoader = false;
+      return;
+    }
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listPais)) {
+        this.filteredPais = this.listPais.filter((Pais) => {
+          const clave = Pais.c_pais.toString().toLowerCase();
+          const descripcion = Pais.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Paises filtrados:', this.filteredPais);
+  
+        const exactMatch = this.listPais.some(pais =>
+          pais.c_pais.toString().toLowerCase() === query ||
+          pais.descripcion.toLowerCase() === query
+        );
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
   }
-
+  
 
 
   onKeyDown(event: KeyboardEvent): void {
@@ -346,40 +359,55 @@ export class FormUbicacionesComponent {
     });
   }
 
-   onInput1(event: any): void {
-      const query = (event.target.value || '').trim().toLowerCase();
-      console.log('Texto ingresado:', query);
+  onInput1(event: any): void {
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Texto ingresado:', query);
   
-      if (query.length >= 2) {
-        this.showLoader = true;
-        setTimeout(() => {
-          if (Array.isArray(this.listPais2)) {
-            this.filteredPais2 = this.listPais2.filter((Pais) => {
-              const clave = Pais.c_pais.toString().toLowerCase();
-              const descripcion = Pais.descripcion.toLowerCase();
-              return clave.includes(query) || descripcion.includes(query);
-            });
-            console.log('Paiss filtrados:', this.filteredPais2);
-  
-            const exactMatch = this.listPais2.some(product =>
-              product.c_pais.toString().toLowerCase() === query ||
-              product.descripcion.toLowerCase() === query
-            );
-  
-            if (!exactMatch) {
-              this.myForm.get('residenciaFiscal')?.setErrors({ notFound: true });
-            } else {
-              this.myForm.get('residenciaFiscal')?.setErrors(null);
-            }
-          }
-          this.showLoader = false;
-        }, 1000);
-      } else {
-        this.filteredPais = [];
-        this.showLoader = false;
-        this.myForm.get('residenciaFiscal')?.setErrors(null);
+    const control = this.myForm.get('residenciaFiscal');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
       }
+      control.updateValueAndValidity();
+      this.filteredPais2 = [];
+      this.showLoader = false;
+      return;
     }
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredPais2 = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listPais2)) {
+        this.filteredPais2 = this.listPais2.filter((Pais) => {
+          const clave = Pais.c_pais.toString().toLowerCase();
+          const descripcion = Pais.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Paises filtrados:', this.filteredPais2);
+  
+        const exactMatch = this.listPais2.some(pais =>
+          pais.c_pais.toString().toLowerCase() === query ||
+          pais.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
+  }
   
   
   

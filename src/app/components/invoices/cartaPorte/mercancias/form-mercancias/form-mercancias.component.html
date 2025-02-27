@@ -1,29 +1,9 @@
 <div>
-    <pre>{{ myForm.value | json }}</pre>
 
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
 
-        <!-- <div class="col-span-1">
-            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto" 
-                    formControlName="claveProdServCP"  [value]="claveProdServDescription" maxlength="8" (input)="onInput($event)"
-                    (keydown)="onKeyDown($event)" [ngClass]="{'is-invalid': isValidField('claveProdServCP')}">
-
-            </div>
-            <span *ngIf="isValidField('claveProdServCP')" class="text-[#EE312A] text-sm">
-                {{ getFieldError('claveProdServCP') }}
-            </span>
-            <ul *ngIf="filteredMercancia.length > 0" class="absolute rounded-lg mt-2 w-full">
-                <li *ngFor="let mercancia of filteredMercancia; let i = index" (click)="selectMercancia(mercancia)"
-                    [ngClass]="{'bg-gray-200': i === selectedIndex}">
-                    {{ mercancia.c_ClaveProdServ }} - {{ mercancia.descripcion }}
-                </li>
-            </ul>
-        </div> -->
         <div class="col-span-3 relative">
-            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Clave Producto
-                Servicio:</label>
+            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto"
                     formControlName="claveProdServCP" [value]="claveProdServDescription" maxlength="8"
@@ -87,14 +67,13 @@
         </div>
         @if(bandera){
         <div class="col-span-1">
-            <label for="domicilio" class="ml-2 text-sm">Material Peligroso</label>
-            <input id="domicilio" type="checkbox"
+            <label for="materialPeligroso" class="ml-2 text-sm">Material Peligroso</label>
+            <input id="materialPeligroso" type="checkbox"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 formControlName="materialPeligroso" (change)="onMaterialPeligrosoChange($event)">
         </div>
 
         <div class="col-span-3 ">
-            <!-- Clave Material Peligroso -->
             <div class="col-span-1 relative">
                 <label for="descripcionMatPeligroso" class="form-label text-[.875rem] text-black">Clave Material
                     Peligroso:</label>

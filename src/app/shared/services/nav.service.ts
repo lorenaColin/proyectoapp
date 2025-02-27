@@ -109,6 +109,8 @@ export class NavService implements OnDestroy {
           path: '/cartaPorte/',
           title: 'cartaPorte',
           type: 'sub', 
+          selected: false,
+          active: false,
           children: [
             { path: '/cartaPorte/ubicaciones', title: 'Ubicaciones', type: 'link' },
             { path: '/cartaPorte/autotrasporte', title: 'Autotransporte', type: 'link' },
@@ -116,7 +118,7 @@ export class NavService implements OnDestroy {
             { path: '/cartaPorte/remolques', title: 'Remolques', type: 'link' },
             { path: '/cartaPorte/seguros', title: 'Seguros', type: 'link' },
             { path: '/cartaPorte/mercancias', title: 'Mercancías', type: 'link' },
-            { path: '/cartaPorte/productos', title: 'Productos', type: 'link' },
+            // { path: '/cartaPorte/productos', title: 'Productos', type: 'link' },
           ],
         },
       ],

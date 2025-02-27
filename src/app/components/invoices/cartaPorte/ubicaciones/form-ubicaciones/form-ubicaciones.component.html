@@ -1,5 +1,4 @@
 <div>
-    <pre>{{ myForm.value | json }}</pre>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
         <div class="col-span-3">
             <label for="NombreRemitenteDestinatario" class="block text-sm font-medium ">Nombre</label>
@@ -37,7 +36,7 @@
 
         <div *ngIf="showNumRegIdTrib" class="col-span-1">
             <label for="numRegIdTrib" class="block text-sm font-medium">Num.Reg.Trib</label>
-            <input type="text" id="numRegIdTrib" formControlName="numRegIdTrib"
+            <input type="text" id="numRegIdTrib" formControlName="numRegIdTrib"maxlength="40"
                    class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
             <span *ngIf="isValidField('numRegIdTrib')" class="text-[#EE312A]">
               {{ getFieldError('numRegIdTrib') }}

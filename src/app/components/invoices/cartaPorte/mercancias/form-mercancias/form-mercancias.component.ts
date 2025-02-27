@@ -37,6 +37,7 @@ export class FormMercanciasComponent {
     } else {
       this.myForm.reset();
     }
+
   }
   get currentUbicacion(): MercanciaInterface {
     const mercancia = this.myForm.value as MercanciaInterface;
@@ -68,6 +69,7 @@ export class FormMercanciasComponent {
 
   }
   onSubmit(): void {
+    console.log('enhtrando a onsubmit ');
     if (this.myForm.valid) {
       this.showLoader = true;
       const uuidCompany = this.authService.getUuid();
@@ -77,7 +79,7 @@ export class FormMercanciasComponent {
         ...this.myForm.value,
         uuid_company: uuidCompany || '',
       };
-
+      console.log('Datos que se envían:', formData);
       const action = this.idMercancia !== 0
         ? this.mercanciSer.updatemercancias(this.idMercancia, formData)
         : this.mercanciSer.createmercancias(formData);
@@ -95,6 +97,12 @@ export class FormMercanciasComponent {
       });
     } else {
       this.myForm.markAllAsTouched();
+      Object.keys(this.myForm.controls).forEach((controlName) => {
+        const control = this.myForm.get(controlName);
+        if (control?.invalid && control?.touched) {
+          console.log(`Campo inválido: ${controlName}`, control.errors);
+        }
+      });
     }
   }
   resetMercancia(): void {
@@ -142,12 +150,30 @@ export class FormMercanciasComponent {
    
   }
 
-onInput(event: any): void {
-
-  const query = (event.target.value || '').trim().toLowerCase();
-  console.log('Texto ingresado:', query);
-
-  if (query.length >= 4) {
+  onInput(event: any): void {
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Texto ingresado:', query);
+  
+    const control = this.myForm.get('claveProdServCP');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
+      this.filteredEmbalaje = [];
+      this.showLoader = false;
+      return;
+    }
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredMercancia = [];
+      this.showLoader = false;
+      return;
+    }
+  
     this.showLoader = true;
     setTimeout(() => {
       if (Array.isArray(this.listMercancia)) {
@@ -156,28 +182,24 @@ onInput(event: any): void {
           const descripcion = mercancia.descripcion.toLowerCase();
           return clave.includes(query) || descripcion.includes(query);
         });
-        console.log('mercancia filtrados:', this.filteredMercancia);
-
+  
+        console.log('Mercancías filtradas:', this.filteredMercancia);
+  
         const exactMatch = this.listMercancia.some(mercancia =>
           mercancia.c_ClaveProdServ.toString().toLowerCase() === query ||
           mercancia.descripcion.toLowerCase() === query
         );
-
-        if (!exactMatch ) {
-          this.myForm.get('claveProdServCP')?.setErrors({ notFound: true });
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
         } else {
-          this.myForm.get('claveProdServCP')?.setErrors(null);
+          control.setErrors(null); 
         }
       }
       this.showLoader = false;
     }, 1000);
-  } else {
-    this.filteredMercancia = [];
-    this.showLoader = false;
-    this.myForm.get('claveProdServCP')?.setErrors(null);
   }
-}
-
+  
   
 
 
@@ -201,17 +223,11 @@ onInput(event: any): void {
       }
     }
   }
-
-
-  
-  
   claveProdServDescription: string = '';
-
-
   selectMercancia(Mercancia: CatProdServCP): void {
     console.log(Mercancia);
     let { c_ClaveProdServ, descripcion, material_peligroso } = Mercancia;
-  
+
     this.myForm.get('claveProdServCP')?.setValue(c_ClaveProdServ); 
     this.claveProdServDescription = descripcion; 
     this.myForm.get('claveProdServCP')?.setErrors(null);
@@ -219,70 +235,69 @@ onInput(event: any): void {
     if (inputElement) {
       inputElement.value = this.claveProdServDescription;
     }
-    this.bandera = material_peligroso === "0,1" || material_peligroso === "1";
-  
+
+    if (material_peligroso === "1") {
+      
+      this.bandera = true;
+     
+    } else if (material_peligroso === "0,1") {
+      this.bandera = true; 
+    } else if (material_peligroso === "0") {
+      this.bandera = false; 
+    }
+
     if (material_peligroso === "1") {
       this.myForm.get('materialPeligroso')?.setValue(true);
-      this.myForm.get('materialPeligroso')?.disable(); 
+      this.myForm.get('materialPeligroso')?.disable();
       this.myForm.get('cveMaterialPeligroso')?.setValidators([Validators.required]);
       this.myForm.get('embalaje')?.setValidators([Validators.required]);
-      this.myForm.get('descripEmbalaje')?.setValidators([Validators.required]);
     } else if (material_peligroso === "0,1") {
       this.myForm.get('materialPeligroso')?.setValue(false);
       this.myForm.get('materialPeligroso')?.enable();
-      this.myForm.get('cveMaterialPeligroso')?.clearValidators();
-      this.myForm.get('embalaje')?.clearValidators();
-      this.myForm.get('descripEmbalaje')?.clearValidators();
+      this.myForm.get('cveMaterialPeligroso')?.clearValidators(); 
+      this.myForm.get('embalaje')?.clearValidators(); 
     } else {
       this.myForm.get('materialPeligroso')?.setValue(false);
-      this.myForm.get('materialPeligroso')?.disable(); 
-      this.myForm.get('cveMaterialPeligroso')?.setValidators([Validators.required]);
-      this.myForm.get('embalaje')?.setValidators([Validators.required]);
-      this.myForm.get('descripEmbalaje')?.setValidators([Validators.required]);
+      this.myForm.get('cveMaterialPeligroso')?.clearValidators(); 
+      this.myForm.get('embalaje')?.clearValidators(); 
     }
-  
+
     this.myForm.get('cveMaterialPeligroso')?.updateValueAndValidity();
     this.myForm.get('embalaje')?.updateValueAndValidity();
     this.myForm.get('descripEmbalaje')?.updateValueAndValidity();
-  
+
     this.filteredMercancia = [];
     this.selectedIndex = -1;
-  }
-  
+}
 
-  
-  onMaterialPeligrosoChange(event: any): void {
+onMaterialPeligrosoChange(event: any): void {
     const isChecked = event.target.checked;
-  
+
     if (isChecked) {
       this.myForm.get('cveMaterialPeligroso')?.setValidators([Validators.required]);
       this.myForm.get('embalaje')?.setValidators([Validators.required]);
-      this.myForm.get('descripEmbalaje')?.setValidators([Validators.required]);
     } else {
       this.myForm.get('cveMaterialPeligroso')?.clearValidators();
       this.myForm.get('embalaje')?.clearValidators();
-      this.myForm.get('descripEmbalaje')?.clearValidators();
     }
-  
+
     this.myForm.get('cveMaterialPeligroso')?.updateValueAndValidity();
     this.myForm.get('embalaje')?.updateValueAndValidity();
-    this.myForm.get('descripEmbalaje')?.updateValueAndValidity();
-  }
+}
 
-  
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent): void {
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
     if (!targetElement.closest('#claveProdServCP')) { 
       this.filteredMercancia = []; 
     }
-  }
-  
-  onMaterialPeligrosoChange1(event: Event): void {
+}
+
+onMaterialPeligrosoChange1(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     this.bandera = checkbox.checked;
-  }
+}
+
   // ----------------------------------------------------------------------------
 
   listMatPeligroso: catMatPeligroso[] = [];
@@ -313,37 +328,53 @@ onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
   
-    if (query.length >= 4) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listMatPeligroso)) {
-          this.filteredMatPeligroso = this.listMatPeligroso.filter((lista) => {
-            const clave = lista.clave ? lista.clave.toLowerCase() : '';
-              const descripcion = lista.descripcion ? lista.descripcion.toLowerCase() : '';
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('mercancia filtrados:', this.filteredMatPeligroso);
-  
-          const exactMatch = this.listMatPeligroso.some(mercancia =>
-            mercancia.clave.toString().toLowerCase() === query ||
-            mercancia.descripcion.toLowerCase() === query
-          );
-  
-          if (!exactMatch ) {
-            this.myForm.get('cveMaterialPeligroso')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('cveMaterialPeligroso')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
-      this.filteredMatPeligroso = [];
+    const control = this.myForm.get('cveMaterialPeligroso');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
+      this.filteredEmbalaje = [];
       this.showLoader = false;
-      this.myForm.get('cveMaterialPeligroso')?.setErrors(null);
+      return;
     }
   
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredMatPeligroso = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listMatPeligroso)) {
+        this.filteredMatPeligroso = this.listMatPeligroso.filter((lista) => {
+          const clave = lista.clave ? lista.clave.toLowerCase() : '';
+          const descripcion = lista.descripcion ? lista.descripcion.toLowerCase() : '';
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Materiales peligrosos filtrados:', this.filteredMatPeligroso);
+  
+        const exactMatch = this.listMatPeligroso.some(material =>
+          material.clave.toString().toLowerCase() === query ||
+          material.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null); 
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
   }
+  
  
 
   matPeligrosoDescription: string = '';
@@ -375,21 +406,7 @@ onInput(event: any): void {
 // -----------------------------------------------------------------
   listClave: catClaveUnidad[] = [];
   filteredClave: catClaveUnidad[] = []; 
-  // loadClave(): void {
-  //   this.mercanciSer.getAllcatClaveUnidad().subscribe({
-  //     next: (response: ApiResponseClave) => {
-  //       if (Array.isArray(response.data)) {
-  //         this.listClave = response.data;
-  //       } else {
-  //         console.error('La respuesta no contiene un array en "data":', response.data);
-  //         this.listClave = [];
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al cargar los datos:', err);
-  //     }
-  //   });
-  // }
+
   loadClave(): void {
     this.mercanciSer.getAllcatClaveUnidad().subscribe({
       next: (response: ApiResponseClave) => {  
@@ -409,90 +426,67 @@ onInput(event: any): void {
     });
   }
   
-  // onInput1(event: any): void {
-  //   const query = event.target.value?.toLowerCase() || '';
-  //   console.log('Texto ingresado:', query);
-  
-  //   if (query.length >= 2) {
-  //     this.showLoader = true; 
-  
-  //     setTimeout(() => {
-  //       if (Array.isArray(this.listClave)) {
-  //         this.filteredClave = this.listClave.filter((listClave) =>
-  //           listClave.c_claveunidad.toLowerCase().includes(query) || 
-  //           listClave.nombre.toLowerCase().includes(query)
-  //         );
-  //         console.log('Claves filtradas:', this.filteredClave);
-  //       }
-  
-  //       this.showLoader = false;
-  //     }, 1000); 
-  //   } else {
-  //     this.filteredClave = [];
-  //     this.showLoader = false;
-  //   }
-  // }
+ 
   
   onInput1(event: any): void {
-
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
   
-    if (query.length >= 4) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listClave)) {
-          this.filteredClave = this.listClave.filter((listClave) => {
-            const clave = listClave.c_claveunidad.toLowerCase();
-            const descripcion = listClave.nombre.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('mercancia filtrados:', this.filteredMercancia);
-  
-          const exactMatch = this.listClave.some(mercancia =>
-            mercancia.c_claveunidad.toString().toLowerCase() === query ||
-            mercancia.nombre.toLowerCase() === query
-          );
-  
-          if (!exactMatch ) {
-            this.myForm.get('unidad')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('unidad')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
-      this.filteredMercancia = [];
+    const control = this.myForm.get('unidad');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
+      this.filteredEmbalaje = [];
       this.showLoader = false;
-      this.myForm.get('unidad')?.setErrors(null);
+      return;
     }
-  }
-  // claveUnidadDescription: string = '';
-  // selectClave(clave: catClaveUnidad): void {
-  //   this.myForm.get('claveUnidad')?.setValue(clave.c_claveunidad); 
-  //   this.myForm.get('unidad')?.setValue(clave.nombre);
-  //   this.claveUnidadDescription = clave.nombre; 
-  //   this.filteredClave = [];
-  //   this.selectedIndex = -1;
-  // }
+    
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredClave = [];
+      this.showLoader = false;
+      return;
+    }
   
-
-  // @HostListener('document:click', ['$event'])
-  // onClickOutside1(event: MouseEvent): void {
-  //   const targetElement = event.target as HTMLElement;
-  //   if (!targetElement.closest('#claveUnidad')) {
-  //     this.filteredClave = [];
-  //   }
-  // }
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listClave)) {
+        this.filteredClave = this.listClave.filter((listClave) => {
+          const clave = listClave.c_claveunidad.toLowerCase();
+          const descripcion = listClave.nombre.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Claves filtradas:', this.filteredClave);
+  
+        const exactMatch = this.listClave.some(listClave =>
+          listClave.c_claveunidad.toString().toLowerCase() === query ||
+          listClave.nombre.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null); 
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
+  }
   
   claveUnidadDescription: string = '';
   
  
   
   selectClave(clave: catClaveUnidad): void {
-      this.claveUnidadDescription = clave.nombre;
-      this.myForm.get('unidad')?.setValue(clave.c_claveunidad);
+    this.myForm.get('claveUnidad')?.setValue(clave.c_claveunidad); 
+      this.myForm.get('unidad')?.setValue(clave.nombre);
+      this.claveUnidadDescription = clave.nombre; 
       this.filteredClave = [];
       this.selectedIndex = -1;
       
@@ -516,21 +510,7 @@ onInput(event: any): void {
   // -------------------------------------------------------------
   listRmbalaje: catEmbalaje[] = [];
   filteredEmbalaje: catEmbalaje[] = []; 
-  // loadEmbalaje(): void {
-  //   this.mercanciSer.getAllcatEmbalaje().subscribe({
-  //     next: (response: ApiResponseEmbalaje) => {
-  //       if (Array.isArray(response.data)) {
-  //         this.listRmbalaje = response.data;
-  //       } else {
-  //         console.error('La respuesta no contiene un array en "data":', response.data);
-  //         this.listRmbalaje = [];
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al cargar los datos:', err);
-  //     }
-  //   });
-  // }
+ 
   loadEmbalaje(): void {
     this.mercanciSer.getAllcatEmbalaje().subscribe({
       next: (response: ApiResponseEmbalaje) => {  
@@ -549,81 +529,58 @@ onInput(event: any): void {
       }
     });
   }
-  
-  // onInput4(event: any): void {
-  //   const query = event.target.value?.toLowerCase() || '';
-  //   console.log('Texto ingresado:', query);
-  
-  //   if (query.length >= 2) {
-  //     this.showLoader = true;  
-  
-  //     setTimeout(() => {
-  //       if (Array.isArray(this.listRmbalaje)) {
-  //         this.filteredEmbalaje = this.listRmbalaje.filter((listRmbalaje) =>
-  //           listRmbalaje.clave.toLowerCase().includes(query) || 
-  //           listRmbalaje.descripcion.toLowerCase().includes(query)
-  //         );
-  //         console.log('Claves filtradas:', this.filteredEmbalaje);
-  //       }
-  
-  //       this.showLoader = false;
-  //     }, 1000); 
-  //   } else {
-  //     this.filteredEmbalaje = [];
-  //     this.showLoader = false;
-  //   }
-  // }
   onInput4(event: any): void {
-
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
   
-    if (query.length >= 4) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listRmbalaje)) {
-          this.filteredEmbalaje = this.listRmbalaje.filter((listRmbalaje) => {
-            const clave = listRmbalaje.clave.toLowerCase();
-            const descripcion = listRmbalaje.descripcion.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('mercancia filtrados:', this.filteredEmbalaje);
+    const control = this.myForm.get('embalaje');
+    if (!control) return;
   
-          const exactMatch = this.listRmbalaje.some(mercancia =>
-            mercancia.clave.toString().toLowerCase() === query ||
-            mercancia.descripcion.toLowerCase() === query
-          );
-  
-          if (!exactMatch ) {
-            this.myForm.get('embalaje')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('embalaje')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
       this.filteredEmbalaje = [];
       this.showLoader = false;
-      this.myForm.get('unidad')?.setErrors(null);
+      return;
     }
-  }
-  // embalajeDescription: string = '';
-  // selectEmbalaje(embalaje: catEmbalaje): void {
-  //   this.myForm.get('embalaje')?.setValue(embalaje.clave); 
-  //   this.embalajeDescription = embalaje.descripcion;
-  //   this.filteredEmbalaje = [];
-  //   this.selectedIndex = -1;
-  // }
   
-
-  // @HostListener('document:click', ['$event'])
-  // onClickOutside4(event: MouseEvent): void {
-  //   const targetElement = event.target as HTMLElement;
-  //   if (!targetElement.closest('#embalaje')) {
-  //     this.filteredEmbalaje = [];
-  //   }
-  // }
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredEmbalaje = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listRmbalaje)) {
+        this.filteredEmbalaje = this.listRmbalaje.filter((listRmbalaje) => {
+          const clave = listRmbalaje.clave.toLowerCase();
+          const descripcion = listRmbalaje.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Embalaje filtrados:', this.filteredEmbalaje);
+  
+        const exactMatch = this.listRmbalaje.some(listRmbalaje =>
+          listRmbalaje.clave.toString().toLowerCase() === query ||
+          listRmbalaje.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null); 
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
+  }
+  
   embalajeDescription: string = '';
   
  

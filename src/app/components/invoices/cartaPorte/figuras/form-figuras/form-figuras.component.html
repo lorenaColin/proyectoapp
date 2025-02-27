@@ -1,5 +1,4 @@
 <div>
-    <pre>{{ myForm.value | json }}</pre>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
 
         <div class="col-span-1">
@@ -50,17 +49,7 @@
                 {{ getFieldError('numRegIdTribFigura') }}
             </span>
         </div>
-        <!-- <div class="col-span-1">
-            <label for="residenciaFiscalFigura" class="block text-sm font-medium">Residencia Fiscal</label>
-            <select id="residenciaFiscalFigura" formControlName="residenciaFiscalFigura"
-                class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <option value="">Selecciona País</option>
-                <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
-            </select>
-            <span *ngIf="isValidField('residenciaFiscalFigura')" class="text-[#EE312A]">
-                {{ getFieldError('residenciaFiscalFigura') }}
-            </span>
-        </div> -->
+        
         <div *ngIf="showResidenciaFiscalFigura" class="col-span-1 relative">
             <label for="residenciaFiscalFiguras" class="form-label text-[.875rem] text-black">Residencia Fiscal:</label>
             <div class="input-group">
@@ -78,8 +67,8 @@
                 {{ getFieldError('residenciaFiscalFigura') }}
             </span>
 
-            <ul *ngIf="filteredPais.length > 0" class="absolute rounded-lg mt-2 w-full">
-                <li *ngFor="let pais of filteredPais; let i = index" (click)="selectPais2(pais)"
+            <ul *ngIf="filteredPais2.length > 0" class="absolute rounded-lg mt-2 w-full">
+                <li *ngFor="let pais of filteredPais2; let i = index" (click)="selectPais2(pais)"
                     [ngClass]="{'bg-gray-200': i === selectedIndex}">
                     {{ pais.c_pais }} - {{ pais.descripcion }}
                 </li>

@@ -242,6 +242,7 @@ export class FormFigurasComponent {
   selectedIndex: number = -1;
   ngOnInit(): void {
     this.loadPais();
+    this.loadPais2()
     this.onValueChanges();
     this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
       if (pais === 'MEX') {
@@ -257,7 +258,7 @@ showResidenciaFiscalFigura = true;
 
 onValueChanges(): void {
   this.myForm.get('rfcFigura')?.setValidators([Validators.required]);
-  this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required]);
+  this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required, Validators.minLength(6),Validators.maxLength(40)]);
 
   this.myForm.get('rfcFigura')?.valueChanges.subscribe((rfcValue) => {
     setTimeout(() => {
@@ -319,38 +320,52 @@ onValueChanges(): void {
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
-
-    if (query.length >= 2) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listPais)) {
-          this.filteredPais = this.listPais.filter((Pais) => {
-            const clave = Pais.c_pais.toString().toLowerCase();
-            const descripcion = Pais.descripcion.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('Paiss filtrados:', this.filteredPais);
-
-          const exactMatch = this.listPais.some(product =>
-            product.c_pais.toString().toLowerCase() === query ||
-            product.descripcion.toLowerCase() === query
-          );
-
-          if (!exactMatch) {
-            this.myForm.get('pais')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('pais')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
+  
+    const control = this.myForm.get('pais');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
       this.filteredPais = [];
       this.showLoader = false;
-      this.myForm.get('pais')?.setErrors(null);
+      return;
     }
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredPais = [];
+      this.showLoader = false;
+      return;
+    }
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listPais)) {
+        this.filteredPais = this.listPais.filter((Pais) => {
+          const clave = Pais.c_pais.toString().toLowerCase();
+          const descripcion = Pais.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Paises filtrados:', this.filteredPais);
+  
+        const exactMatch = this.listPais.some(pais =>
+          pais.c_pais.toString().toLowerCase() === query ||
+          pais.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
   }
-
+  
 
 
   onKeyDown(event: KeyboardEvent): void {
@@ -400,42 +415,77 @@ onValueChanges(): void {
     }
   }
   // ---------------------------------------------------------
+  listPais2: catpais[] = [];
+  filteredPais2: catpais[] = [];
+  loadPais2(): void {
+    this.figuras.getAllPais().subscribe({
+      next: (response: ApiResponsepais) => {
+        console.log('Datos recibidos desde el servicio:', response);
+        if (Array.isArray(response.data)) {
+          this.listPais2 = response.data;
+          console.log('listPais:', this.listPais2);
+        } else {
+          console.error('La respuesta no contiene un array en "data":', response.data);
+          this.listPais2 = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos:', err);
+        this.showLoader = false;
+      }
+    });
+  }
+
   onInput1(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
-
-    if (query.length >= 2) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listPais)) {
-          this.filteredPais = this.listPais.filter((Pais) => {
-            const clave = Pais.c_pais.toString().toLowerCase();
-            const descripcion = Pais.descripcion.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('Paiss filtrados:', this.filteredPais);
-
-          const exactMatch = this.listPais.some(product =>
-            product.c_pais.toString().toLowerCase() === query ||
-            product.descripcion.toLowerCase() === query
-          );
-
-          if (!exactMatch) {
-            this.myForm.get('residenciaFiscalFigura')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('residenciaFiscalFigura')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
-      this.filteredPais = [];
+  
+    const control = this.myForm.get('residenciaFiscalFigura');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
+      this.filteredPais2 = [];
       this.showLoader = false;
-      this.myForm.get('residenciaFiscalFigura')?.setErrors(null);
+      return;
     }
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredPais2 = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listPais2)) {
+        this.filteredPais2 = this.listPais2.filter((Pais) => {
+          const clave = Pais.c_pais.toString().toLowerCase();
+          const descripcion = Pais.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Países filtrados:', this.filteredPais2);
+  
+        const exactMatch = this.listPais2.some(pais =>
+          pais.c_pais.toString().toLowerCase() === query ||
+          pais.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
   }
-
-
+  
 
   clavepaisDescription2: string = '';
 
@@ -443,7 +493,7 @@ onValueChanges(): void {
   selectPais2(Pais: catpais): void {
     this.clavepaisDescription2 = Pais.descripcion;
     this.myForm.get('residenciaFiscalFigura')?.setValue(Pais.c_pais.toString());
-    this.filteredPais = [];
+    this.filteredPais2 = [];
     this.selectedIndex = -1;
 
     this.myForm.get('residenciaFiscalFigura')?.setErrors(null);
@@ -462,28 +512,30 @@ onValueChanges(): void {
       this.filteredPais = [];
     }
   }
-  onCodigoPostalBlur(): void {
-    const codigoPostal = this.myForm.get('codigoPostal')?.value;
-    if (codigoPostal) {
-      this.showLoader = true;
-      this.figuras.getDireccion(codigoPostal).subscribe({
-        next: (data) => {
-          this.showLoader = false;
-          this.localidades = data.localidades || [];
-          this.colonias = data.colonias || [];
-
-          this.myForm.patchValue({
-            estado: data.estado || '',
-            municipio: data.municipio || '',
-            localidad: this.localidades[0] || '',
-            colonia: this.colonias[0] || '',
-          });
-        },
-        error: (err) => {
-          this.showLoader = false;
-          Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
-        },
-      });
-    }
-  }
+ onCodigoPostalBlur(): void {
+       const codigoPostal = this.myForm.get('codigoPostal')?.value;
+       const pais = this.myForm.get('pais')?.value;
+   
+       if (pais === 'MEX' && codigoPostal) {
+         this.showLoader = true;
+         this.figuras.getDireccion(codigoPostal).subscribe({
+           next: (data) => {
+             this.showLoader = false;
+             this.localidades = data.localidades || [];
+             this.colonias = data.colonias || [];
+   
+             this.myForm.patchValue({
+               estado: data.estado || '',
+               municipio: data.municipio || '',
+               localidad: this.localidades[0] || '',
+               colonia: this.colonias[0] || '',
+             });
+           },
+           error: (err) => {
+             this.showLoader = false;
+             Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
+           },
+         });
+       }
+     }
 }
