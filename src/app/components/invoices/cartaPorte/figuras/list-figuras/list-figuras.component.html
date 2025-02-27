@@ -40,21 +40,17 @@
         <div class="flex items-center gap-4 mb-4">
           <img class="w-12 h-12 rounded-full" src="./images/faces/1.jpg" alt="Producto" />
           <div>
-            <p class="text-primary text-sm font-semibold">
-              {{ figura.rfcFigura}}
-            </p>
+           
             <p class="text-xs font-semibold text-gray-600">
               {{ figura.tipoFigura}}
             </p>
           </div>
         </div>
 
-        <div class="mb-4">
-          <span class="text-gray-800 text-sm">Clave: {{ figura.rfcFigura }}</span>
-        </div>
+       
         <div class="flex items-center justify-between">
           <span class="text-gray-800 text-sm">
-            Unidad: {{ figura.tipoFigura }}
+            Tipo: {{ figura.tipoFigura }}
           </span>
           <button type="button" (click)="editFigura(figura.id)" data-hs-overlay="#hs-extralarge-modal1"
             class="ti-btn ti-btn-primary-full text-sm font-medium">
@@ -74,6 +70,7 @@
           <h6 class="ti-modal-title">Figuras</h6>
         </div>
         <app-form-figuras [figuraHijo]="figura" (respuesta)="responseFigura($event)" />
+        
       </div>
     </div>
   </div>

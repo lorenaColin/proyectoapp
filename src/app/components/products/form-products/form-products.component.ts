@@ -166,41 +166,56 @@ export class FormProductsComponent {
       }
     });
   }
-
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
   
-    if (query.length >= 4) {
-      this.showLoader = true;
-      setTimeout(() => {
-        if (Array.isArray(this.listProducto)) {
-          this.filteredProducto = this.listProducto.filter((Producto) => {
-            const clave = Producto.c_ClaveProdServ.toString().toLowerCase();
-            const descripcion = Producto.descripcion.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('Productos filtrados:', this.filteredProducto);
-  
-          const exactMatch = this.listProducto.some(product =>
-            product.c_ClaveProdServ.toString().toLowerCase() === query ||
-            product.descripcion.toLowerCase() === query
-          );
-  
-          if (!exactMatch ) {
-            this.myForm.get('product_key')?.setErrors({ notFound: true });
-          } else {
-            this.myForm.get('product_key')?.setErrors(null);
-          }
-        }
-        this.showLoader = false;
-      }, 1000);
-    } else {
+    const control = this.myForm.get('product_key');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
       this.filteredProducto = [];
       this.showLoader = false;
-      this.myForm.get('product_key')?.setErrors(null);
+      return;
     }
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredProducto = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listProducto)) {
+        this.filteredProducto = this.listProducto.filter((Producto) => {
+          const clave = Producto.c_ClaveProdServ.toString().toLowerCase();
+          const descripcion = Producto.descripcion.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+  
+        console.log('Productos filtrados:', this.filteredProducto);
+  
+        const exactMatch = this.listProducto.some(product =>
+          product.c_ClaveProdServ.toString().toLowerCase() === query ||
+          product.descripcion.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null); 
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
   }
+  
   
 
 
@@ -241,8 +256,6 @@ export class FormProductsComponent {
     }
   }
 
-
-
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
@@ -250,28 +263,7 @@ export class FormProductsComponent {
       this.filteredProducto = [];
     }
   }
-// @HostListener('document:click', ['$event'])
-// onClickOutside(event: MouseEvent): void {
-//   const targetElement = event.target as HTMLElement;
-//   const inputElement = document.getElementById('product_key');
-//   const inputValue = (this.myForm.get('product_key')?.value || '').trim().toLowerCase();
 
-//   // Verificar si el clic fue fuera del input
-//   if (inputElement && !inputElement.contains(targetElement)) {
-//     // Verificar si el valor ingresado existe en la lista
-//     const productExists = this.listProducto.some(product =>
-//       product.c_ClaveProdServ.toString().toLowerCase() === inputValue ||
-//       product.descripcion.toLowerCase() === inputValue
-//     );
-
-//     if (!productExists && inputValue) {
-//       this.myForm.get('product_key')?.setErrors({ notFound: true });
-//     } else {
-//       this.myForm.get('product_key')?.setErrors(null);
-//     }
-//   }
-// }
-  
 
   // -------------------------------------------------------------------
   listUnidad: catUnidad[] = [];
@@ -296,36 +288,100 @@ export class FormProductsComponent {
     });
   }
 
+
   onInput1(event: any): void {
-    const query = event.target.value.toLowerCase();
+    const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
-
-    if (query.length >= 4) {
-      this.showLoader = true;
-
-      setTimeout(() => {
-        if (Array.isArray(this.listUnidad)) {
-          this.filteredUnidad = this.listUnidad.filter((unidad) => {
-            const clave = unidad.c_claveunidad.toLowerCase();
-            const descripcion = unidad.nombre.toLowerCase();
-            return clave.includes(query) || descripcion.includes(query);
-          });
-          console.log('Unidades filtradas:', this.filteredUnidad);
-
-          if (this.filteredUnidad.length === 0) {
-            this.myForm.get('unit')?.setErrors({ notFound: true });
-
-          } else {
-            this.myForm.get('unit')?.setErrors(null);
-          }
-        }
-
-        this.showLoader = false;
-      }, 1000);
-    } else {
+  
+    const control = this.myForm.get('unit');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
       this.filteredUnidad = [];
       this.showLoader = false;
-      this.myForm.get('unit')?.setErrors(null);
+      return;
+    }
+    if (query.length < 4) {
+      control.setErrors({ notFound: true });
+      this.filteredUnidad = [];
+      this.showLoader = false;
+      return;
+    }
+  
+    this.showLoader = true;
+    setTimeout(() => {
+      if (Array.isArray(this.listUnidad)) {
+        this.filteredUnidad = this.listUnidad.filter((unidad) => {
+          const clave = unidad.c_claveunidad.toLowerCase();
+          const descripcion = unidad.nombre.toLowerCase();
+          return clave.includes(query) || descripcion.includes(query);
+        });
+        console.log('Unidades filtradas:', this.filteredUnidad);
+  
+        const exactMatch = this.listUnidad.some(uni =>
+          uni.c_claveunidad.toLowerCase() === query ||
+          uni.nombre.toLowerCase() === query
+        );
+  
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null); 
+        }
+      }
+      this.showLoader = false;
+    }, 1000);
+  }
+  
+
+  onKeyDown2(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown') {
+      if (this.selectedIndex < this.filteredUnidad.length - 1) {
+        this.selectedIndex++;
+      }
+      event.preventDefault();
+    } else if (event.key === 'ArrowUp') {
+      if (this.selectedIndex > 0) {
+        this.selectedIndex--;
+      }
+      event.preventDefault();
+    } else if (event.key === 'Enter') {
+      if (this.selectedIndex >= 0) {
+        this.selectUnidad(this.filteredUnidad[this.selectedIndex]);
+
+
+
+      }
+    }
+  }
+
+
+  // claveProdServUnidad: string = '';
+
+  // selectUnidad(unidad: catUnidad): void {
+  //   console.log(unidad);
+  //   let { c_claveunidad, nombre } = unidad;
+  //   this.myForm.get('unidad')?.setValue(c_claveunidad);
+  //   this.claveProdServUnidad = nombre;
+  //   this.filteredUnidad = [];
+  //   this.selectedIndex = -1;
+  // }
+  claveProdServUnidad: string = '';
+  selectUnidad(unidad: catUnidad): void {
+    this.claveProdServUnidad = unidad.nombre;
+    this.myForm.get('unit')?.setValue(unidad.c_claveunidad);
+    this.filteredUnidad = [];
+    this.selectedIndex = -1;
+    
+    this.myForm.get('unit')?.setErrors(null);
+    const inputElement = document.getElementById('unidad') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = this.claveProdServUnidad;
     }
   }
 
@@ -333,28 +389,13 @@ export class FormProductsComponent {
 
 
 
+ 
 
-  claveProdServUnidad: string = '';
-
-  selectUnidad(unidad: catUnidad): void {
-    console.log(unidad);
-    let { c_claveunidad, nombre } = unidad;
-    this.myForm.get('unidad')?.setValue(c_claveunidad);
-    this.claveProdServUnidad = nombre;
-    this.filteredUnidad = [];
-    this.selectedIndex = -1;
-  }
-
-
-
-
-
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside1(event: MouseEvent): void {
+ @HostListener('document:click', ['$event'])
+  onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-    if (!targetElement.closest('#unidad')) {
-      this.filteredProducto = [];
+    if (!targetElement.closest('#unit')) {
+      this.filteredUnidad = [];
     }
   }
 

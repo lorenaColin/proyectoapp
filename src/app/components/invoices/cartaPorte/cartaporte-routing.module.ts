@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: 'remolques', component: ListRemolquesComponent },
       { path: 'seguros', component: ListSegurosComponent},
       { path: 'mercancias', component: ListMercanciasComponent},
-      { path: 'productos', component: ListProductosComponent},
+      // { path: 'productos', component: ListProductosComponent},
       { path: '**', redirectTo: 'ubicaciones' }, 
     ],
   },

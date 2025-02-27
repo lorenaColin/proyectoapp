@@ -163,6 +163,7 @@ export class SidebarComponent {
  
   // Toggle menu
   toggleNavActive(item: any) {
+    console.log("Before toggle:", item.active);
    if (localStorage.getItem('ynex-sidemenu-styles') == 'icontext') {
      document.querySelector('html')?.setAttribute('icon-text','open')
    }else{
@@ -194,21 +195,23 @@ export class SidebarComponent {
       });
     }
     item.active = !item.active;
+    console.log("After toggle:", item.active);
   }
   // Close Nav menu
   closeNavActive() {
     this.menuItems?.forEach((a: any) => {
-      if (this.menuItems) {
-        a.active = false;
-      }
+      a.active = false;
+  
       a?.children?.forEach((b: any) => {
-        if (a.children) {
-          b.active = false;
-        }
+        b.active = false;
+  
+        b?.children?.forEach((c: any) => {
+          c.active = false;
+        });
       });
     });
   }
- 
+  
   ParentActive() {
     this.menuItems.map((element: any) => {
       if (element.children) {
