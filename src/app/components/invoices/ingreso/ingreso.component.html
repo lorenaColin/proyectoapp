@@ -1,4 +1,4 @@
-<form [formGroup]="formIngreso"  autocomplete="off">
+<form [formGroup]="formIngreso" autocomplete="off">
     <!-- <pre> {{ formIngreso.value | json }} </pre> -->
 
     <div class="grid grid-cols-12 gap-x-6">
@@ -11,10 +11,10 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <!-- <app-autocomplete [listItems]="listSeries" [formGroup]="formIngreso" formControlName="serie_folio"
+                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
+                            <app-autocomplete [listItems]="listSeries" [formGroup]="formIngreso" formControlName="serie_folio"
                                 (itemSelected)="onSerieSelected($event)">
-                            </app-autocomplete> -->
+                            </app-autocomplete>
                             <label for="serieFolio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="serieFolio" id="serieFolio"
@@ -37,7 +37,36 @@
                                 </li>
                             </ul>
 
+                        </div> -->
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
+                            <label for="serie_folio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="serie_folio" id="serie_folio"
+                                    formControlName="serie_folio"  (input)="onInputReceptorJun($event, 'series')"
+                                    (keydown)="onKeyDown($event)"
+                                    [ngClass]="{'is-invalid': isValidField('serie_folio')}">
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+                            <span *ngIf="formIngreso.get('serie_folio')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                                Este código de serie no se encuentra .
+                            </span>
+                            <span *ngIf="isValidField('serie_folio')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('serie_folio') }}
+                            </span>
+                           
+
+                            <ul *ngIf="filteredSeries.length > 0"
+                                class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full">
+                                <li *ngFor="let series of filteredSeries; let i = index" (click)="selectSerie(series)"
+                                    [ngClass]="{'bg-gray-200': i === selectedIndex}" class="text-black">
+                                    {{ series.serie }} - {{ series.folio }}
+                                </li>
+                            </ul>
                         </div>
+
+
 
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
@@ -75,40 +104,53 @@
                                 {{ getFieldError('receptor') }}
                             </span>
                         </div> -->
-                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
                             <!-- <app-autocomplete [listItems]="series" [formGroup]="formIngreso" formControlName="serie_folio"
                                 (itemSelected)="onSerieSelected($event)">
                             </app-autocomplete> -->
                             <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="receptor" id="receptor"
-                                    formControlName="receptor" (input)="onInputReceptor($event,'receptors')"
-                                    (keydown)="onKeyDown($event,'selectReceptor', 'filteredReceptors')"
-                                    [ngClass]="{'is-invalid': isValidField('receptor')}">
+                                    formControlName="receptor"  (input)="onInputReceptorJun($event, 'receptors')"
+                                    (keydown)="onKeyDown2($event)" [ngClass]="{'is-invalid': isValidField('receptor')}">
                                 <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                                     <i class="ri-add-line"></i>
                                 </div>
                             </div>
+                            <span *ngIf="formIngreso.get('receptor')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                                Este Receptor no se encuentra .
+                            </span>
                             <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
                                 {{ getFieldError('receptor') }}
                             </span>
 
                             <ul *ngIf="filteredReceptors.length > 0"
                                 class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full">
-                                <li *ngFor="let receptor of filteredReceptors; let i = index" (click)="selectReceptor(receptor)"
-                                    [ngClass]="{'bg-gray-200': i === selectedIndex}" class="text-black">
+                                <li *ngFor="let receptor of filteredReceptors; let i = index"
+                                    (click)="selectReceptor(receptor)" [ngClass]="{'bg-gray-200': i === selectedIndex}"
+                                    class="text-black">
                                     {{ receptor.name }}
                                 </li>
                             </ul>
 
                         </div>
+                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                            <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
+                                formControlName="uso_cfdi" id="usoCfdi">
+                                <option value="">Selecciona</option>
+                                <option *ngFor="let cfdi of listaCfdi" [value]="cfdi.uso">
+                                    {{ cfdi.nombre }}
+                                </option>
+                            </select>
+                            <span *ngIf="isValidField('uso_cfdi')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('uso_cfdi') }}
+                            </span>
+                        </div> -->
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
-                            <select 
-                                class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" 
-                                name="usoCfdi"
-                                formControlName="uso_cfdi" 
-                                id="usoCfdi">
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
+                                formControlName="uso_cfdi" id="usoCfdi">
                                 <option value="">Selecciona</option>
                                 <option *ngFor="let cfdi of listaCfdi" [value]="cfdi.uso">
                                     {{ cfdi.nombre }}
@@ -118,7 +160,8 @@
                                 {{ getFieldError('uso_cfdi') }}
                             </span>
                         </div>
-                        
+
+
                     </div>
                     <hr class="my-6 border-gray-300">
 
@@ -196,4 +239,7 @@
             <app-form-invoice />
         </div>
     </div>
+</div>
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
 </div>

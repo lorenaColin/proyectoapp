@@ -57,7 +57,7 @@ export class FormCustomerComponent implements OnChanges {
   clientes: CustomersInterface[] = [];
   idCustomer = 0;
   showLoader = false;
-  constructor() {}
+  constructor() { }
 
   myForm: FormGroup = this.fb.group({
     name: [
@@ -77,7 +77,7 @@ export class FormCustomerComponent implements OnChanges {
     status: [true],
   });
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnChanges(): void {
     this.idCustomer = this.productoHijo.id || 0;
@@ -151,21 +151,21 @@ export class FormCustomerComponent implements OnChanges {
     this.formCustomerReset();
   }
 
-  formCustomerReset(): void{
+  formCustomerReset(): void {
     console.log("resetting");
     this.myForm.reset(
       {
-        name:'',
+        name: '',
         rfc: '',
-        regime:'',
+        regime: '',
         cp: '',
-        num_reg_id_trib:'',
-        email:'' ,
-        phone:'',
+        num_reg_id_trib: '',
+        email: '',
+        phone: '',
         address: '',
-        payment_method:'',
-        payment_form:'',
-        residence:'',
+        payment_method: '',
+        payment_form: '',
+        residence: '',
         status: true,
       }
     );
