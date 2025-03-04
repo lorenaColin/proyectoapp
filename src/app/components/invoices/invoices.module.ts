@@ -21,6 +21,12 @@ import { EgresoComponent } from './egreso/egreso.component';
 import { RelatedsComponent } from './shared/relateds/relateds.component';
 import { DecimalsDirective } from '../../shared/directives/decimals.directive';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
+import { FormUbicacionesComponent } from './shared/components-cp/ubicaciones/form-ubicaciones/form-ubicaciones.component';
+import { FormMercanciasComponent } from './shared/components-cp/mercancias/form-mercancias/form-mercancias.component';
+import { FormAutotrasporteComponent } from './shared/components-cp/autotrasnporte/form-autotrasporte/form-autotrasporte.component';
+import { FormRemolquesComponent } from './shared/components-cp/Remolques/form-remolques/form-remolques.component';
+import { FormSegurosComponent } from './shared/components-cp/Seguros/form-seguros/form-seguros.component';
+import { FormFigurasComponent } from './shared/components-cp/Figuras/form-figuras/form-figuras.component';
 
 
 
@@ -42,7 +48,13 @@ import { AutocompleteComponent } from '../../shared/components/autocomplete/auto
     EgresoComponent,
     RelatedsComponent,
     DecimalsDirective,
-    AutocompleteComponent
+    AutocompleteComponent,
+    FormUbicacionesComponent,
+    FormMercanciasComponent,
+    FormAutotrasporteComponent,
+    FormRemolquesComponent,
+    FormSegurosComponent,
+    FormFigurasComponent
   ],
   imports: [
     CommonModule,

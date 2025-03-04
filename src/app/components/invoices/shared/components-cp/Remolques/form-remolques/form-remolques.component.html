@@ -1,0 +1,43 @@
+<form [formGroup]="formRemolques">
+
+<h5 class="mt-3 mb-3">Remolques</h5>
+<div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+        <label class="form-label" for="sAmbient">Subtipo Remolque:</label>
+        <div class="input-group">
+            <select class="form-control" name="sAmbient" id="sAmbient">
+                <option value="">Selecciona Remolque</option>
+
+                <!-- {{-- @foreach($safes->where('type', 'Ambiental')  as $safe)
+                    <option value="{{ $safe->id }}">{{ $safe->polize }}</option>
+                @endforeach --}} -->
+            </select>
+            <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                <i class="ri-add-line"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+        <label class="form-label" for="placaRem">Placa:</label>
+        <input type="text" class="form-control" name="placaRem" id="placaRem">
+    </div>
+    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+        <label class="form-label" for="sAmbient">Subtipo Remolque:</label>
+        <div class="input-group">
+            <select class="form-control" name="sAmbient1" id="sAmbient1">
+                <option value="">Selecciona Remolque</option>
+
+                <!-- {{-- @foreach($safes->where('type', 'Ambiental')  as $safe)
+                    <option value="{{ $safe->id }}">{{ $safe->polize }}</option>
+                @endforeach --}} -->
+            </select>
+            <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                <i class="ri-add-line"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-span-12 sm:col-span-12 md:col-span-3">
+        <label class="form-label" for="placaRem1">Placa:</label>
+        <input type="text" class="form-control" name="placaRem1" id="placaRem1">
+    </div>
+</div>
