@@ -8,6 +8,7 @@ export interface AutotransportInterface {
     numPermisoSCT: string,
     aseguraRespCivil: string,
     polizaRespCivil: string,
+    tipoRemolque: string,
     company_id: string,
 }
 

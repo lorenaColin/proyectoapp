@@ -1,20 +1,20 @@
 <form [formGroup]="formCartaPorte">
-    <pre> {{ formCartaPorte.value | json }} </pre>
+    <!-- <pre> {{ formCartaPorte.value | json }} </pre> -->
     <div>
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                <label for="selectIstmo" class="form-label text-[.875rem] text-black">R. Istmo:</label>
+                <label for="selectIstmo"  class="form-label text-[.875rem] text-black">R. Istmo:</label>
                 <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="selectIstmo"
-                    id="selectIstmo">
+                    id="selectIstmo" formControlName="selectIstmo">
                     <option selected value="No">No</option>
                     <option value="Si">Si</option>
                 </select>
             </div>
 
             <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                <label for="uPoloOrigen" class="form-label text-[.875rem] text-black">U. Polo O:</label>
+                <label for="uPoloOrigen"  class="form-label text-[.875rem] text-black">U. Polo O:</label>
                 <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="uPoloOrigen"
-                    id="uPoloOrigen">
+                    id="uPoloOrigen" formControlName="uPoloOrigen">
                     <option value="01">Coatzacoalcos I</option>
                     <option value="02">Coatzacoalcos II</option>
                     <option value="03">Texistepec</option>
@@ -27,7 +27,7 @@
             <div class="col-span-12 sm:col-span-12 md:col-span-3">
                 <label for="uPoloDestino" class="form-label text-[.875rem] text-black">U. Polo D:</label>
                 <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="uPoloDestino"
-                    id="uPoloDestino">
+                    id="uPoloDestino"  formControlName="uPoloDestino">
                     <option value="01">Coatzacoalcos I</option>
                     <option value="02">Coatzacoalcos II</option>
                     <option value="03">Texistepec</option>
@@ -38,12 +38,12 @@
             </div>
 
             <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                <label for="serieFolio" class="form-label text-[.875rem] text-black">D.recorrida:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" name="serieFolio" id="serieFolio">
-                    <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                <label for="serieFolio"   class="form-label text-[.875rem] text-black">D.recorrida:</label>
+                <div class="input-group" >
+                    <input type="text" class="form-control" name="serieFolio" id="serieFolio" formControlName="serieFolio">
+                    <!-- <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                         <i class="ri-add-line"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

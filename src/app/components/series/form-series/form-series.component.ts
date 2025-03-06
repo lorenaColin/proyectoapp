@@ -63,6 +63,7 @@ export class FormSeriesComponent {
     console.log(this.productoHijo);  
     if (this.productoHijo) {
       this.idSerie = this.productoHijo.id || 0;  
+      console.log(this.idSerie)
       this.buttonTitle = this.idSerie !== 0 ? 'Actualizar' : 'Crear';  
       const statusValue = this.idSerie !== 0 ? this.productoHijo.status : true;
       this.myForm.patchValue({

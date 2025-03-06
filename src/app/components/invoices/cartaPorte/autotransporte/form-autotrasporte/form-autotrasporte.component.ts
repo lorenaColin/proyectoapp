@@ -48,6 +48,17 @@ export class FormAutotrasporteComponent implements OnChanges {
     this.idAutotransport != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
     this.setCompanyId();
   }
+  ngOnInit(): void {
+    this.myForm.get('configVehicular')?.valueChanges.subscribe((selectedNomenclature) => {
+      const selectedConfig = this.configVehicularList.find(
+        (config) => config.nomenclature === selectedNomenclature
+      );
+  
+      if (selectedConfig) {
+        this.myForm.patchValue({ tipoRemolque: selectedConfig.remolq });
+      }
+    });
+  }
   setCompanyId(): void {
     const companyId = localStorage.getItem('company');
     console.log('seteando empresa al formulario', companyId);
@@ -61,6 +72,7 @@ export class FormAutotrasporteComponent implements OnChanges {
     this.autotransportService.getConfigVehicular().subscribe(
       (response) => {
         this.configVehicularList = response.data;
+        console.log(response)
       },
       (error) => {
         console.error(
@@ -99,6 +111,8 @@ export class FormAutotrasporteComponent implements OnChanges {
     aseguraRespCivil: ['', [Validators.required, Validators.minLength(3)]],
     polizaRespCivil: ['', [Validators.required, Validators.minLength(3)]],
     company_id: ['', [Validators.required]],
+    tipoRemolque: ['',],
+
   });
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.myForm, field);
@@ -112,7 +126,7 @@ export class FormAutotrasporteComponent implements OnChanges {
   }
   onSubmit(): void {
     this.showLoader = true;
-
+    console.log(this.myForm.value)
     if (this.myForm.invalid) {
       this.showLoader = false;
       this.myForm.markAllAsTouched();
@@ -126,9 +140,9 @@ export class FormAutotrasporteComponent implements OnChanges {
 
     const submitCustomer = this.idAutotransport
       ? this.autotransportService.updateAutotransport(
-          this.idAutotransport,
-          formData
-        )
+        this.idAutotransport,
+        formData
+      )
       : this.autotransportService.createAutotransport(formData);
     this.subscription.add(
       submitCustomer.subscribe(
@@ -139,7 +153,7 @@ export class FormAutotrasporteComponent implements OnChanges {
           if (!response.error) {
             this.myForm.reset();
             this.closeModal();
-          } 
+          }
         },
         (error) => {
           console.error('Error al enviar los datos del autotransporte', error);

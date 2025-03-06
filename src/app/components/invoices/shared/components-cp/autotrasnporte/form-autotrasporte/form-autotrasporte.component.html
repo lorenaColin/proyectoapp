@@ -1,52 +1,58 @@
 
 
 <form [formGroup]="formAutotrasporte">
+    <!-- <pre> {{ formAutotrasporte.value | json }} </pre> -->
+
 <h5 class="mt-3 mb-3">Autotransporte</h5>
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label" for="">Placa:</label>
             <div class="input-group">
-                <select class="form-control"  formControlName="placa" id="placa" onchange="cargeAutotransport()">
-                    <option value="">Selecciona autotransporte</option>
+                <select class="form-control"  formControlName="placa" id="placa" (change)="cargeAutotransport($event)">
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option *ngFor="let autotransporte of listAutotransporte" [value]="autotransporte.id">
                         {{ autotransporte.placaVM }}
                       </option>
                  
                 </select>
-                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                <!-- <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                     <i class="ri-add-line"></i>
-                </div>
+                </div> -->
             </div>
         </div>
-        <div class="col-span-12 sm:col-span-12 md:col-span-6">
+        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-6">
             <label class="form-label" name="PermSCT2" for="">PermSCT: </label>
-            <select class="form-control">
-                cargeAutotransport   <option value="">Selecciona permisoSCT</option>
+            <select class="form-control"  formControlName="PermSCT2">
+               <option value="">Selecciona permisoSCT</option> -->
 
                 <!-- @foreach($permisos as $permiso)
                     <option value="{{ $permiso->permission }}">{{ $permiso->description }}</option>
                 @endforeach -->
-            </select>
+            <!-- </select>
+        </div> -->
+        <div class="col-span-12 sm:col-span-12 md:col-span-3">
+            <label class="form-label"  name= "PermSCT2"for="">PermSCT:: </label>
+            <input type="text" class="form-control "  formControlName="PermSCT2"   readonly>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label"  name= "NumPermisoSCT"for="">NumPermisoSCT: </label>
-            <input type="text" class="form-control" readonly>
+            <input type="text" class="form-control"  formControlName="NumPermisoSCT"   readonly>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label" for="aCivil">A. Civil: </label>
-            <input type="text" class="form-control" id="aCivil" name="aCivil" readonly>
+            <input type="text" class="form-control" id="aCivil"  formControlName="aCivil" name="aCivil"  readonly>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label" for="cVehicle">C. Vehicular: </label>
-            <input type="text" class="form-control" id="cVehicle" name="cVehicle" readonly>
+            <input type="text" class="form-control" id="cVehicle"  formControlName="cVehicle"  name="cVehicle" readonly>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label" for="anioVehicle">Año: </label>
-            <input type="text" class="form-control" id="anioVehicle" name="anioVehicle" readonly>
+            <input type="text" class="form-control" id="anioVehicle" formControlName="anioVehicle" name="anioVehicle" readonly>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label class="form-label" for="weighVehicle">Peso Bruto: </label>
-            <input type="text" class="form-control" id="weighVehicle" name="weighVehicle" readonly>
+            <input type="text" class="form-control "   formControlName="weighVehicle" id="weighVehicle"   name="weighVehicle" readonly>
         </div>
     </div>
 

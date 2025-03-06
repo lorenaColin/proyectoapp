@@ -6,66 +6,71 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 })
 export class CartaPorteService {
   formInvoice: FormGroup;
-autotransporte:FormGroup
+// autotransporte:FormGroup
   constructor(private fb: FormBuilder) {
     this.formInvoice = this.fb.group({
       selectIstmo: [''],
       uPoloOrigen: [''],
       uPoloDestino: [''],
       serieFolio: [''],
-      ubicaciones: this.fb.array([]),
+      ubicaciones: this.fb.array([
+        
+      ]),
       mercancias: this.fb.array([]),
      
       remolques: this.fb.group({
-        sAmbient:[''],
+        sAmbientr:[''],
         placaRem:[''],
         sAmbient1:[''],
         placaRem1:[''],
       }),
       seguros: this.fb.group({
-        sAmbient:[''],
+        sAmbients:[''],
         sCarge:[''],
         pSeguro:[''],
       }),
       figuras: this.fb.array([]),
+      autotransporte:this.fb.group({
+        placa:[''],
+        PermSCT2:[''],
+        NumPermisoSCT:[''],
+        aCivil:[''],
+        cVehicle:[''],
+        anioVehicle:[''],
+        weighVehicle:['']
+  
+      })
     });
-   this.autotransporte=this.fb.group({
-      placa:[''],
-      PermSCT2:[''],
-      NumPermisoSCT:[''],
-      aCivil:[''],
-      cVehicle:[''],
-      anioVehicle:[''],
-      weighVehicle:['']
-
-    })
+  
   }
 
   getFormCarta(): FormGroup {
     return this.formInvoice;
   }
-  getAutotrasporte(): FormGroup {
-    return this.autotransporte
+  // getAutotrasporte(): FormGroup {
+  //   return this.autotransporte
+  // }
+  getAutotransporteForm(): FormGroup {
+    return this.formInvoice.get('autotransporte') as FormGroup;
   }
   getRemolques(): FormGroup {
-    let { remolques } = this.formInvoice.value
-    return remolques as FormGroup;
+    return this.formInvoice.get('remolques') as FormGroup;
+   
   }
   getseguros(): FormGroup {
-    let { seguros } = this.formInvoice.value
-    return seguros as FormGroup;
+    return this.formInvoice.get('seguros') as FormGroup;
   }
   getUbicacionesFormArray(): FormArray {
-    let { ubicaciones } = this.formInvoice.value
-    return ubicaciones as FormArray;
+    return this.formInvoice.get('ubicaciones') as FormArray;
+
   }
   getMercanciasFormArray(): FormArray {
-    let { mercancias } = this.formInvoice.value
-    return mercancias as FormArray;
+    return this.formInvoice.get('mercancias') as FormArray;
+
   }
   getFigurasFormArray(): FormArray {
-    let { figuras } = this.formInvoice.value
-    return figuras as FormArray;
+    return this.formInvoice.get('figuras') as FormArray;
+
   }
 
 

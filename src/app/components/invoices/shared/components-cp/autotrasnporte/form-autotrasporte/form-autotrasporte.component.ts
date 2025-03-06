@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CartaPorteService } from '../../../../../services/carta-porte.service';
 import { AutotransportService } from '../../../../../services/autotransport.service';
 import { AutotransportInterface } from '../../../../../interfaces/autotransport.interface';
@@ -11,18 +11,19 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class FormAutotrasporteComponent {
   formAutotrasporte: FormGroup;
-  listAutotransporte:AutotransportInterface [] = [];
+  formRemolque: FormGroup;
 
   private cartaPorteService = inject(CartaPorteService);
-  // formAutotrasporte = this.cartaPorteService.getAutotrasporte();
   private AutotransporteService = inject(AutotransportService);
   formCartaPorte = this.cartaPorteService.getFormCarta();
-  constructor( private fb: FormBuilder) {
-    this.formAutotrasporte = this.fb.group({
-      autotransporte: this.cartaPorteService.getAutotrasporte(),
-    });
-  }
 
+  // @Input() formRemolques!: FormGroup;
+  constructor(private fb: FormBuilder) {
+    this.formAutotrasporte = this.cartaPorteService.getAutotransporteForm();
+    this.formRemolque = this.cartaPorteService.getRemolques();
+
+  }
+  listAutotransporte: AutotransportInterface[] = [];
   ngOnInit(): void {
     this.loadTrasporte();
   }
@@ -30,9 +31,41 @@ export class FormAutotrasporteComponent {
 
     this.AutotransporteService.getAutotransports().subscribe((response) => {
       const { error, data } = response;
-      console.log('Datos recibidos:', data);
+      console.log('Datos de autotrasporte recibidos:', data);
       (!error) ? this.listAutotransporte = data : '';
     });
+  }
+
+  selectedAutotransport: AutotransportInterface | null = null;
+
+  cargeAutotransport(event: Event): void {
+    const selectedId = +(event.target as HTMLSelectElement).value;
+
+    if (selectedId) {
+      this.selectedAutotransport = this.listAutotransporte.find(
+        (autotransporte) => autotransporte.id === selectedId
+      ) || null;
+
+      console.log(this.selectedAutotransport);
+
+      if (this.selectedAutotransport) {
+        this.formAutotrasporte.patchValue({
+          placa: this.selectedAutotransport.id,
+          PermSCT2: this.selectedAutotransport.permSCT,
+          NumPermisoSCT: this.selectedAutotransport.numPermisoSCT,
+          aCivil: this.selectedAutotransport.aseguraRespCivil,
+          cVehicle: this.selectedAutotransport.configVehicular,
+          anioVehicle: this.selectedAutotransport.anioModeloVM,
+          weighVehicle: this.selectedAutotransport.pesoBrutoVehicular,
+        });
+
+        this.selectedAutotransport.tipoRemolque === '0' ? this.formRemolque.disable() : this.formRemolque.enable();
+
+      }
+    } else {
+      this.formAutotrasporte.reset();
+      this.formRemolque.enable();
+    }
   }
 
 }
