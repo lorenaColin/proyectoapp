@@ -33,27 +33,26 @@
                                             <i class="ri-add-line"></i>
                                         </div>
 
-                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Origen' && filteredRFCOrigen.length > 0"
+                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Origen' && filteredRFCOrigen.length > 0 && activeIndex === i"
                                             class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10">
-                                            <li *ngFor="let ubic of filteredRFCOrigen; let i = index"
-                                            (click)="selectSerieWrapper(ubic, 'Origen')"
-
-                                                [ngClass]="{'bg-gray-200': i === selectedIndex}"
+                                            <li *ngFor="let ubic of filteredRFCOrigen; let j = index"
+                                                (click)="selectSerieWrapper(ubic, i, 'Origen')"
+                                                [ngClass]="{'bg-gray-200': j === selectedIndex}"
+                                                class="p-2 cursor-pointer hover:bg-gray-300">selectSerie
+                                                {{ ubic.idUbicacion }} - {{ ubic.rfc }}
+                                            </li>
+                                        </ul>
+                                        
+                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Destino' && filteredRFCDestino.length > 0 && activeIndex === i"
+                                            class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10">
+                                            <li *ngFor="let ubic of filteredRFCDestino; let j = index"
+                                                (click)="selectSerieWrapper(ubic, i, 'Destino')"
+                                                [ngClass]="{'bg-gray-200': j === selectedIndex}"
                                                 class="p-2 cursor-pointer hover:bg-gray-300">
                                                 {{ ubic.idUbicacion }} - {{ ubic.rfc }}
                                             </li>
                                         </ul>
-
-                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Destino' && filteredRFCDestino.length > 0"
-                                            class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10">
-                                            <li *ngFor="let ubic of filteredRFCDestino; let i = index"
-                                            (click)="selectSerieWrapper(ubic, 'Destino')"
-
-                                            [ngClass]="{'bg-gray-200': i === selectedIndex}"
-                                            class="p-2 cursor-pointer hover:bg-gray-300">
-                                            {{ ubic.idUbicacion }} - {{ ubic.rfc }}
-                                        </li>
-                                        </ul>
+                                        
                                     </div>
                                 </div>
                             </td>

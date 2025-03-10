@@ -30,6 +30,7 @@ export class FormUbicacionesComponent {
   filteredList: ubicacionInterface[] = [];
   filteredRFCOrigen: ubicacionInterface[] = [];
   filteredRFCDestino: ubicacionInterface[] = [];
+  activeIndex: number | null = null;
 
 
   // constructor(private fb: FormBuilder) {
@@ -61,14 +62,9 @@ export class FormUbicacionesComponent {
         this.listRFCDestino = this.listUbicaciones.filter(
           (ubicacion) => ubicacion.tipoUbicacion === 'DESTINO'
         );
-
-        // console.log('RFC Origen:', this.listRFCOrigen);
-        // console.log('RFC Destino:', this.listRFCDestino);
       }
     });
   }
-
-
 
   addUbicacion(tipo: string) {
     const ubicacionesnew = this.fb.group({
@@ -88,11 +84,9 @@ export class FormUbicacionesComponent {
     this.ubicaciones.removeAt(index);
   }
 
-
-
-
-
   onInput(event: any, index: number, field: string): void {
+    this.activeIndex = index;
+
     const query = (event.target.value || '').trim().toLowerCase();
     console.log(`Texto ingresado en ${field} de la fila ${index}:`, query);
 
@@ -102,15 +96,11 @@ export class FormUbicacionesComponent {
     const tipoUbicacion = row.get('tipo')?.value;
     console.log(`Tipo de Ubicación para la fila ${index}:`, tipoUbicacion);
 
-    const control = this.ubicaciones.get('rfc');
-
     this.showLoader = true;
     console.log('Loader activado');
 
     setTimeout(() => {
       if (query.length < 3) {
-        const fieldControl = row.get(field);
-        fieldControl?.setErrors({ minLength: true });
         this.filteredRFCOrigen = [];
         this.filteredRFCDestino = [];
         this.showLoader = false;
@@ -129,23 +119,9 @@ export class FormUbicacionesComponent {
         console.log(`RFC filtrados para DESTINO:`, this.filteredRFCDestino);
       }
 
-      const exactMatch = (tipoUbicacion === 'Origen' ? this.filteredRFCOrigen : this.filteredRFCDestino).some(
-        (ubicacion: ubicacionInterface) => ubicacion.rfc.toLowerCase() === query
-      );
-
-      const fieldControl = row.get(field);
-      if (exactMatch) {
-        fieldControl?.setErrors(null);
-      } else {
-        fieldControl?.setErrors({ notFound: true });
-      }
-
       this.showLoader = false;
     }, 1000);
   }
-
-
-
 
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
@@ -161,50 +137,13 @@ export class FormUbicacionesComponent {
     } else if (event.key === 'Enter') {
       if (this.selectedIndex >= 0) {
         if (this.ubicaciones.get('tipo')?.value === 'Origen') {
-          this.selectSerie(this.filteredRFCOrigen[this.selectedIndex], this.selectedIndex, 'Origen');
+          this.selectSerieWrapper(this.filteredRFCOrigen[this.selectedIndex], this.selectedIndex, 'Origen');
         } else if (this.ubicaciones.get('tipo')?.value === 'Destino') {
-          this.selectSerie(this.filteredRFCDestino[this.selectedIndex], this.selectedIndex, 'Destino');
+          this.selectSerieWrapper(this.filteredRFCDestino[this.selectedIndex], this.selectedIndex, 'Destino');
         }
       }
     }
   }
-
-  selectSerie(ubicacion: any, index: number, tipo: string): void {
-    console.log('Ubicación seleccionada:', ubicacion);
-    console.log('Índice recibido:', index);
-    console.log('Tipo recibido:', tipo);
-    console.log('FormArray actual:', this.ubicaciones.value); 
-  
-    if (ubicacion && ubicacion.idUbicacion && ubicacion.rfc) {
-      const value = `${ubicacion.idUbicacion} - ${ubicacion.rfc}`;
-  
-      if (index >= 0 && index < this.ubicaciones.length) {
-        const ubicacionControl = this.ubicaciones.at(index);
-  
-        if (!ubicacionControl) {
-          console.error(`No se encontró un FormGroup en el índice ${index}`);
-          return;
-        }
-  
-        console.log('FormGroup encontrado:', ubicacionControl.value);
-  
-        const rfcControl = ubicacionControl.get('rfc');
-  
-        if (!rfcControl) {
-          console.error(`No se encontró el control 'rfc' en el índice ${index}`);
-          return;
-        }
-  
-        rfcControl.setValue(value);
-        console.log(`Nuevo valor del campo rfc en índice ${index}:`, value);
-      } else {
-        console.error(`Índice fuera de rango: ${index}`);
-      }
-    } else {
-      console.error('Ubicación inválida o datos faltantes:', ubicacion);
-    }
-  }
-  
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
@@ -213,15 +152,28 @@ export class FormUbicacionesComponent {
       this.filteredRFC = [];
     }
   }
-  findUbicacionIndex(tipo: string): number {
-    return this.ubicaciones.controls.findIndex(control => control.value?.tipo === tipo);
-  }
-  
-selectSerieWrapper(ubic: any, tipo: string) {
-  const ubicacionIndex = this.findUbicacionIndex(tipo);
-  this.selectSerie(ubic, ubicacionIndex, tipo);
-}
 
-  
+  selectSerieWrapper(ubicacion: any, index: number, tipo: string): void {
+    console.log('Ubicación seleccionada:', ubicacion);
+    console.log('Índice recibido:', index);
+    console.log('Tipo recibido:', tipo);
+
+    if (!ubicacion || !ubicacion.idUbicacion || !ubicacion.rfc) {
+      console.error('Ubicación inválida o datos faltantes:', ubicacion);
+      return;
+    }
+
+    const row = this.ubicaciones.at(index);
+
+    const rfcControl = row.get('rfc');
+
+
+    const value = `${ubicacion.idUbicacion} - ${ubicacion.rfc}`;
+    rfcControl?.setValue(value);
+
+    this.filteredRFCOrigen = [];
+    this.filteredRFCDestino = [];
+    this.activeIndex = null;
+  }
 
 }
