@@ -1,4 +1,8 @@
 <form [formGroup]="formCartaPorte">
+    <pre>
+
+        {{ formCartaPorte.value | json }}
+    </pre>
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 sm:col-span-12 md:col-span-3">
             <label for="selectIstmo" class="form-label text-[.875rem] text-black">R. Istmo:</label>

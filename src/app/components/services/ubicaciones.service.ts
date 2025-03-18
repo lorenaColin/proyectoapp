@@ -19,6 +19,9 @@ export class ubicacionesService {
   private apiUrl = `${environment.apiUrl}/ubicacion`;
   private paisesUrl = `${environment.apiUrl}/paises`;
   private direccionUrl = `${environment.apiUrl}/direccion`;
+  private getlistaUbicacion = `${environment.apiUrl}/ubicaciones`;
+
+
 
 
 
@@ -38,7 +41,7 @@ export class ubicacionesService {
       domicilio: ['', []],
       pais: ['', []],
       codigoPostal: ['', []],
-      estado: ['', [ Validators.maxLength(30), Validators.minLength(1)]],
+      estado: ['', [Validators.maxLength(30), Validators.minLength(1)]],
       municipio: ['', []],
       localidad: ['', []],
       colonia: ['', []],
@@ -76,11 +79,20 @@ export class ubicacionesService {
 
 
 
-   getDireccion(codigoPostal: string): Observable<any> {
-      return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
-    }
+  getDireccion(codigoPostal: string): Observable<any> {
+    return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
+  }
+
+  getAllPais(): Observable<ApiResponsepais> {
+    return this.http.get<ApiResponsepais>(this.paisesUrl);
+  }
+
+
+  // getUbicacionesPorTipo(tipo: string): Observable<ubicacionResponseInterface> {
+  //   return this.http.get<ubicacionResponseInterface>(`${this.apiUrl}?tipoUbicacion=${tipo}`);
+  // }
+  getUbicacionesPorTipo(tipo: string): Observable<{ data: ubicacionInterface[] }> {
+    return this.http.get<{ data: ubicacionInterface[] }>(`${this.getlistaUbicacion}/${tipo}`);
+  }
   
-     getAllPais(): Observable<ApiResponsepais> {
-        return this.http.get<ApiResponsepais>(this.paisesUrl);
-      }
 }

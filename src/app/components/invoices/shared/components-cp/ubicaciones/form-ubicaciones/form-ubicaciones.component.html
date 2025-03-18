@@ -1,4 +1,8 @@
-<form [formGroup]="formCartaPorte">
+<form [formGroup]="formCartaPorte" autocomplete="off">
+    <pre>
+
+        {{ ubicaciones.value | json }}
+    </pre>
     <div class="grid grid-cols-12 gap-4">
         <h5 class="col-span-12 mt-3">Ubicaciones</h5>
         <div class="col-span-12">
@@ -8,75 +12,125 @@
                         <tr>
                             <th style="width: 5%;">Tipo</th>
                             <th style="width: 25%;">RFC</th>
-                            <th>Datos Generales</th>
+                            <th style="width: 15%;">Datos Generales</th>
                             <th style="width: 15%;">F. Hora</th>
                             <th style="width: 15%;">Distancia</th>
                             <th style="width: 3%;">Eliminar</th>
                         </tr>
                     </thead>
 
-                    <tbody formArrayName="ubicaciones" id="tbodyUbication">
+                    <tbody formArrayName="ubicaciones" id="tbodyUbication" autocomplete="off">
                         <tr *ngFor="let ubicacion of ubicaciones.controls; let i = index" [formGroupName]="i">
                             <td>
                                 <h5>{{ ubicacion.get('tipo')?.value }}</h5>
 
                             </td>
                             <td>
-                                <div class="mb-4 relative">
+                                <div class="mb-4 relative rfc-container">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="rfc" id="rfc"
-                                            formControlName="rfc" maxlength="8" (input)="onInput($event, i, 'rfc')"
+                                            formControlName="rfc" (input)="onInput($event, i, 'rfc')"
                                             (keydown)="onKeyDown($event)"
-                                            [ngClass]="{'is-invalid': ubicacion.get('rfc')?.hasError('notFound') && ubicacion.get('rfc')?.touched}">
+                                            [ngClass]="{'is-invalid': ubicacion.get('rfc')?.hasError('required') && ubicacion.get('rfc')?.touched}">
 
                                         <div class="input-group-text">
                                             <i class="ri-add-line"></i>
                                         </div>
-
-                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Origen' && filteredRFCOrigen.length > 0 && activeIndex === i"
-                                            class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10">
-                                            <li *ngFor="let ubic of filteredRFCOrigen; let j = index"
-                                                (click)="selectSerieWrapper(ubic, i, 'Origen')"
-                                                [ngClass]="{'bg-gray-200': j === selectedIndex}"
-                                                class="p-2 cursor-pointer hover:bg-gray-300">selectSerie
-                                                {{ ubic.idUbicacion }} - {{ ubic.rfc }}
-                                            </li>
-                                        </ul>
-                                        
-                                        <ul *ngIf="ubicacion.get('tipo')?.value === 'Destino' && filteredRFCDestino.length > 0 && activeIndex === i"
-                                            class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10">
-                                            <li *ngFor="let ubic of filteredRFCDestino; let j = index"
-                                                (click)="selectSerieWrapper(ubic, i, 'Destino')"
-                                                [ngClass]="{'bg-gray-200': j === selectedIndex}"
-                                                class="p-2 cursor-pointer hover:bg-gray-300">
-                                                {{ ubic.idUbicacion }} - {{ ubic.rfc }}
-                                            </li>
-                                        </ul>
-                                        
                                     </div>
+
+                                    <span
+                                        *ngIf="ubicacion.get('rfc')?.hasError('required') && ubicacion.get('rfc')?.touched"
+                                        class="text-[#EE312A] text-sm mt-2">
+                                        El RFC es obligatorio.
+                                    </span>
+
+                                    <span *ngIf="ubicacion.get('rfc')?.hasError('notFound')"
+                                        class="text-[#EE312A] text-sm mt-2">
+                                        Este RFC no se encuentra en el catálogo.
+                                    </span>
+                                    <ul *ngIf="filteredRFC.length > 0 && activeIndex === i"
+                                        class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10 rfc-container">
+                                        <li *ngFor="let ubic of filteredRFC; let j = index"
+                                        (click)="selectSerieWrapper(ubic, i, ubicacion.get('tipo')?.value)"
+                                            [ngClass]="{'bg-gray-200': j === selectedIndex}"
+                                            class="p-2 cursor-pointer hover:bg-gray-300">
+                                            {{ ubic.idUbicacion }} - {{ ubic.rfc }}
+                                        </li>
+                                    </ul>
+                                    <!-- <ul *ngIf="ubicacion.get('tipo')?.value === 'Origen' && filteredRFCOrigen.length > 0 && activeIndex === i"
+                                        class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10 rfc-container">
+                                        <li *ngFor="let ubic of filteredRFCOrigen; let j = index"
+                                            (click)="selectSerieWrapper(ubic, i, 'Origen')"
+                                            [ngClass]="{'bg-gray-200': j === selectedIndex}"
+                                            class="p-2 cursor-pointer hover:bg-gray-300">
+                                            {{ ubic.idUbicacion }} - {{ ubic.rfc }}
+                                        </li>
+                                    </ul>
+
+                                    <ul *ngIf="ubicacion.get('tipo')?.value === 'Destino' && filteredRFCDestino.length > 0 && activeIndex === i"
+                                        class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10 rfc-container">
+                                        <li *ngFor="let ubic of filteredRFCDestino; let j = index"
+                                            (click)="selectSerieWrapper(ubic, i, 'Destino')"
+                                            [ngClass]="{'bg-gray-200': j === selectedIndex}"
+                                            class="p-2 cursor-pointer hover:bg-gray-300">
+                                            {{ ubic.idUbicacion }} - {{ ubic.rfc }}
+                                        </li>
+                                    </ul> -->
                                 </div>
                             </td>
 
 
+
+                            <td style="text-align: center; vertical-align: middle;">
+                                <ng-container *ngIf="ubicaciones.at(i).get('datosGenerales')?.value">
+
+                                    <a aria-label="Ver Datos Generales" href="javascript:void(0);"
+                                        (click)="openModal(ubicaciones.at(i).get('datosGenerales')?.value)"
+                                        class="ti-btn ti-btn-secondary !rounded-full mt-1 mb-1">
+                                        <i class="ri-eye-line"></i>Datos Generales
+                                    </a>
+
+                                </ng-container>
+
+                            </td>
+
+
+
                             <td>
-                                <textarea formControlName="datosGenerales" class="form-control" rows="3"></textarea>
+                                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                                    <label for="fechaHora" class="form-label text-[.875rem] text-black">Fecha:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="date" placeholder="yyyy-mm-dd"
+                                            name="dp" mwlFlatpickr formControlName="fechaHora" />
+                                        <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i
+                                                class="ri-calendar-line"></i> </div>
+                                    </div>
+
+                                </div>
                             </td>
 
                             <td>
-                                <input type="datetime-local" formControlName="fechaHora" class="form-control" />
+                                <input type="number" formControlName="distancia" class="form-control"
+                                    [readonly]="ubicacion.get('tipo')?.value === 'Origen'"
+                                    [ngClass]="{'origen-style': ubicacion.get('tipo')?.value === 'Origen'}" />
                             </td>
 
-                            <td>
-                                <input type="number" formControlName="distancia" class="form-control" />
-                            </td>
 
-                            <td *ngIf="buttonDelete">
-                                <a aria-label="anchor" href="javascript:void(0);"
-                                    (click)="ubicacion.get('tipo')?.value !== 'Origen' ? removeProducto(i) : null"
-                                    class="ti-btn ti-btn-danger !rounded-full">
-                                    <i class="ri-delete-bin-line"></i>
+                            <td *ngIf="buttonDelete && i >= 2">
+                                <a 
+                                  aria-label="anchor" 
+                                  href="javascript:void(0);"
+                                  (click)="removeProducto(i)"
+                                  class="ti-btn ti-btn-danger !rounded-full"
+                                >
+                                  <i class="ri-delete-bin-line"></i>
                                 </a>
-                            </td>
+                              </td>
+                              
+                              
+
+
+
                         </tr>
                         <tr *ngIf="buttonAdd">
                             <td colspan="6">

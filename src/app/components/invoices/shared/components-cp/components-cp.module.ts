@@ -9,7 +9,7 @@ import { FormMercanciasComponent } from './mercancias/form-mercancias/form-merca
 import { FormRemolquesComponent } from './Remolques/form-remolques/form-remolques.component';
 import { FormSegurosComponent } from './Seguros/form-seguros/form-seguros.component';
 import { FormFigurasComponent } from './Figuras/form-figuras/form-figuras.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -25,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ComponentsCpRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class ComponentsCpModule { }
