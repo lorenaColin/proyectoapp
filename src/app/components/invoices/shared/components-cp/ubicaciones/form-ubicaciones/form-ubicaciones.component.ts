@@ -1,10 +1,12 @@
 import { Component, HostListener, inject, Input } from '@angular/core';
 import { CartaPorteService } from '../../../../../services/carta-porte.service';
 import { ubicacionesService } from '../../../../../services/ubicaciones.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ubicacionInterface, ubicacionResponseInterface } from '../../../../../interfaces/ubicaciones.interface';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
-import Swal from 'sweetalert2';  // Asegúrate de importar SweetAlert2
+import Swal from 'sweetalert2';  
+import { Subscription } from 'rxjs';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-form-ubicaciones',
@@ -28,43 +30,21 @@ export class FormUbicacionesComponent {
   selectedIndex: number = -1;
   filteredRFC: ubicacionInterface[] = [];
   listUbicaciones: ubicacionInterface[] = [];
-  // filteredList: ubicacionInterface[] = [];
   filteredRFCOrigen: ubicacionInterface[] = [];
   filteredRFCDestino: ubicacionInterface[] = [];
   activeIndex: number | null = null;
 
-  // constructor(private fb: FormBuilder) {
-  //   this.ubicaciones = this.cartaPorteService.getUbicacionesFormArray();
-  // }
+
   constructor(private fb: FormBuilder) {
     this.formCartaPorte = this.cartaPorteService.getFormCarta();
     this.ubicaciones = this.cartaPorteService.getUbicacionesFormArray();
   }
 
   ngOnInit(): void {
-    // this.loadubicacion();
     this.addUbicacion('Origen');
     this.addUbicacion('Destino');
   }
 
-  // loadubicacion(): void {
-  //   this.ubicacioneService.getAllubicacion().subscribe((response) => {
-  //     const { error, data } = response;
-  //     console.log('Datos de ubicaciones recibidos:', data);
-
-  //     if (!error) {
-  //       this.listUbicaciones = Array.isArray(data) ? data : [data];
-
-  //       this.listRFCOrigen = this.listUbicaciones.filter(
-  //         (ubicacion) => ubicacion.tipoUbicacion === 'ORIGEN'
-  //       );
-
-  //       this.listRFCDestino = this.listUbicaciones.filter(
-  //         (ubicacion) => ubicacion.tipoUbicacion === 'DESTINO'
-  //       );
-  //     }
-  //   });
-  // }
 
   addUbicacion(tipo: string) {
     const ubicacionesnew = this.fb.group({
@@ -79,89 +59,41 @@ export class FormUbicacionesComponent {
     this.ubicaciones.push(ubicacionesnew);
     this.subscribeToChanges(ubicacionesnew);
   }
+  subscriptions: Subscription[] = [];
 
   subscribeToChanges(ubicacionesnew: FormGroup) {
     const distanciaControl = ubicacionesnew.get('distancia');
     if (distanciaControl) {
       const distanciaSubscription = distanciaControl.valueChanges.subscribe((value) => {
         console.log('Cambio en distancia:', value);
+        this.calcularDistanciaTotal(); 
       });
-      // this.subscriptions.push(distanciaSubscription);
-    }
-    
+      this.subscriptions.push(distanciaSubscription);
+    } 
   }
+  
+  calcularDistanciaTotal() {
+    let totalDistancia = new Decimal(0);  
+    this.ubicaciones.controls.forEach((ubicacion) => {
+      const distancia = (ubicacion as FormGroup).get('distancia')?.value; 
+      if (distancia) {
+        totalDistancia = totalDistancia.plus(new Decimal(distancia));
+      }
+    });
+    const servicioForm = this.formCartaPorte;
+    servicioForm.patchValue({
+      serieFolio: totalDistancia.toString(),  
+    });
+  }
+  
+
+
+
   removeProducto(index: number) {
     this.ubicaciones.removeAt(index);
+    
+    this.calcularDistanciaTotal();
   }
-
-  // onInput(event: any, index: number, field: string): void {
-  //   this.activeIndex = index;
-  
-  //   const query = (event.target.value || '').trim().toLowerCase();
-  //   console.log(`Texto ingresado en ${field} de la fila ${index}:`, query);
-  //   const control = this.ubicaciones.get('rfc');
-  
-  //   const row = this.ubicaciones.at(index);
-  //   if (!row) return;
-  
-  //   const tipoUbicacion = row.get('tipo')?.value;
-  //   console.log(`Tipo de Ubicación para la fila ${index}:`, tipoUbicacion);
-  
-  //   const currentRFC = row.get('rfc')?.value;
-  //   if (currentRFC !== query) {
-  //     this.clearGeneralData(index);
-  //   }
-  
-  //   this.showLoader = true;
-  
-  //   if (query.length === 0) {
-  //     control?.setErrors({ required: true });  
-  
-  //     if (control?.hasValidator(Validators.required)) {
-  //       control.setValidators([Validators.required]);
-  //     }
-  //     control?.updateValueAndValidity();
-  //     this.filteredRFCOrigen = [];
-  //     this.filteredRFCDestino = [];
-  //     this.showLoader = false;
-  //     return;
-  //   }
-  
-  //   if (query.length < 3) {
-  //     row.get('rfc')?.setErrors({ notFound: true });
-  //     this.filteredRFCOrigen = [];
-  //     this.filteredRFCDestino = [];
-  //     this.showLoader = false;
-  //     return;
-  //   }
-  
-  //   setTimeout(() => {
-     
-  //     if (query.length >= 3) {
-  //       if (tipoUbicacion === 'Origen') {
-  //         this.filteredRFCOrigen = this.listRFCOrigen.filter((ubicacion: ubicacionInterface) =>
-  //           ubicacion.rfc.toLowerCase().includes(query)
-  //         );
-  //         if (this.filteredRFCOrigen.length === 0) {
-  //           row.get('rfc')?.setErrors({ notFound: true }); 
-  //         } else {
-  //           row.get('rfc')?.setErrors(null); 
-  //         }
-  //       } else if (tipoUbicacion === 'Destino') {
-  //         this.filteredRFCDestino = this.listRFCDestino.filter((ubicacion: ubicacionInterface) =>
-  //           ubicacion.rfc.toLowerCase().includes(query)
-  //         );
-  //         if (this.filteredRFCDestino.length === 0) {
-  //           row.get('rfc')?.setErrors({ notFound: true }); 
-  //         } else {
-  //           row.get('rfc')?.setErrors(null); 
-  //         }
-  //       }
-  //     }
-  
-  //     this.showLoader = false; 
-  //   }, 1000);
-  // }
   
   tipoUbicacion: string = ''; 
 
