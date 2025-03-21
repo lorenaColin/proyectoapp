@@ -10,7 +10,7 @@
               <div class="input-group">
                 <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
                   placeholder="Buscar ubicaciones" aria-describedby="search-contact-member" autocomplete="off" 
-                   (input)="filtro($event)" />
+                  />
                 <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
                   id="search-contact-member">
                   <i class="ri-search-line text-[#8C9097]"></i>
@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div *ngFor="let ubicacion of filteredUbicaciones"
+  <div *ngFor="let ubicacion of ubicaciones"
     class="xxl:col-span-3 xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
     <div class="box shadow-md rounded-md overflow-hidden">
       <div class="box-body p-4 bg-white">

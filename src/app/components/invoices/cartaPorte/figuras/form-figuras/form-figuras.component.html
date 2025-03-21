@@ -1,6 +1,9 @@
 <div>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <pre>
 
+            {{ myForm.value | json }}
+        </pre>
         <div class="col-span-1">
             <label for="tipoFigura" class="block text-sm font-medium">Tipo</label>
             <select id="tipoFigura" formControlName="tipoFigura" class="mt-1 block w-full rounded-md"
@@ -76,7 +79,7 @@
         </div>
 
         <div class="col-span-1">
-            <input id="domicilio" type="checkbox" (change)="toggleDomicilio()"
+            <input id="domicilio" type="checkbox"  formControlName="domicilio"(change)="toggleDomicilio()"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
             <label for="domicilio" class="ml-2 text-sm">Domicilio</label>
         </div>
@@ -84,17 +87,7 @@
 
         <div *ngIf="isDomicilioChecked" class="col-span-3">
             <div class="grid grid-cols-3 gap-6">
-                <!-- <div class="col-span-1">
-                    <label for="pais" class="block text-sm font-medium">Pais</label>
-                    <select id="pais" formControlName="pais"
-                        class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Selecciona País</option>
-                        <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
-                    </select>
-                    <span *ngIf="isValidField('pais')" class="text-[#EE312A]">
-                        {{ getFieldError('pais') }}
-                    </span>
-                </div> -->
+               
                 <div class="col-span-3 relative">
                     <label for="product_keys" class="form-label text-[.875rem] text-black">pais:</label>
                     <div class="input-group">
@@ -129,12 +122,13 @@
                 </div>
                 <div class="col-span-1">
                     <label for="estado" class="block text-sm font-medium ">Estado</label>
-                    <input type="text" id="estado" formControlName="estado"
+                    <input type="text" id="estado" formControlName="estado"  [attr.readonly]="isEstadoReadonly ? true : null"
                         class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
                     <span *ngIf="isValidField('estado')" class="text-[#EE312A]">
                         {{ getFieldError('estado') }}
                     </span>
                 </div>
+
                 <div class="col-span-1">
                     <label for="municipio" class="block text-sm font-medium ">Municipio</label>
                     <input type="text" id="municipio" formControlName="municipio"

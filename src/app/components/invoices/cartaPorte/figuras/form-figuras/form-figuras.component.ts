@@ -38,7 +38,6 @@ export class FormFigurasComponent {
       this.myForm.get('numLicencia')?.clearValidators();
     }
 
-    // Actualizar la validez del campo 'numLicencia'
     this.myForm.get('numLicencia')?.updateValueAndValidity();
   }
   // ngOnChanges(): void {
@@ -54,7 +53,10 @@ export class FormFigurasComponent {
   // }
   ngOnChanges(): void {
     this.idFiguras = this.figuraHijo.id || 0;
+    
     this.myForm.patchValue(this.figuraHijo);
+    this.isDomicilioChecked = Boolean(this.figuraHijo.domicilio);
+  this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
     this.idFiguras != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
   }
  
@@ -71,7 +73,7 @@ export class FormFigurasComponent {
     nombreFigura: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(255),]],
     numRegIdTribFigura: ['', [Validators.minLength(6), Validators.maxLength(40)]],
     residenciaFiscalFigura: ['', []],
-    domicilio: ['', []],
+    domicilio: [false],
     pais: ['', []],
     codigoPostal: ['', []],
     estado: ['', [ Validators.maxLength(30), Validators.minLength(1)]],
@@ -198,6 +200,7 @@ export class FormFigurasComponent {
   colonias: string[] = [];
   toggleDomicilio() {
     this.isDomicilioChecked = !this.isDomicilioChecked;
+    this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
     if (this.isDomicilioChecked) {
       this.myForm.get('pais')?.setValidators([Validators.required]);
       this.myForm.get('estado')?.setValidators([Validators.required]);
@@ -240,24 +243,31 @@ export class FormFigurasComponent {
   listPais: catpais[] = [];
   filteredPais: catpais[] = [];
   selectedIndex: number = -1;
+  isEstadoReadonly: boolean = false;  
+
   ngOnInit(): void {
     this.loadPais();
-    this.loadPais2()
+    this.loadPais2();
     this.onValueChanges();
+
     this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
       if (pais === 'MEX') {
-        this.myForm.get('estado')?.disable();
+        this.isEstadoReadonly = true; 
       } else {
-        this.myForm.get('estado')?.enable();
+        this.isEstadoReadonly = false;  
       }
     });
   }
+
+  
   showRfcFigura = true;
 showNumRegIdTribFigura = true;
 showResidenciaFiscalFigura = true;
 
 onValueChanges(): void {
-  this.myForm.get('rfcFigura')?.setValidators([Validators.required]);
+  this.myForm.get('rfcFigura')?.setValidators([Validators.pattern(PATRON_RFC),Validators.required]);
+
+
   this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required, Validators.minLength(6),Validators.maxLength(40)]);
 
   this.myForm.get('rfcFigura')?.valueChanges.subscribe((rfcValue) => {

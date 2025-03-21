@@ -6,7 +6,7 @@ export interface ubicacionInterface {
     numRegIdTrib: string;
     residenciaFiscal: string;
     tipoUbicacion: string;
-    domicilio: string;
+    domicilio: boolean;
     pais: string;
     codigoPostal: string;
     estado: string;

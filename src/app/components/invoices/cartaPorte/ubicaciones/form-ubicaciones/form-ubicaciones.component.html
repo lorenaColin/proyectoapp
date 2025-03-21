@@ -1,5 +1,9 @@
 <div>
     <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <pre>
+
+            {{ myForm.value | json }}
+        </pre>
         <div class="col-span-3">
             <label for="NombreRemitenteDestinatario" class="block text-sm font-medium ">Nombre</label>
             <input type="text" id="NombreRemitenteDestinatario" formControlName="NombreRemitenteDestinatario"
@@ -69,7 +73,7 @@
           
 
         <div class="col-span-1">
-            <input id="domicilio" type="checkbox" (change)="toggleDomicilio()"
+            <input id="domicilio" type="checkbox"  formControlName="domicilio" (change)="toggleDomicilio()"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
             <label for="domicilio" class="ml-2 text-sm">Domicilio</label>
         </div>
@@ -111,7 +115,7 @@
                 </div>
                 <div class="col-span-1">
                     <label for="estado" class="block text-sm font-medium ">Estado</label>
-                    <input type="text" id="estado" formControlName="estado"
+                    <input type="text" id="estado" formControlName="estado"  [attr.readonly]="isEstadoReadonly ? true : null"
                         class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
                     <span *ngIf="isValidField('estado')" class="text-[#EE312A]">
                         {{ getFieldError('estado') }}
@@ -127,8 +131,7 @@
                 </div>
                 <div class="col-span-1">
                     <label for="localidad" class="block text-sm font-medium">Localidad</label>
-                    <input *ngIf="myForm.get('pais')?.value !== 'MEX'" type="text" id="localidad"
-                        formControlName="localidad"
+                    <input *ngIf="myForm.get('pais')?.value !== 'MEX'" type="text" id="localidad" formControlName="localidad"
                         class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500" />
                     <select *ngIf="myForm.get('pais')?.value === 'MEX'" id="localidad" formControlName="localidad"
                         class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:border-blue-500">

@@ -36,20 +36,26 @@ export class FormUbicacionesComponent {
 
   ngOnChanges(): void {
     if (!this.myForm) {
-      this.myForm = this.ubicacionesService.getFormUbicacion("");  // Si no existe, inicialízalo
+      this.myForm = this.ubicacionesService.getFormUbicacion(""); 
     }
     console.log(this.ubicacionHijo);
     if (this.ubicacionHijo) {
       this.idUbicacion = this.ubicacionHijo.id || 0;
       this.buttonTitle = this.idUbicacion !== 0 ? 'Actualizar' : 'Crear';
       console.log(this.buttonTitle)
-      // this.isDomicilioChecked = !!this.ubicacionHijo.domicilio;
+      this.isDomicilioChecked = !!this.ubicacionHijo.domicilio;
+      this.myForm.patchValue({
+        domicilio: this.isDomicilioChecked  
+      });
       this.myForm.patchValue({
         ...this.ubicacionHijo,
       });
+    
 
     }
+    
     this.onValueChanges()
+    console.log('myForm after patchValue:', this.myForm.value);
   }
 
 
@@ -118,6 +124,7 @@ export class FormUbicacionesComponent {
   }
   toggleDomicilio() {
     this.isDomicilioChecked = !this.isDomicilioChecked;
+    this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
     if (this.isDomicilioChecked) {
       this.myForm.get('pais')?.setValidators([Validators.required]);
       this.myForm.get('estado')?.setValidators([Validators.required]);
@@ -180,25 +187,27 @@ export class FormUbicacionesComponent {
   showNumRegIdTrib = false;  
   listPais: catpais[] = [];
   filteredPais: catpais[] = [];
+  isEstadoReadonly: boolean = false;  
   selectedIndex: number = -1;
   ngOnInit(): void {
     this.loadPais();
     this.loadPais2();
     this.onValueChanges(); 
     
+
     this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
-      if (pais === 'MEX') {
-        this.myForm.get('estado')?.disable();
-      } else {
-        this.myForm.get('estado')?.enable();
-      }
-    });
+         if (pais === 'MEX') {
+           this.isEstadoReadonly = true; 
+         } else {
+           this.isEstadoReadonly = false;  
+         }
+       });
   
 
   }
   
   onValueChanges(): void {
-    this.myForm.get('rfc')?.setValidators([Validators.required]);
+    this.myForm.get('rfc')?.setValidators([Validators.required, Validators.pattern(PATRON_RFC)]);
   
     this.myForm.get('rfc')?.valueChanges.subscribe((rfcValue) => {
   
@@ -255,7 +264,6 @@ export class FormUbicacionesComponent {
 
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    // console.log('Texto ingresado:', query);
     const control = this.myForm.get('pais');
     if (!control) return;
     if (query.length === 0) {

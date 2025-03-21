@@ -19,7 +19,8 @@ export class AccountsComponent implements OnInit {
   empresas: CompanyInterface[] = [];
   @Input() empresa: CompanyInterface = {} as CompanyInterface;
   filteredCompanies: any[] = [];
-
+  @Input() buttonTitle: string = 'Editar';
+  
   ngOnInit(): void {
     this.showLoader = true;
     this.companyService.listCompany().subscribe((response) => {
@@ -46,8 +47,16 @@ export class AccountsComponent implements OnInit {
   }
 
   respuesta(respuesta: CompanyListInterface): void {
-    this.listadoEmpresas.push(respuesta);
+    const index = this.listadoEmpresas.findIndex(emp => emp.id === respuesta.id);
+    if (index !== -1) {
+      this.listadoEmpresas[index] = respuesta;
+      console.log(this.listadoEmpresas)
+    } else {
+      this.listadoEmpresas.push(respuesta);
+    }
+    
   }
+  
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value

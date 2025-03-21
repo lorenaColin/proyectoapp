@@ -41,7 +41,6 @@ editFigura(id: number): void {
       next: (response) => {
         this.figura = response.data;
         console.log(this.figura);
-        
         this.showLoader = false;
         
       },

@@ -220,16 +220,16 @@ export class ListUbicacionesComponent {
   //     }
   //   });
   // }
-  filtro(event: Event): void {
-    const recorrer = (event.target as HTMLInputElement).value
-      .trim().toLowerCase();
-    this.filteredUbicaciones  = this.ubicaciones.filter(
-      (ubicacion) =>
-        ubicacion.rfc.toLowerCase().includes(recorrer) ||
-        ubicacion.tipoUbicacion.toLowerCase().includes(recorrer)
+  // filtro(event: Event): void {
+  //   const recorrer = (event.target as HTMLInputElement).value
+  //     .trim().toLowerCase();
+  //   this.filteredUbicaciones  = this.ubicaciones.filter(
+  //     (ubicacion) =>
+  //       ubicacion.rfc.toLowerCase().includes(recorrer) ||
+  //       ubicacion.tipoUbicacion.toLowerCase().includes(recorrer)
 
-    );
-    console.log(this.ubicaciones);
-  }
+  //   );
+  //   console.log(this.ubicaciones);
+  // }
 
 }

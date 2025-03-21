@@ -6,6 +6,7 @@ import {
   CompanyListResponseInterface,
   CompanyInterface,
   CompanySeals,
+  CompanyResponseInterface,
 } from '../interfaces/company.interface';
 
 @Injectable({
@@ -24,7 +25,9 @@ export class CompanyService {
   ): Observable<CompanyListResponseInterface> {
     return this.http.post<CompanyListResponseInterface>(this.apiUrl, form);
   }
-
+ updateCompany(id: string, company: CompanyInterface): Observable<CompanyListResponseInterface> {
+    return this.http.put<CompanyListResponseInterface>(`${this.apiUrl}/${id}`, company);
+  }
   getCompanyById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

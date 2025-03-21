@@ -22,9 +22,11 @@ import { CompanyService } from '../../../services/company.service';
 import {
   CompanyInterface,
   CompanyListInterface,
+  CompanyResponseInterface,
 } from '../../../interfaces/company.interface';
 
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-company-form',
@@ -39,11 +41,12 @@ export class CompanyFormComponent implements OnInit {
   private utilsService = inject(UtilsService);
   private companyService = inject(CompanyService);
   public banderaFisica: boolean = false;
+  buttonTitle: string = 'Crear';
   listadoRegimen: RegimenInterface[] = [];
   empresaExiste: boolean = false;
-  idCompany = 0;
+  idCompany: string | null = null;
   selectedFile: File | null = null;
-
+  showLoader = false;
   myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(254)]],
     rfc: [
@@ -88,17 +91,18 @@ export class CompanyFormComponent implements OnInit {
     company_id: [''],
     dateInit: ['', [Validators.required]],
     dateVig: ['', [Validators.required]],
-    certificate: ['', [Validators.required]],
-    private_key: ['', [Validators.required]],
+    certificate: ['', ],
+    private_key: ['', ],
     password_key: ['', [Validators.required, Validators.minLength(5)]],
   });
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnChanges(): void {
-    // this.idCustomer = this.productoHijo.id || 0;
+    this.idCompany = this.productoHijo.id ? this.productoHijo.id : null;
     this.myForm.patchValue(this.productoHijo);
-    // this.idCustomer != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
+    this.buttonTitle = this.idCompany ? 'Actualizar' : 'Guardar';
+    console.log(this.idCompany)
     this.listadoRegimen = this.utilsService.getRegimenSat(
       this.productoHijo.rfc
     );
@@ -112,6 +116,8 @@ export class CompanyFormComponent implements OnInit {
       });
     }
   }
+
+
 
   checkEmpresaExistente(id: string): void {
     this.companyService.getCompanyById(id).subscribe(
@@ -161,24 +167,62 @@ export class CompanyFormComponent implements OnInit {
     return this.validatorsService.getFieldError(this.formularioSellos, field);
   }
 
+  // onSubmit(): void {
+  //   if (this.myForm.invalid) {
+  //     this.myForm.markAllAsTouched();
+  //     return;
+  //   }
+
+  //   const formData = this.myForm.value;
+  //   this.companyService.createCompany(formData).subscribe((response) => {
+  //     const { error, data, message } = response;
+
+  //     if (error) {
+  //       Swal.fire('Mensaje', message, 'error');
+  //       return;
+  //     }
+  //     this.myForm.reset();
+  //     this.respuestaHijo.emit(data[0]);
+  //   });
+  // }
+  // idEmpresa = 0;
+  // private empresa = inject(CompanyService)
+
+
   onSubmit(): void {
     if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
       return;
     }
-
-    const formData = this.myForm.value;
-    this.companyService.createCompany(formData).subscribe((response) => {
+  
+    console.log('Datos a enviar:', this.myForm.value);
+  
+    const servicio = this.idCompany
+      ? this.companyService.updateCompany(this.idCompany, this.myForm.value)
+      : this.companyService.createCompany(this.myForm.value);
+  
+    servicio.subscribe((response) => {
       const { error, data, message } = response;
-
+  
       if (error) {
         Swal.fire('Mensaje', message, 'error');
         return;
       }
-      this.myForm.reset();
-      this.respuestaHijo.emit(data[0]);
+  
+      this.respuestaHijo.emit(Array.isArray(data) ? data[0] : data);
+
+  
+      if (!this.idCompany) {
+        this.myForm.reset();
+      }
+  
+      Swal.fire('Mensaje', `Empresa ${this.idCompany ? 'actualizada' : 'creada'} correctamente`, 'success');
+   
     });
   }
+  
+
+
   onSubmit2(): void {
     if (this.formularioSellos.invalid) {
       this.formularioSellos.markAllAsTouched();
@@ -205,9 +249,11 @@ export class CompanyFormComponent implements OnInit {
       this.formularioSellos.reset();
     });
   }
-  
+
   closeModal(): void {
     this.formCompanyReset();
+    // this.idCompany = '';
+    // this.buttonTitle = 'Crear';
   }
 
   formCompanyReset(): void {
@@ -226,8 +272,8 @@ export class CompanyFormComponent implements OnInit {
       phone: '',
       logo: '',
     });
-    // this.buttonTitle = 'Guardar';
-    // this.idCustomer = 0;
+    this.buttonTitle = 'Guardar';
+    this.idCompany = '';
     this.listadoRegimen = [];
   }
 

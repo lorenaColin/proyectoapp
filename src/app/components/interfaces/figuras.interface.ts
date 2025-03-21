@@ -6,7 +6,7 @@ export interface FigurasInterface {
     nombreFigura: string;
     numRegIdTribFigura: string;
     residenciaFiscalFigura: string;
-    domicilio: string;
+    domicilio: boolean;
     pais: string;
     codigoPostal: string;
     estado: string;
