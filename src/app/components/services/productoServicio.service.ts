@@ -34,10 +34,20 @@ export class productoServicio {
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  getAllCatProducto(): Observable<ApiResponseProducto> {
-    return this.http.get<ApiResponseProducto>(this.catproductApiUrl);
+  // getAllCatProducto(): Observable<ApiResponseProducto> {
+  //   return this.http.get<ApiResponseProducto>(this.catproductApiUrl);
+  // }
+  getAllCatProducto(query: string): Observable<ApiResponseProducto> {
+    const url = `${this.catproductApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseProducto>(url);
   }
-  getAllCatUnidad(): Observable<ApiResponseUnidad> {
-    return this.http.get<ApiResponseUnidad>(this.catunidadApiUrl);
+  
+  // getAllCatUnidad(): Observable<ApiResponseUnidad> {
+  //   return this.http.get<ApiResponseUnidad>(this.catunidadApiUrl);
+  // }
+  getAllCatUnidad(query: string): Observable<ApiResponseUnidad> {
+    const url = `${this.catunidadApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseUnidad>(url);
   }
+  
 }

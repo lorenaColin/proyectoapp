@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { productoServicio } from '../../services/productoServicio.service';
 import { ApiResponseProducto, ApiResponseUnidad, catproducto, catUnidad, ProductInterface, ProductListResponseInterface, ProductResponseInterface } from '../../interfaces/producto.interface';
 import Swal from 'sweetalert2';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-form-products',
@@ -21,20 +22,17 @@ export class FormProductsComponent {
   @Input() productoHijo!: ProductInterface;
   @Output() respuesta = new EventEmitter<ProductInterface>();
   showLoader = false;
-
   private fb = inject(FormBuilder);
   buttonTitle: string = 'Crear';
   idProducto: string = '';
-
-
   listadoRegimen: RegimenInterface[] = [];
   private validatorsService = inject(ValidatorsService);
   // private prodServ = inject(prodServ)
   private productoservicio = inject(productoServicio)
 
   private authService = inject(AuthService);
-  filteredClavProdServ$: Observable<any[]> = new Observable();
-  filteredClavUnidad$: Observable<any[]> = new Observable();
+  // filteredClavProdServ$: Observable<any[]> = new Observable();
+  // filteredClavUnidad$: Observable<any[]> = new Observable();
 
   constructor(private cat_Clave_Unidad: cat_Clave_Unidad
 
@@ -47,16 +45,13 @@ export class FormProductsComponent {
     unit: ['', [Validators.required, Validators.minLength(2)]],
     unit_description: ['', [Validators.minLength(1), Validators.maxLength(20)]],
     unit_price: ['',],
-    identifier_number: ['', [Validators.required,Validators.maxLength(20)]],
+    identifier_number: ['', [Validators.required, Validators.maxLength(20)]],
     internal_key: ['', [Validators.required]],
     description: ['', [Validators.required]],
     quantity: ['', [Validators.required]],
     status: [true],
 
   });
-
-
-
   ngOnChanges(): void {
     if (this.productoHijo) {
       this.idProducto = this.productoHijo?.id || '0';
@@ -140,83 +135,163 @@ export class FormProductsComponent {
       status: true
     })
   }
+  buscar = new Subject<string>();
+  buscarUnidad = new Subject<string>();
+
   listProducto: catproducto[] = [];
   filteredProducto: catproducto[] = [];
   selectedIndex: number = -1;
-  ngOnInit(): void {
-    this.loadProducto();
-    this.loadUnidad();
 
-  }
-  loadProducto(): void {
-    this.productoservicio.getAllCatProducto().subscribe({
-      next: (response: ApiResponseProducto) => {
-        console.log('Datos recibidos desde el servicio:', response);
-        if (Array.isArray(response.data)) {
-          this.listProducto = response.data;
-          console.log('listProducto:', this.listProducto);
-        } else {
-          console.error('La respuesta no contiene un array en "data":', response.data);
-          this.listProducto = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar los datos:', err);
-        this.showLoader = false;
-      }
+  ngOnInit(): void {
+    this.buscar.pipe(
+      debounceTime(500),
+    ).subscribe((query: string) => {
+      this.filterProducts(query);
+    });
+    this.buscarUnidad.pipe(
+      debounceTime(500),
+    ).subscribe((query: string) => {
+      this.filterUnidad(query);
     });
   }
+
+  // ngOnInit(): void {
+  //   this.loadProducto();
+  //   this.loadUnidad();
+  //   this.buscar.pipe(debounceTime(500)).subscribe(query => {
+  //     this.filterProducts(query);
+  //   });
+  //   this.buscarUnidad.pipe(debounceTime(500)).subscribe(query => {
+  //     this.filterUnidad(query);
+  //   });
+
+
+  // }
+  // loadProducto(): void {
+  //   this.productoservicio.getAllCatProducto().subscribe({
+  //     next: (response: ApiResponseProducto) => {
+  //       console.log('Datos recibidos desde el servicio:', response);
+  //       if (Array.isArray(response.data)) {
+  //         this.listProducto = response.data;
+  //         console.log('listProducto:', this.listProducto);
+  //       } else {
+  //         console.error('La respuesta no contiene un array en "data":', response.data);
+  //         this.listProducto = [];
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al cargar los datos:', err);
+  //       this.showLoader = false;
+  //     }
+  //   });
+  // }
+
+  // onInput(event: any): void {
+  //   const query = (event.target.value || '').trim().toLowerCase();
+  //   console.log('Texto ingresado:', query);
+  //   this.buscar.next(query);
+  // }
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Texto ingresado:', query);
-  
+    console.log('Buscando producto:', query);
+    this.buscar.next(query);
+  }
+
+  private filterProducts(query: string): void {
     const control = this.myForm.get('product_key');
     if (!control) return;
+
     if (query.length === 0) {
       control.setErrors(null);
-      
+      this.filteredProducto = [];
       if (control.hasValidator(Validators.required)) {
         control.setValidators([Validators.required]);
       }
       control.updateValueAndValidity();
-      this.filteredProducto = [];
       this.showLoader = false;
       return;
     }
+
     if (query.length < 4) {
       control.setErrors({ notFound: true });
       this.filteredProducto = [];
       this.showLoader = false;
       return;
     }
-  
+
     this.showLoader = true;
-    setTimeout(() => {
-      if (Array.isArray(this.listProducto)) {
-        this.filteredProducto = this.listProducto.filter((Producto) => {
-          const clave = Producto.c_ClaveProdServ.toString().toLowerCase();
-          const descripcion = Producto.descripcion.toLowerCase();
-          return clave.includes(query) || descripcion.includes(query);
-        });
-  
-        console.log('Productos filtrados:', this.filteredProducto);
-  
-        const exactMatch = this.listProducto.some(product =>
-          product.c_ClaveProdServ.toString().toLowerCase() === query ||
-          product.descripcion.toLowerCase() === query
+    this.productoservicio.getAllCatProducto(query).subscribe({
+      next: (response: ApiResponseProducto) => {
+        this.filteredProducto = response.data || [];
+        console.log('Productos obtenidos:', this.filteredProducto);
+
+        const exactMatch = this.filteredProducto.some(producto =>
+          producto.c_ClaveProdServ.toString().toLowerCase() === query ||
+          producto.descripcion.toLowerCase() === query
         );
-  
+
         if (!exactMatch) {
           control.setErrors({ notFound: true });
         } else {
-          control.setErrors(null); 
+          control.setErrors(null);
         }
+
+        this.showLoader = false;
+      },
+      error: (err) => {
+        console.error('Error en la búsqueda de productos:', err);
+        this.showLoader = false;
       }
-      this.showLoader = false;
-    }, 1000);
+    });
   }
-  
-  
+  // private filterProducts(query: string): void {
+  //   const control = this.myForm.get('product_key');
+  //   if (!control) return;
+
+  //   if (query.length === 0) {
+  //     control.setErrors(null);
+  //     if (control.hasValidator(Validators.required)) {
+  //       control.setValidators([Validators.required]);
+  //     }
+  //     control.updateValueAndValidity();
+  //     this.filteredProducto = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+
+  //   if (query.length < 4) {
+  //     control.setErrors({ notFound: true });
+  //     this.filteredProducto = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+
+  //   this.showLoader = true;
+
+  //   if (Array.isArray(this.listProducto)) {
+  //     this.filteredProducto = this.listProducto.filter((producto) => {
+  //       const clave = producto.c_ClaveProdServ.toString().toLowerCase();
+  //       const descripcion = producto.descripcion.toLowerCase();
+  //       return clave.includes(query) || descripcion.includes(query);
+  //     });
+
+  //     console.log('Productos filtrados:', this.filteredProducto);
+
+  //     const exactMatch = this.listProducto.some(producto =>
+  //       producto.c_ClaveProdServ.toString().toLowerCase() === query ||
+  //       producto.descripcion.toLowerCase() === query
+  //     );
+
+  //     if (!exactMatch) {
+  //       control.setErrors({ notFound: true });
+  //     } else {
+  //       control.setErrors(null);
+  //     }
+  //   }
+
+  //   this.showLoader = false;
+  // }
+
 
 
   onKeyDown(event: KeyboardEvent): void {
@@ -242,13 +317,13 @@ export class FormProductsComponent {
   }
   claveProdServDescription: string = '';
 
-  
+
   selectProducto(Producto: catproducto): void {
     this.claveProdServDescription = Producto.descripcion;
     this.myForm.get('product_key')?.setValue(Producto.c_ClaveProdServ.toString());
     this.filteredProducto = [];
     this.selectedIndex = -1;
-    
+
     this.myForm.get('product_key')?.setErrors(null);
     const inputElement = document.getElementById('product_keys') as HTMLInputElement;
     if (inputElement) {
@@ -269,35 +344,36 @@ export class FormProductsComponent {
   listUnidad: catUnidad[] = [];
   filteredUnidad: catUnidad[] = [];
 
-  loadUnidad(): void {
-    this.productoservicio.getAllCatUnidad().subscribe({
-      next: (response: ApiResponseUnidad) => {
-        console.log('Datos recibidos desde el servicio:', response);
-        if (Array.isArray(response.data)) {
-          this.listUnidad = response.data;
-          console.log('listUnidad:', this.listUnidad);
-        } else {
-          console.error('La respuesta no contiene un array en "data":', response.data);
-          this.listUnidad = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar los datos:', err);
-        this.showLoader = false;
-      }
-    });
-  }
-
+  // loadUnidad(): void {
+  //   this.productoservicio.getAllCatUnidad().subscribe({
+  //     next: (response: ApiResponseUnidad) => {
+  //       console.log('Datos recibidos desde el servicio:', response);
+  //       if (Array.isArray(response.data)) {
+  //         this.listUnidad = response.data;
+  //         console.log('listUnidad:', this.listUnidad);
+  //       } else {
+  //         console.error('La respuesta no contiene un array en "data":', response.data);
+  //         this.listUnidad = [];
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al cargar los datos:', err);
+  //       this.showLoader = false;
+  //     }
+  //   });
+  // }
 
   onInput1(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
-  
+    this.buscarUnidad.next(query);
+  }
+  private filterUnidad(query: string): void {
     const control = this.myForm.get('unit');
     if (!control) return;
+  
     if (query.length === 0) {
       control.setErrors(null);
-      
       if (control.hasValidator(Validators.required)) {
         control.setValidators([Validators.required]);
       }
@@ -306,6 +382,7 @@ export class FormProductsComponent {
       this.showLoader = false;
       return;
     }
+  
     if (query.length < 4) {
       control.setErrors({ notFound: true });
       this.filteredUnidad = [];
@@ -314,28 +391,31 @@ export class FormProductsComponent {
     }
   
     this.showLoader = true;
-    setTimeout(() => {
-      if (Array.isArray(this.listUnidad)) {
-        this.filteredUnidad = this.listUnidad.filter((unidad) => {
-          const clave = unidad.c_claveunidad.toLowerCase();
-          const descripcion = unidad.nombre.toLowerCase();
-          return clave.includes(query) || descripcion.includes(query);
-        });
-        console.log('Unidades filtradas:', this.filteredUnidad);
   
-        const exactMatch = this.listUnidad.some(uni =>
-          uni.c_claveunidad.toLowerCase() === query ||
-          uni.nombre.toLowerCase() === query
-        );
+    this.productoservicio.getAllCatUnidad(query).subscribe({
+      next: (response: ApiResponseUnidad) => {
+        if (Array.isArray(response.data)) {
+          this.filteredUnidad = response.data;  // Asignar las unidades filtradas
+          console.log('Unidades filtradas:', this.filteredUnidad);
   
-        if (!exactMatch) {
-          control.setErrors({ notFound: true });
-        } else {
-          control.setErrors(null); 
+          const exactMatch = this.filteredUnidad.some((uni) =>
+            uni.c_claveunidad.toString().toLowerCase() === query ||
+            uni.nombre.toLowerCase() === query
+          );
+  
+          if (!exactMatch) {
+            control.setErrors({ notFound: true });
+          } else {
+            control.setErrors(null);
+          }
         }
+        this.showLoader = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar las unidades:', err);
+        this.showLoader = false;
       }
-      this.showLoader = false;
-    }, 1000);
+    });
   }
   
 
@@ -377,7 +457,7 @@ export class FormProductsComponent {
     this.myForm.get('unit')?.setValue(unidad.c_claveunidad);
     this.filteredUnidad = [];
     this.selectedIndex = -1;
-    
+
     this.myForm.get('unit')?.setErrors(null);
     const inputElement = document.getElementById('unidad') as HTMLInputElement;
     if (inputElement) {
@@ -389,9 +469,9 @@ export class FormProductsComponent {
 
 
 
- 
 
- @HostListener('document:click', ['$event'])
+
+  @HostListener('document:click', ['$event'])
   onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
     if (!targetElement.closest('#unit')) {
