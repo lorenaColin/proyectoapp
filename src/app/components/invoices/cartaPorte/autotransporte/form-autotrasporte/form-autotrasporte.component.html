@@ -2,12 +2,12 @@
     <!-- <pre>
         {{ myForm.value | json }}
     </pre> -->
-    <form [formGroup]="myForm" class="grid grid-cols-4 gap-6 p-6 rounded-lg">
+    <form [formGroup]="myForm"   autocomplete="off" class="grid grid-cols-4 gap-6 p-6 rounded-lg">
 
         <div class="col-span-4">
-            <label for="configVehicular" class="block text-sm font-medium ">C. Vehicular</label>
+            <label for="configVehicular" class="block text-sm font-medium">C. Vehicular:</label>
             <select id="configVehicular" formControlName="configVehicular"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                class="mt-1 block w-full max-w-full rounded-md focus:ring-blue-500 focus:border-blue-500">
                 <option value="" selected disabled>Seleccione una clave</option>
                 <option *ngFor="let config of configVehicularList" [value]="config.nomenclature">
                     {{ config.nomenclature }} - {{ config.description }}
@@ -17,40 +17,84 @@
                 {{ getFieldError('configVehicular') }}
             </span>
         </div>
+        
 
         <div class="col-span-4 grid grid-cols-3 gap-6">
             <div>
-                <label for="anioModeloVM" class="block text-sm font-medium">Año</label>
+                <label for="anioModeloVM" class="block text-sm font-medium">Año:</label>
                 <input type="text" id="anioModeloVM" formControlName="anioModeloVM"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500"
                     maxlength="4">
                 <span *ngIf="isValidField('anioModeloVM')" class="text-[#EE312A]">
                     {{ getFieldError('anioModeloVM') }}
                 </span>
             </div>
-            <div>
-                <label for="placaVM" class="block text-sm font-medium">P. Vehicular</label>
+            <div class="relative">
+                <label for="placaVM" class="block text-sm font-medium">P. Vehicular:
+                    <span class="ml-1 cursor-pointer text-blue-500" (mouseenter)="showTooltip = true"
+                        (mouseleave)="showTooltip = false">
+                        <i class="fa fa-question-circle"></i>
+                    </span>
+
+                </label>
+
                 <input type="text" id="placaVM" formControlName="placaVM"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500"
                     minlength="5" maxlength="7">
+
+                <div *ngIf="showTooltip"
+                    class="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-md z-20">
+                    Atributo requerido para registrar solo los caracteres
+                    alfanuméricos, sin guiones ni espacios de la placa vehicular
+                    del autotransporte que es utilizado para transportar los
+                    bienes y/o mercancías.
+                </div>
+
                 <span *ngIf="isValidField('placaVM')" class="text-[#EE312A]">
                     {{ getFieldError('placaVM') }}
                 </span>
             </div>
-            <div>
-                <label for="pesoBrutoVehicular" class="block text-sm font-medium">Peso B</label>
+
+            <div class="relative">
+                <label for="pesoBrutoVehicular" class="block text-sm font-medium">
+                    Peso B:
+                    <span class="ml-1 cursor-pointer text-blue-500" (mouseenter)="showTooltip1 = true"
+                        (mouseleave)="showTooltip1 = false">
+                        <i class="fa fa-question-circle"></i>
+                    </span>
+
+                </label>
                 <input type="number" step="0.01" id="pesoBrutoVehicular" formControlName="pesoBrutoVehicular"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
+
+                <div *ngIf="showTooltip1"
+                    class="absolute left-0 mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-md">
+                    Atributo requerido para indicar en toneladas el peso bruto
+                    vehicular permitido del autotransporte de acuerdo a la
+                    NOM-SCT-012-2017.
+                </div>
+
+                <span *ngIf="myForm.get('pesoBrutoVehicular')?.hasError('pattern')" class="text-[#EE312A]">
+                    el valor debe tener hasta 2 decimales (ej. 3.22, 8.00).
+                </span>
                 <span *ngIf="isValidField('pesoBrutoVehicular')" class="text-[#EE312A]">
                     {{ getFieldError('pesoBrutoVehicular') }}
                 </span>
             </div>
+
         </div>
 
-        <div class="col-span-2">
-            <label for="permSCT" class="block text-sm font-medium">Permiso SCT</label>
+        <div class="col-span-2 relative">
+            <label for="permSCT" class="block text-sm font-medium">Permiso SCT:
+                <span class="ml-1 cursor-pointer text-blue-500" (mouseenter)="showTooltip2 = true"
+                    (mouseleave)="showTooltip2 = false">
+                    <i class="fa fa-question-circle"></i>
+                </span>
+            </label>
+
+
             <select id="permSCT" formControlName="permSCT"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500">
                 <option value="" selected disabled>Seleccionar el Permiso</option>
                 <option *ngFor="let permiso of permisosList" [value]="permiso.permission">
                     {{ permiso.permission }} - {{ permiso.description }}
@@ -59,30 +103,44 @@
             <span *ngIf="isValidField('permSCT')" class="text-[#EE312A]">
                 {{ getFieldError('permSCT') }}
             </span>
+            <div *ngIf="showTooltip2"
+                class="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-md">
+                Atributo requerido para registrar la clave del tipo de permiso
+                proporcionado por la Secretaría de Infraestructura,
+                Comunicaciones y Transportes (SICT) o la autoridad
+                análoga
+            </div>
         </div>
 
         <div class="col-span-2">
-            <label for="numPermisoSCT" class="block text-sm font-medium">Número de Permiso SCT</label>
+            <label for="numPermisoSCT" class="block text-sm font-medium">Número de Permiso SCT:
+
+
+            </label>
             <input type="text" id="numPermisoSCT" formControlName="numPermisoSCT"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="1" maxlength="50">
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500"
+                minlength="1" maxlength="50">
             <span *ngIf="isValidField('numPermisoSCT')" class="text-[#EE312A]">
                 {{ getFieldError('numPermisoSCT') }}
             </span>
+
         </div>
 
         <div class="col-span-2">
-            <label for="aseguraRespCivil" class="block text-sm font-medium">Seguro</label>
+            <label for="aseguraRespCivil" class="block text-sm font-medium">Seguro:</label>
             <input type="text" id="aseguraRespCivil" formControlName="aseguraRespCivil"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="3" maxlength="50">
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500"
+                minlength="3" maxlength="50">
             <span *ngIf="isValidField('aseguraRespCivil')" class="text-[#EE312A]">
                 {{ getFieldError('aseguraRespCivil') }}
             </span>
         </div>
 
         <div class="col-span-2">
-            <label for="polizaRespCivil" class="block text-sm font-medium">Número de Poliza</label>
+            <label for="polizaRespCivil" class="block text-sm font-medium">Número de Poliza:</label>
             <input type="text" id="polizaRespCivil" formControlName="polizaRespCivil"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" minlength="3" maxlength="30">
+                class="mt-1 block w-full rounded-md  focus:ring-blue-500 focus:border-blue-500"
+                minlength="3" maxlength="30">
             <span *ngIf="isValidField('polizaRespCivil')" class="text-[#EE312A]">
                 {{ getFieldError('polizaRespCivil') }}
             </span>

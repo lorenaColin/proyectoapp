@@ -10,6 +10,8 @@ import Swal from 'sweetalert2';
 })
 export class ListRemolquesComponent {
   remolques: remolquesInterface[] = [];
+  filteredRemolques: remolquesInterface[] = [];
+ 
   @Input() remolque: remolquesInterface = {} as remolquesInterface;
   @Input() buttonTitle: string = 'Editar';
   showLoader = false;
@@ -23,6 +25,7 @@ export class ListRemolquesComponent {
       console.log(data);
       if (!error) {
         this.remolques = data;
+        this.filteredRemolques = [...data];
         console.log(data); 
       }
       this.showLoader = false;
@@ -81,5 +84,16 @@ export class ListRemolquesComponent {
         icon: 'success',
       });
     }
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.remolques = this.filteredRemolques.filter(
+      (auto) =>
+        auto.placa.toLowerCase().includes(filterValue) ||
+        auto.SubTipoRem.toLowerCase().includes(filterValue) 
+    );
+    console.log(this.remolques);
   }
 }

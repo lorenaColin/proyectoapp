@@ -78,7 +78,7 @@ export class FormRemolquesComponent {
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
-          this.resetProduct();
+          // this.resetProduct();
           this.showLoader = false;
         },
         error: (err) => {
@@ -101,20 +101,11 @@ export class FormRemolquesComponent {
 
   remolquess: { Clave: string; descripcion: string }[] = [];
 
-// ngOnInit(): void {
-//   this.remolques.getremolques().subscribe({
-//     next: (data) => {
-//       this.remolquess = data;
-//     },
-//     error: (err) => {
-//       console.error('Error al obtener remolques:', err);
-//     },
-//   });
-// }
+
 ngOnInit(): void {
   this.remolques.getremolques().subscribe({
     next: (data) => {
-      console.log('Datos recibidos:', data); // 🔍 Verifica que los datos lleguen correctamente
+      console.log('Datos recibidos:', data); 
       this.remolquess = data; 
       console.log(this.remolquess)
     },

@@ -1,4 +1,5 @@
 import {
+  DECIMALES,
   PATRON_ANIO,
   PATRON_PLACAVM,
 } from './../../../../../shared/utils/expressions';
@@ -35,6 +36,13 @@ export class FormAutotrasporteComponent implements OnChanges {
   clientes: AutotransportInterface[] = [];
   idAutotransport = 0;
   showLoader = false;
+  showTooltip = false;
+  showTooltip1 = false;
+  showTooltip2 = false;
+
+
+
+
   configVehicularList: any[] = [];
   permisosList: any[] = [];
   constructor() {
@@ -96,16 +104,9 @@ export class FormAutotrasporteComponent implements OnChanges {
 
   myForm: FormGroup = this.fb.group({
     configVehicular: ['', [Validators.required]],
-    anioModeloVM: ['', [Validators.required, Validators.pattern(PATRON_ANIO)]],
-    placaVM: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.pattern(PATRON_PLACAVM),
-      ],
-    ],
-    pesoBrutoVehicular: ['', [Validators.required, Validators.min(0.01)]],
+    anioModeloVM: ['', [Validators.required,Validators.minLength(4),Validators.maxLength(4), Validators.pattern(PATRON_ANIO)]],
+    placaVM: [  '', [  Validators.required,  Validators.minLength(5),  Validators.pattern(PATRON_PLACAVM), ], ],
+    pesoBrutoVehicular: ['', [Validators.required, Validators.pattern(DECIMALES) ,Validators.min(0.01)]],
     permSCT: ['', [Validators.required]],
     numPermisoSCT: ['', [Validators.required, Validators.minLength(1)]],
     aseguraRespCivil: ['', [Validators.required, Validators.minLength(3)]],
@@ -123,6 +124,8 @@ export class FormAutotrasporteComponent implements OnChanges {
   }
   closeModal(): void {
     this.resetAutotransport();
+    this.idAutotransport = 0;
+    this.buttonTitle = 'Crear';
   }
   onSubmit(): void {
     this.showLoader = true;
@@ -151,8 +154,8 @@ export class FormAutotrasporteComponent implements OnChanges {
           this.respuesta.emit(response);
           console.log('Respuesta del servidor:', response);
           if (!response.error) {
-            this.myForm.reset();
-            this.closeModal();
+            // this.myForm.reset();
+            // this.closeModal();
           }
         },
         (error) => {
@@ -175,8 +178,8 @@ export class FormAutotrasporteComponent implements OnChanges {
       polizaRespCivil: '',
       company_id: '',
     });
-    this.idAutotransport = 0;
-    this.buttonTitle = 'Crear';
+    // this.idAutotransport = 0;
+    // this.buttonTitle = 'Crear';
     this.setCompanyId();
   }
 }

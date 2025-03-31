@@ -10,7 +10,8 @@
               <div class="flex sm:mt-0 mt-2 items-center">
                 <div class="input-group">
                   <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
-                    placeholder="Buscar remolques" aria-describedby="search-contact-member" autocomplete="off" />
+                    placeholder="Buscar remolques" aria-describedby="search-contact-member" autocomplete="off"
+                    (input)="applyFilter($event)"  />
                   <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
                     id="search-contact-member">
                     <i class="ri-search-line text-[#8C9097]"></i>

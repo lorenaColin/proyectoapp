@@ -25,6 +25,7 @@ export class MercanciasService {
   getAllmercancias(): Observable<MercanciaListResponseInterface> {
     return this.http.get<MercanciaListResponseInterface>(this.apiUrl);
   }
+
   createmercancias(mercancias: MercanciaInterface): Observable<MercanciaResponseInterface> {
     return this.http.post<MercanciaResponseInterface>(this.apiUrl, mercancias);
   }
@@ -43,17 +44,31 @@ export class MercanciasService {
   // getAllProductsAndServices(): Observable<CatProdServCP[]> {
   //   return this.http.get<CatProdServCP[]>(this.prodServApiUrl);  
   // }
-  getAllProductsAndServices(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(this.prodServApiUrl);
+
+  getAllProductsAndServices(query: string): Observable<ApiResponse> {
+        const url = `${this.prodServApiUrl}?termino=${query}`;
+        return this.http.get<ApiResponse>(url);
+      }
+  // getAllcatClaveUnidad(): Observable<ApiResponseClave> {
+  //   return this.http.get<ApiResponseClave>(this.catClaveUnidadApiUrl);
+  // }
+  getAllcatClaveUnidad(query: string): Observable<ApiResponseClave> {
+    const url = `${this.catClaveUnidadApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseClave>(url);
   }
-  getAllcatClaveUnidad(): Observable<ApiResponseClave> {
-    return this.http.get<ApiResponseClave>(this.catClaveUnidadApiUrl);
+  // getAllcatMatPeligroso(): Observable<ApiResponseMatPeligroso> {
+  //   return this.http.get<ApiResponseMatPeligroso>(this.catMatPeligrosoApiUrl);
+  // }
+  getAllcatMatPeligroso(query: string): Observable<ApiResponseMatPeligroso> {
+    const url = `${this.catMatPeligrosoApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseMatPeligroso>(url);
   }
-  getAllcatMatPeligroso(): Observable<ApiResponseMatPeligroso> {
-    return this.http.get<ApiResponseMatPeligroso>(this.catMatPeligrosoApiUrl);
-  }
-  getAllcatEmbalaje(): Observable<ApiResponseEmbalaje> {
-    return this.http.get<ApiResponseEmbalaje>(this.catEmbalajeApiUrl);
+  // getAllcatEmbalaje(): Observable<ApiResponseEmbalaje> {
+  //   return this.http.get<ApiResponseEmbalaje>(this.catEmbalajeApiUrl);
+  // }
+  getAllcatEmbalaje(query: string): Observable<ApiResponseEmbalaje> {
+    const url = `${this.catEmbalajeApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseEmbalaje>(url);
   }
   
 }

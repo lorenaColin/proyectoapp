@@ -11,7 +11,9 @@ import Swal from 'sweetalert2';
 export class ListComponent {
   @Input() producto: ProductInterface = {} as ProductInterface;
   productos: ProductInterface[] = [];
-
+  
+  filteredProducto: ProductInterface[] = [];
+  
   @Input() buttonTitle: string = 'Editar';
   showLoader = false;
 
@@ -25,9 +27,12 @@ export class ListComponent {
         console.log(response); 
         if (Array.isArray(response)) {
           this.productos = response;  
+        this.filteredProducto = [...response];
+
         } else {
           console.error('La respuesta no es un array', response);
           this.productos = [];
+
         }
         this.showLoader=false
       },
@@ -106,6 +111,16 @@ responseproducto(response: ProductInterface): void {
     });
   }
 }
-
+applyFilter(event: Event): void {
+  const filterValue = (event.target as HTMLInputElement).value
+    .trim()
+    .toLowerCase();
+  this.productos = this.filteredProducto.filter(
+    (seguro) =>
+    seguro.product_key.toString().includes(filterValue) ||
+    seguro.identifier_number.toString().includes(filterValue) 
+    
+  );
+}
 
 }

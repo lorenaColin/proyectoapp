@@ -194,33 +194,40 @@ export class CompanyFormComponent implements OnInit {
       this.myForm.markAllAsTouched();
       return;
     }
-  
     console.log('Datos a enviar:', this.myForm.value);
+    this.showLoader = true;
   
     const servicio = this.idCompany
       ? this.companyService.updateCompany(this.idCompany, this.myForm.value)
       : this.companyService.createCompany(this.myForm.value);
   
-    servicio.subscribe((response) => {
-      const { error, data, message } = response;
+    servicio.subscribe({
+      next: (response) => {
+        const { error, data, message } = response;
   
-      if (error) {
-        Swal.fire('Mensaje', message, 'error');
-        return;
+        if (error) {
+          Swal.fire('Mensaje', message, 'error');
+          this.showLoader = false; 
+          return;
+        }
+  
+        this.respuestaHijo.emit(Array.isArray(data) ? data[0] : data);
+  
+        if (!this.idCompany) {
+          this.myForm.reset();
+        }
+  
+        Swal.fire('Mensaje', `Empresa ${this.idCompany ? 'actualizada' : 'creada'} correctamente`, 'success');
+        this.showLoader = false; 
+      },
+      error: (err) => {
+        console.error('Error al actualizar/crear empresa:', err);
+        Swal.fire('Mensaje', 'Error al actualizar la empresa', 'error');
+        this.showLoader = false; 
       }
-  
-      this.respuestaHijo.emit(Array.isArray(data) ? data[0] : data);
-
-  
-      if (!this.idCompany) {
-        this.myForm.reset();
-      }
-  
-      Swal.fire('Mensaje', `Empresa ${this.idCompany ? 'actualizada' : 'creada'} correctamente`, 'success');
-   
     });
-  }
-  
+}
+
 
 
   onSubmit2(): void {

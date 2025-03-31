@@ -4,7 +4,7 @@ import {
   CompanyListInterface,
   CompanyInterface,
 } from '../../../interfaces/company.interface';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-accounts',
@@ -12,7 +12,9 @@ import { Router } from '@angular/router';
   styleUrl: './accounts.component.scss',
 })
 export class AccountsComponent implements OnInit {
-  showLoader = false;
+  // showLoader = false;
+  showLoader: boolean = false;
+
   public listadoEmpresas: CompanyListInterface[] = [];
   private companyService = inject(CompanyService);
   private router = inject(Router);
@@ -20,7 +22,7 @@ export class AccountsComponent implements OnInit {
   @Input() empresa: CompanyInterface = {} as CompanyInterface;
   filteredCompanies: any[] = [];
   @Input() buttonTitle: string = 'Editar';
-  
+ 
   ngOnInit(): void {
     this.showLoader = true;
     this.companyService.listCompany().subscribe((response) => {
@@ -33,9 +35,17 @@ export class AccountsComponent implements OnInit {
     });
   }
   setCompany(id: string): void {
+    this.showLoader = true; 
     localStorage.setItem('company', id);
-    this.router.navigate(['dashboard']);
+  
+    setTimeout(() => {
+      this.router.navigate(['dashboard']).then(() => {
+        this.showLoader = false; 
+      });
+    }, 500); 
   }
+  
+  
 
   editCompany(id: string): void {
     this.showLoader = true;

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegimenInterface } from '../../../shared/interfaces/shared.interface';
 import { UtilsService } from '../../../shared/services/utils.service';
 import { ValidatorsService } from '../../../shared/services/validators.service';
-import { Observable } from 'rxjs';
+import { max, Observable } from 'rxjs';
 import { prodServ } from '../../services/prodServ.service';
 import { HttpClient } from '@angular/common/http';
 import { cat_Clave_Unidad } from '../../services/CatClaveUnidad.service';
@@ -12,6 +12,7 @@ import { productoServicio } from '../../services/productoServicio.service';
 import { ApiResponseProducto, ApiResponseUnidad, catproducto, catUnidad, ProductInterface, ProductListResponseInterface, ProductResponseInterface } from '../../interfaces/producto.interface';
 import Swal from 'sweetalert2';
 import { debounceTime, Subject } from 'rxjs';
+import { DECIMALESPRODU } from '../../../shared/utils/expressions';
 
 @Component({
   selector: 'app-form-products',
@@ -44,13 +45,12 @@ export class FormProductsComponent {
     // descripcion_producto:['', [Validators.required]],
     unit: ['', [Validators.required, Validators.minLength(2)]],
     unit_description: ['', [Validators.minLength(1), Validators.maxLength(20)]],
-    unit_price: ['',],
-    identifier_number: ['', [Validators.required, Validators.maxLength(20)]],
-    internal_key: ['', [Validators.required]],
+    unit_price: ['',[Validators.pattern(DECIMALESPRODU)]],
+    identifier_number: ['', [Validators.required, Validators.maxLength(100), Validators.minLength(5) ,Validators.maxLength(20)]],
+    internal_key: ['', [Validators.required,Validators.maxLength(20),Validators.minLength(5)]],
     description: ['', [Validators.required]],
-    quantity: ['', [Validators.required]],
+    quantity: ['', [Validators.required,Validators.pattern(DECIMALESPRODU)]],
     status: [true],
-
   });
   ngOnChanges(): void {
     if (this.productoHijo) {
@@ -103,7 +103,7 @@ export class FormProductsComponent {
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
-          this.resetProduct();
+          // this.resetProduct();
           this.showLoader = false;
 
         },
@@ -478,5 +478,10 @@ export class FormProductsComponent {
       this.filteredUnidad = [];
     }
   }
-
+  validateNumberInput(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    if (!/^\d$/.test(event.key) || input.value.length >= 30) {
+      event.preventDefault();
+    }
+  }
 }

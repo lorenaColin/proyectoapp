@@ -15,8 +15,10 @@ export const PATRON_PLACA = '^[A-Za-z0-9]{5,7}$';
 export const PATRON_UBICACION_ORIGEN = /OR[0-9]{6}$/;
 export const PATRON_UBICACION_DESTINO = /DE[0-9]{6}$/;
 export const PATRON_PLACAVM = /[^(?!.*\s)-]{5,7}/; 
-export const PATRON_ANIO = /^[0-9]{4}$/; 
+export const PATRON_ANIO = /^(19[0-9]{2}|20[0-9]{2})$/; 
 export const DIMENSIONES_REGEX = /^([0-9]{1,3}\/){2}[0-9]{1,3}(cm|plg)$/;
+export const DECIMALES = /^\d+(\.\d{1,2})?$/;
+export const DECIMALESPRODU = /^\d{1,24}(\.\d{1,6})?$/;
 
 
 /*

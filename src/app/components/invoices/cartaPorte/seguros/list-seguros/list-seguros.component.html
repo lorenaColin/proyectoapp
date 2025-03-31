@@ -43,11 +43,11 @@
           </span>
           <div>
             <p class="font-semibold text-[0.875rem] text-primary">
-              Tipo: {{ seguro.type }}
+              {{ seguro.type }}
             </p>
           </div>
         </div>
-        <ul class="list-none divide-y divide-gray-300 mb-4">
+        <ul class="list-none mb-4">
           <li class="flex items-center py-2">
             <p class="font-semibold text-gray-800">Aseguradora:</p>
             <span class="ml-2 text-gray-700">{{ seguro.asegure }}</span>
@@ -57,6 +57,7 @@
             <span class="ml-2 text-gray-700">{{ seguro.polize }}</span>
           </li>
         </ul>
+        
 
         <div class="flex justify-end">
           <button type="button" (click)="editInsurance(seguro.id)" data-hs-overlay="#hs-extralarge-modal1"

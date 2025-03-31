@@ -52,6 +52,8 @@ export class FormSegurosComponent implements OnChanges {
   }
   closeModal(): void {
     this.resetInsurance();
+    this.idInsurance = 0;
+    this.buttonTitle = 'Crear';
   }
 
   setCompanyId(): void {
@@ -85,8 +87,8 @@ export class FormSegurosComponent implements OnChanges {
           this.showLoader = false;
           this.respuesta.emit(response);
           console.log('Respuesta del servidor:', response);
-          this.myForm.reset();
-          this.closeModal();
+          // this.myForm.reset();
+          // this.closeModal();
         },
         (error) => {
           console.error('Error al enviar los datos del seguro', error);
@@ -103,8 +105,8 @@ export class FormSegurosComponent implements OnChanges {
       polize: '',
       company_id: '',
     });
-    this.idInsurance = 0;
-    this.buttonTitle = 'Crear';
+    // this.idInsurance = 0;
+    // this.buttonTitle = 'Crear';
     this.setCompanyId();
   }
 }

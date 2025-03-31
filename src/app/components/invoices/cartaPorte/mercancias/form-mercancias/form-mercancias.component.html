@@ -1,7 +1,10 @@
 <div>
 
-    <form [formGroup]="myForm" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+    <form [formGroup]="myForm"  autocomplete="off" class="grid grid-cols-3 gap-6 p-6  rounded-lg">
+        <!-- <pre>
 
+            {{ myForm.value | json }}
+        </pre> -->
         <div class="col-span-3 relative">
             <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
             <div class="input-group">
@@ -28,7 +31,12 @@
         </div>
 
         <div class="col-span-2 relative">
-            <label for="claveUnidades" class="form-label text-[.875rem] text-black"> Clave Unidad:</label>
+            <label for="claveUnidades" class="form-label text-[.875rem] text-black"> Clave Unidad:
+                <span class="ml-1 cursor-pointer text-blue-500" (mouseenter)="showTooltip = true"
+                    (mouseleave)="showTooltip = false">
+                    <i class="fa fa-question-circle"></i>
+                </span>
+            </label>
             <div class="input-group">
                 <input type="text" class="form-control" name="claveUnidades" id="claveUnidades" formControlName="unidad"
                     [value]="claveUnidadDescription" (input)="onInput1($event)" (keydown)="onKeyDown($event)"
@@ -40,7 +48,14 @@
             <span *ngIf="isValidField('unidad')" class="text-[#EE312A] text-sm">
                 {{ getFieldError('unidad') }}
             </span>
-
+            <div *ngIf="showTooltip"
+            class="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-md z-20">
+            Atributo requerido para registrar la clave de la unidad de 
+            medida estandarizada aplicable para la cantidad de los 
+            bienes y/o mercancías que se trasladan en los distintos 
+            medios de transporte.  
+        </div>
+           
             <ul *ngIf="filteredClave.length > 0" class="absolute rounded-lg mt-2 w-full">
                 <li *ngFor="let clave of filteredClave; let i = index" (click)="selectClave(clave)"
                     [ngClass]="{'bg-gray-200': i === selectedIndex}">
@@ -49,17 +64,31 @@
             </ul>
         </div>
 
-        <div class="col-span-1">
-            <label for="dimensiones" class="block text-sm font-medium">Dimensiones</label>
+        <div class="col-span-1 relative">
+            <label for="dimensiones" class="block text-sm font-medium">Dimensiones:
+                <span class="ml-1 cursor-pointer text-blue-500" (mouseenter)="showTooltip1 = true"
+                (mouseleave)="showTooltip1 = false">
+                <i class="fa fa-question-circle"></i>
+            </span>
+            </label>
             <input type="text" id="dimensiones" formControlName="dimensiones" class="mt-1 block w-full rounded-md">
             <span *ngIf="isValidField('dimensiones')" class="text-[#EE312A]">
                 El formato de la dimensión no es válido: ejemplo (60/60/60plg)
             </span>
+            <div *ngIf="showTooltip1"
+            class="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-md z-20">
+            Atributo opcional para expresar las medidas del empaque 
+            de los bienes y/o mercancías que se trasladan en los 
+            distintos medios de transporte. Se debe registrar la 
+            longitud, la altura y la anchura en centímetros o en 
+            pulgadas, separados dichos valores con una diagonal, i.e. 
+            30/40/30cm.   
+        </div>
         </div>
 
         <div class="col-span-3">
-            <label for="descripcion" class="block text-sm font-medium">Descripción</label>
-            <textarea id="descripcion" rows="4" formControlName="descripcion"
+            <label for="descripcion" class="block text-sm font-medium">Descripción:</label>
+            <textarea id="descripcion" rows="3" formControlName="descripcion"
                 class="mt-1 block w-full rounded-md "></textarea>
             <span *ngIf="isValidField('descripcion')" class="text-[#EE312A]">
                 {{ getFieldError('descripcion') }}
@@ -67,7 +96,7 @@
         </div>
         @if(bandera){
         <div class="col-span-1">
-            <label for="materialPeligroso" class="ml-2 text-sm">Material Peligroso</label>
+            <label for="materialPeligroso" class="ml-2 text-sm">Material Peligroso:</label>
             <input id="materialPeligroso" type="checkbox"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 formControlName="materialPeligroso" (change)="onMaterialPeligrosoChange($event)">
@@ -83,7 +112,7 @@
                         (input)="onInput2($event)" (keydown)="onKeyDown($event)"
                         [ngClass]="{'is-invalid': isValidField('cveMaterialPeligroso')}">
                 </div>
-        
+
                 <span *ngIf="myForm.get('cveMaterialPeligroso')?.hasError('notFound') " class="text-[#EE312A] text-sm">
                     Este código de mercancia no se encuentra en el catálogo.
                 </span>
@@ -121,7 +150,7 @@
             </div>
 
             <div class="col-span-1">
-                <label for="descripEmbalaje" class="block text-sm font-medium ">Descripción</label>
+                <label for="descripEmbalaje" class="block text-sm font-medium ">Descripción:</label>
                 <input type="text" id="descripEmbalaje" formControlName="descripEmbalaje"
                     class="mt-1 block w-full rounded-md ">
                 <span *ngIf="isValidField('descripEmbalaje')" class="text-[#EE312A]">

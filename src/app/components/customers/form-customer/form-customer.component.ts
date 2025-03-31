@@ -64,11 +64,11 @@ export class FormCustomerComponent implements OnChanges {
       '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(254)],
     ],
-    rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
+    rfc: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13), Validators.pattern(PATRON_RFC)]],
     regime: ['', Validators.required],
     cp: ['', [Validators.minLength(5), Validators.maxLength(5)]],
     num_reg_id_trib: ['', [Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.pattern(PATRON_EMAIL)]],
+    email: ['', [Validators.required, Validators.maxLength(75),Validators.pattern(PATRON_EMAIL)]],
     phone: ['', [Validators.required, Validators.minLength(10)]],
     address: ['', Validators.required],
     payment_method: ['', Validators.required],
@@ -149,6 +149,11 @@ export class FormCustomerComponent implements OnChanges {
   }
   closeModal(): void {
     this.formCustomerReset();
+    this.idCustomer = 0;
+    // this.buttonTitle = 'Crear';
+    this.buttonTitle = 'Guardar';
+    this.listaFormaPago = [];
+    this.listadoRegimen = [];
   }
 
   formCustomerReset(): void {
@@ -169,10 +174,10 @@ export class FormCustomerComponent implements OnChanges {
         status: true,
       }
     );
-    this.buttonTitle = 'Guardar';
-    this.idCustomer = 0;
-    this.listaFormaPago = [];
-    this.listadoRegimen = [];
+    // this.buttonTitle = 'Guardar';
+    // this.idCustomer = 0;
+    // this.listaFormaPago = [];
+    // this.listadoRegimen = [];
   }
 
   onSubmit(): void {
@@ -205,8 +210,10 @@ export class FormCustomerComponent implements OnChanges {
         this.showLoader = false;
         this.respuesta.emit(response);
         console.log('Respuesta del servidor:', response);
-        this.myForm.reset();
-        this.closeModal();
+        // this.myForm.reset();
+          // this.formCustomerReset();
+
+        // this.closeModal();
       })
     );
   }

@@ -22,12 +22,38 @@ export class FormSeriesComponent {
   showLoader = false;
   buttonTitle: string = 'Crear';
   idSerie = 0;
+  ngOnChanges(): void {
+    console.log(this.productoHijo);  
+    if (this.productoHijo) {
+      this.idSerie = this.productoHijo.id || 0;  
+      console.log(this.idSerie)
+      this.buttonTitle = this.idSerie !== 0 ? 'Actualizar' : 'Crear';  
+      const statusValue = this.idSerie !== 0 ? this.productoHijo.status : true;
+      this.myForm.patchValue({
+        ...this.productoHijo,  
+        status: this.productoHijo.status ?? true,
+          
+      });
+  
+      const tipos = this.productoHijo.tipoComprobante ? this.productoHijo.tipoComprobante.split(',') : [];
+      this.myForm.get('tipoComprobante')?.setValue(tipos); 
+  
+    } else {
+      this.myForm.reset({ status: true }); 
+    
+    }
+  }
   myForm: FormGroup = this.fb.group({
     serie: ['', [Validators.required, Validators.maxLength(25)]],
-    folio: ['', [Validators.required, Validators.maxLength(5)]],
+    folio: ['', [Validators.required, Validators.maxLength(5) ,Validators.pattern("^[0-9]{1,5}$")]],
     tipoComprobante: ['', [Validators.required, Validators.maxLength(40)]],
     status: [true],
   });
+  get currentSerie(): SerietInterface {
+    const serie = this.myForm.value as SerietInterface;
+    console.log(serie)
+    return serie;
+  }
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.myForm, field);
   }
@@ -59,35 +85,11 @@ export class FormSeriesComponent {
   //   this.buttonTitle = this.idSerie !== 0 ? 'Actualizar' : 'Crear';
 
   // }
-  ngOnChanges(): void {
-    console.log(this.productoHijo);  
-    if (this.productoHijo) {
-      this.idSerie = this.productoHijo.id || 0;  
-      console.log(this.idSerie)
-      this.buttonTitle = this.idSerie !== 0 ? 'Actualizar' : 'Crear';  
-      const statusValue = this.idSerie !== 0 ? this.productoHijo.status : true;
-      this.myForm.patchValue({
-        ...this.productoHijo,  
-        status: this.productoHijo.status ?? true,
-          
-      });
-  
-      const tipos = this.productoHijo.tipoComprobante ? this.productoHijo.tipoComprobante.split(',') : [];
-      this.myForm.get('tipoComprobante')?.setValue(tipos); 
-  
-    } else {
-      this.myForm.reset({ status: true }); 
-    
-    }
-  }
+
   
   
 
-  get currentSerie(): SerietInterface {
-    const serie = this.myForm.value as SerietInterface;
-    console.log(serie)
-    return serie;
-  }
+
   
   onSubmit(): void {
     if (this.myForm.valid) {
@@ -103,6 +105,7 @@ export class FormSeriesComponent {
         uuid_company: uuidCompany || '', 
         tipoComprobante: tipoComprobante,
       };
+      console.log('Formulario enviado:', formData);
   
       const action = this.idSerie !== 0
         ? this.series.updateSeries(this.idSerie, formData)
@@ -111,7 +114,7 @@ export class FormSeriesComponent {
       action.subscribe({
         next: (response) => {
           this.respuesta.emit(response.data);
-          this.formSerieReset();
+          // this.formSerieReset();
           this.showLoader = false;
         },
         error: (err) => {
@@ -169,5 +172,11 @@ export class FormSeriesComponent {
       { id: 5, name: 'Nomina' },
 
     ];
-
+    validateNumberInput(event: KeyboardEvent) {
+      const input = event.target as HTMLInputElement;
+      if (!/^\d$/.test(event.key) || input.value.length >= 5) {
+        event.preventDefault();
+      }
+    }
+    
   }

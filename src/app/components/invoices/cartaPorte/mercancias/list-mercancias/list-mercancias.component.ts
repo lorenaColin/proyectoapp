@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 export class ListMercanciasComponent {
 private mercanciaService = inject(MercanciasService);
 mercancias: MercanciaInterface[] = [];
+public filteredMercancia: MercanciaInterface[] = [];
 @Input() mercancia: MercanciaInterface = {} as MercanciaInterface;
 @Input() buttonTitle: string = 'Editar';
 showLoader = false;
@@ -24,6 +25,7 @@ ngOnInit(): void {
     if (!error) {
       if (Array.isArray(data)) {
         this.mercancias = data;
+        this.filteredMercancia = response.data;
       } else {
         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
       }
@@ -91,5 +93,15 @@ responseMercancia(response: MercanciaInterface): void {
       });
     }
   }
-
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.mercancias = this.filteredMercancia.filter(
+      (seguro) =>
+        seguro.claveProdServCP.toLowerCase().includes(filterValue) ||
+        seguro.unidad.toLowerCase().includes(filterValue) ||
+        seguro.descripcion.toLowerCase().includes(filterValue)
+    );
+  }
 }

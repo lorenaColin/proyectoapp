@@ -12,6 +12,7 @@ import { MercanciaResponseInterface } from '../../../../interfaces/mercancias.in
 export class ListFigurasComponent {
 private figurasService = inject(figurasService);
 // figuras: FigurasInterface[] = [];
+filteredFigura: FigurasInterface[] = [];
 @Input() figura: FigurasInterface = {} as FigurasInterface;
 @Input() buttonTitle: string = 'Editar';
 showLoader = false;
@@ -26,6 +27,7 @@ ngOnInit(): void {
     if (!error) {
       if (Array.isArray(data)) {
         this.figuras = data;
+        this.filteredFigura = [...data];
       } else {
         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
       }
@@ -102,40 +104,19 @@ filteredInsurances: any[] = [];
         }
       );
     }
-  // responseFigura(response: FigurasInterface): void {
-  //   console.log({response})
-  //     const adaptedResponse: FigurasResponseInterface = {
-  //       message: response.tipoFigura? 'figura procesada' : 'Error al procesar la serie',
-  //       statusCode: response.id ? 200 : 500,
-  //       error: !response.tipoFigura || !response.numRegIdTribFigura, 
-  //       data: response
-  //     };
-  
-  //     const { message, data, error } = adaptedResponse;
-  
-  //     if (error) {
-  //       Swal.fire({
-  //         title: data.rfcFigura || data.tipoFigura || 'Error desconocido',
-  //         icon: 'error',
-  //       });
-  //       return;
-  //     }
-  
-  //     const indice = this.figuras.findIndex((ubi) => ubi.id === data.id);
-  //     if (indice !== -1) {
-  //       this.figuras[indice] = data;
-  //       Swal.fire({
-  //         title: 'Figura actualizada exitosamente',
-  //         icon: 'success',
-  //       });
-  //     } else {
-  //       // Serie es nueva, se agrega
-  //       this.figuras.push(data);
-  //       Swal.fire({
-  //         title: 'Figura creada exitosamente',
-  //         icon: 'success',
-  //       });
-  //     }
-  //   }
+
+ 
+ applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.figuras = this.filteredFigura.filter(
+      (auto) =>
+        auto.tipoFigura.toLowerCase().includes(filterValue) ||
+        auto.nombreFigura.toLowerCase().includes(filterValue) 
+    );
+    console.log(this.figuras);
+  }
+
   
 }

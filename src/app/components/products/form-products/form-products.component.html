@@ -1,11 +1,11 @@
 <div>
 
-    <form [formGroup]="myForm" class="grid grid-cols-4 gap-6 p-6 bg-white rounded-lg">
+    <form [formGroup]="myForm" autocomplete="off" class="grid grid-cols-4 gap-6 p-6 bg-white rounded-lg ">
         <div class="col-span-2">
             <label for="internal_key" class="block text-sm font-medium">Clave interna:</label>
             <input id="internal_key" formControlName="internal_key"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
-                oninput="this.value = this.value.toUpperCase();" />
+                oninput="this.value = this.value.toUpperCase();" minlength="5" maxlength="20" />
             <span *ngIf="isValidField('internal_key')" class="text-[#EE312A]">
                 {{ getFieldError('internal_key') }}
             </span>
@@ -21,8 +21,7 @@
 
             </div>
 
-            <span *ngIf="myForm.get('product_key')?.hasError('notFound') "
-                class="text-[#EE312A] text-sm">
+            <span *ngIf="myForm.get('product_key')?.hasError('notFound') " class="text-[#EE312A] text-sm">
                 Este código de producto no se encuentra en el catálogo.
             </span>
             <span *ngIf="isValidField('product_key')" class="text-[#EE312A] text-sm">
@@ -37,7 +36,7 @@
             </ul>
         </div>
 
-        <div class="col-span-2 relative" >
+        <div class="col-span-2 relative">
             <label for="unidad" class="form-label text-[.875rem] text-black">Clave Unidad:</label>
             <div class="input-group">
                 <input type="text" class="form-control" [value]="claveProdServUnidad" name="unidad" id="unidad"
@@ -46,8 +45,7 @@
             </div>
 
             <!-- Mensaje de error -->
-            <span *ngIf="myForm.get('unit')?.hasError('notFound') "
-                class="text-[#EE312A] text-sm">
+            <span *ngIf="myForm.get('unit')?.hasError('notFound') " class="text-[#EE312A] text-sm">
                 Este código de Unidad no se encuentra en el catálogo.
             </span>
             <span *ngIf="isValidField('unit')" class="text-[#EE312A] text-sm">
@@ -62,19 +60,22 @@
         </div>
 
         <div class="col-span-2">
-            <label for="unit_description" class=" form-label text-[.875rem] block text-sm font-medium">Descripción de Unidad:</label>
+            <label for="unit_description" class=" form-label text-[.875rem] block text-sm font-medium">Descripción de
+                Unidad:</label>
             <input type="text" class="form-control" id="unit_description" name="unit_description"
                 formControlName="unit_description" maxlength="20" oninput="this.value = this.value.toUpperCase();" />
             @if (isValidField('unit_description')) {
             <span class="text-[#EE312A]">
                 {{ getFieldError("unit_description") }}
             </span>
+
             }
         </div>
         <div class="col-span-2">
-            <label for="identifier_number" class="block text-sm font-medium">Numero de Identificación</label>
-            <input id="identifier_number" formControlName="identifier_number" oninput="this.value = this.value.toUpperCase();"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="100" />
+            <label for="identifier_number" class="block text-sm font-medium">Numero de Identificación:</label>
+            <input id="identifier_number" formControlName="identifier_number"
+                oninput="this.value = this.value.toUpperCase();"
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" minlength="1" maxlength="20" />
             <span *ngIf="isValidField('identifier_number')" class="text-[#EE312A]">
                 {{ getFieldError('identifier_number') }}
             </span>
@@ -83,23 +84,31 @@
         <div class="col-span-1">
             <label for="unit_price" class="block text-sm font-medium">Precio:</label>
             <input id="unit_price" formControlName="unit_price" type="number"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"   (keypress)="validateNumberInput($event)"/>
             <span *ngIf="isValidField('unit_price')" class="text-[#EE312A]">
                 {{ getFieldError('unit_price') }}
             </span>
+            <div *ngIf="myForm.get('unit_price')?.hasError('pattern') && myForm.get('unit_price')?.touched">
+                La cantidad debe ser un número válido con hasta 24 dígitos enteros y 6 decimales.
+            </div>
         </div>
+
         <div class="col-span-1">
             <label for="quantity" class="block text-sm font-medium">Cantidad:</label>
             <input id="quantity" formControlName="quantity" type="number"
-                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" maxlength="30" />
+                class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"   (keypress)="validateNumberInput($event)"/>
             <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
                 {{ getFieldError('quantity') }}
             </span>
+            <div *ngIf="myForm.get('quantity')?.hasError('pattern') && myForm.get('quantity')?.touched">
+                La cantidad debe ser un número válido con hasta 24 dígitos enteros y 6 decimales.
+            </div>
         </div>
+
         <div class="col-span-4">
             <label for="description" class="block text-sm font-medium">Descripción:</label>
             <textarea formControlName="description" id="description"
-                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="4"
+                class="border px-4 py-2 w-full rounded-md focus:border-blue-500" rows="3"
                 oninput="this.value = this.value.toUpperCase();"></textarea>
             <span *ngIf="isValidField('description')" class="text-[#EE312A]">
                 {{ getFieldError('description') }}

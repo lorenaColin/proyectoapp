@@ -10,7 +10,8 @@
             <div class="flex sm:mt-0 mt-2 items-center">
               <div class="input-group">
                 <input type="text" class="form-control !rounded-s-sm w-full !bg-light !border-0"
-                  placeholder="Buscar producto/servicio" aria-describedby="search-contact-member" autocomplete="off" />
+                  placeholder="Buscar producto/servicio" aria-describedby="search-contact-member" autocomplete="off" 
+                  (input)="applyFilter($event)"/>
                 <button aria-label="button" type="button" class="ti-btn ti-btn-light !rounded-s-none !mb-0"
                   id="search-contact-member">
                   <i class="ri-search-line text-[#8C9097]"></i>
@@ -51,12 +52,10 @@
           </div>
         </div>
         <!-- Producto Información -->
-        <div class="mb-4">
-          <span class="text-gray-800 text-sm">Numero identificador</span>
-        </div>
+       
         <div class="flex items-center justify-between">
           <span class="text-gray-800 text-sm">
-            {{ producto.identifier_number }}
+            Numero identificador  {{ producto.identifier_number }}
           </span>
           <button type="button" (click)="editCustomer(producto.id)" data-hs-overlay="#hs-extralarge-modal1" 
             class="ti-btn ti-btn-primary-full text-sm font-medium">

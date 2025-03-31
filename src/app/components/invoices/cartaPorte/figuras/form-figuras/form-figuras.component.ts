@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { ApiResponsepais, catpais, FigurasInterface, FigurasResponseInterface } from '../../../../interfaces/figuras.interface';
 import { AuthService } from '../../../../services/auth.service';
 import { PATRON_RFC } from '../../../../../shared/utils/expressions';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-form-figuras',
@@ -25,7 +25,7 @@ export class FormFigurasComponent {
   private figuras = inject(figurasService)
   buttonTitle: string = 'Crear';
   idFiguras = 0;
-
+  showTooltip = false;
   isOperadorSelected: boolean = false;
 
   onTipoFiguraChange(event: Event): void {
@@ -40,17 +40,7 @@ export class FormFigurasComponent {
 
     this.myForm.get('numLicencia')?.updateValueAndValidity();
   }
-  // ngOnChanges(): void {
-  //   if (this.figuraHijo) {
-  //     this.idFiguras = this.figuraHijo.id || 0;
-  //     this.buttonTitle = this.idFiguras !== 0 ? 'Actualizar' : 'Crear';
-  //     this.myForm.patchValue({
-  //       ...this.figuraHijo,
-  //     });
-  //   } else {
-  //     this.myForm.reset();
-  //   }
-  // }
+
   ngOnChanges(): void {
     this.idFiguras = this.figuraHijo.id || 0;
     
@@ -129,8 +119,8 @@ export class FormFigurasComponent {
           this.showLoader = false;
           this.respuesta.emit(response);
           console.log('Respuesta del servidor:', response);
-          this.myForm.reset();
-          this.closeModal();
+          // this.myForm.reset();
+          // this.closeModal();
         },
         (error) => {
           console.error('Error al enviar los datos del seguro', error);
@@ -139,39 +129,7 @@ export class FormFigurasComponent {
       )
     );
   }
-  // onSubmit(): void {
-  //   console.log("entrando al formulario")
-  //   if (this.myForm.valid) {
-  //     this.showLoader = true;
-  //     const uuidCompany = this.authService.getUuid();
-  //     console.log('UUID de la empresa:', uuidCompany);
-
-  //     const formData = {
-  //       ...this.myForm.value,
-  //       uuid_company: uuidCompany || '',
-  //     };
-
-  //     const action = this.idFiguras !== 0
-  //       ? this.figuras.updatefiguras(this.idFiguras, formData)
-  //       : this.figuras.createfiguras(formData);
-
-  //     action.subscribe({
-  //       next: (response) => {
-  //         this.respuesta.emit(response.data);
-  //         this.resetFiguras();
-  //         this.showLoader = false;
-  //       },
-     
-
-  //       error: (err) => {
-  //         console.error('Error al enviar los datos:', err);
-  //         this.showLoader = false;
-  //       },
-  //     });
-  //   } else {
-  //     this.myForm.markAllAsTouched();
-  //   }
-  // }
+  
   resetFiguras(): void {
     this.myForm.reset({
 
@@ -181,7 +139,7 @@ export class FormFigurasComponent {
       nombreFigura: "",
       numRegIdTribFigura: "",
       residenciaFiscalFigura: '',
-      domicilio: '',
+      domicilio: false,
       pais: '',
       codigoPostal: '',
       estado: '',
@@ -196,8 +154,8 @@ export class FormFigurasComponent {
   }
 
   isDomicilioChecked = false;
-  localidades: string[] = [];
-  colonias: string[] = [];
+  localidades: any[] = [];
+  colonias: any[] = [];
   toggleDomicilio() {
     this.isDomicilioChecked = !this.isDomicilioChecked;
     this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
@@ -244,19 +202,46 @@ export class FormFigurasComponent {
   filteredPais: catpais[] = [];
   selectedIndex: number = -1;
   isEstadoReadonly: boolean = false;  
-
+  buscar1 = new Subject<string>();
+  buscar2 = new Subject<string>();
   ngOnInit(): void {
-    this.loadPais();
-    this.loadPais2();
+    
+    this.buscar1.pipe(
+              debounceTime(500),
+            ).subscribe((query: string) => {
+              this.BuscarPais(query);
+            });
+            this.buscar2.pipe(
+              debounceTime(500),
+            ).subscribe((query: string) => {
+              this.BuscarPais2(query);
+            });
     this.onValueChanges();
 
-    this.myForm.get('pais')?.valueChanges.subscribe((pais) => {
-      if (pais === 'MEX') {
-        this.isEstadoReadonly = true; 
-      } else {
-        this.isEstadoReadonly = false;  
-      }
-    });
+    if (this.myForm.get('pais')) {
+      this.myForm.get('pais')?.valueChanges.subscribe(pais => {
+        console.log('Nuevo valor de país:', pais);
+  
+        this.isEstadoReadonly = pais === 'MEX';
+  
+        if (!pais || pais.trim() === '') {
+          console.log('Limpiando los campos de ubicación...');
+          this.myForm.patchValue({
+            codigoPostal: '',
+            estado: '',
+            municipio: '',
+            localidad: '',
+            colonia: '',
+            calle: '',
+            numeroExterior: '',
+            numeroInterior: '',
+            referencia: ''
+          }, { emitEvent: false });
+  
+        }
+      });
+    }
+    
   }
 
   
@@ -265,7 +250,7 @@ showNumRegIdTribFigura = true;
 showResidenciaFiscalFigura = true;
 
 onValueChanges(): void {
-  this.myForm.get('rfcFigura')?.setValidators([Validators.pattern(PATRON_RFC),Validators.required]);
+  this.myForm.get('rfcFigura')?.setValidators( [Validators.minLength(12), Validators.maxLength(13),Validators.pattern(PATRON_RFC),Validators.required]);
 
 
   this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required, Validators.minLength(6),Validators.maxLength(40)]);
@@ -308,29 +293,14 @@ onValueChanges(): void {
     return regex.test(rfc);
   }
 
-  loadPais(): void {
-    this.figuras.getAllPais().subscribe({
-      next: (response: ApiResponsepais) => {
-        console.log('Datos recibidos desde el servicio:', response);
-        if (Array.isArray(response.data)) {
-          this.listPais = response.data;
-          console.log('listPais:', this.listPais);
-        } else {
-          console.error('La respuesta no contiene un array en "data":', response.data);
-          this.listPais = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar los datos:', err);
-        this.showLoader = false;
-      }
-    });
-  }
-
-  onInput(event: any): void {
-    const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Texto ingresado:', query);
+ 
   
+onInput(event: any): void {
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Buscando pais:', query);
+    this.buscar1.next(query);
+  }
+  private BuscarPais(query:string):void{
     const control = this.myForm.get('pais');
     if (!control) return;
     if (query.length === 0) {
@@ -351,32 +321,31 @@ onValueChanges(): void {
       return;
     }
     this.showLoader = true;
-    setTimeout(() => {
-      if (Array.isArray(this.listPais)) {
-        this.filteredPais = this.listPais.filter((Pais) => {
-          const clave = Pais.c_pais.toString().toLowerCase();
-          const descripcion = Pais.descripcion.toLowerCase();
-          return clave.includes(query) || descripcion.includes(query);
+     this.figuras.getAllPais(query).subscribe({
+          next: (response: ApiResponsepais) => {
+            console.log('Respuesta de la API:', response);
+            this.filteredPais = response.data || [];
+            console.log('Productos obtenidos:', this.filteredPais);
+    
+            const exactMatch = this.filteredPais.some(producto =>
+              producto.c_pais.toString().toLowerCase() === query ||
+              producto.descripcion.toLowerCase() === query
+            );
+    
+            if (!exactMatch) {
+              control.setErrors({ notFound: true });
+            } else {
+              control.setErrors(null);
+            }
+    
+            this.showLoader = false;
+          },
+          error: (err) => {
+            console.error('Error en la búsqueda de productos:', err);
+            this.showLoader = false;
+          }
         });
-  
-        console.log('Paises filtrados:', this.filteredPais);
-  
-        const exactMatch = this.listPais.some(pais =>
-          pais.c_pais.toString().toLowerCase() === query ||
-          pais.descripcion.toLowerCase() === query
-        );
-  
-        if (!exactMatch) {
-          control.setErrors({ notFound: true });
-        } else {
-          control.setErrors(null);
-        }
-      }
-      this.showLoader = false;
-    }, 1000);
   }
-  
-
 
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
@@ -427,75 +396,55 @@ onValueChanges(): void {
   // ---------------------------------------------------------
   listPais2: catpais[] = [];
   filteredPais2: catpais[] = [];
-  loadPais2(): void {
-    this.figuras.getAllPais().subscribe({
-      next: (response: ApiResponsepais) => {
-        console.log('Datos recibidos desde el servicio:', response);
-        if (Array.isArray(response.data)) {
-          this.listPais2 = response.data;
-          console.log('listPais:', this.listPais2);
-        } else {
-          console.error('La respuesta no contiene un array en "data":', response.data);
-          this.listPais2 = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar los datos:', err);
-        this.showLoader = false;
-      }
-    });
-  }
-
+  
   onInput1(event: any): void {
-    const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Texto ingresado:', query);
-  
-    const control = this.myForm.get('residenciaFiscalFigura');
-    if (!control) return;
-    if (query.length === 0) {
-      control.setErrors(null);
-      
-      if (control.hasValidator(Validators.required)) {
-        control.setValidators([Validators.required]);
-      }
-      control.updateValueAndValidity();
-      this.filteredPais2 = [];
-      this.showLoader = false;
-      return;
+      const query = (event.target.value || '').trim().toLowerCase();
+      console.log('Buscando pais:', query);
+      this.buscar2.next(query);
     }
-    if (query.length < 2) {
-      control.setErrors({ notFound: true });
-      this.filteredPais2 = [];
-      this.showLoader = false;
-      return;
-    }
-  
-    this.showLoader = true;
-    setTimeout(() => {
-      if (Array.isArray(this.listPais2)) {
-        this.filteredPais2 = this.listPais2.filter((Pais) => {
-          const clave = Pais.c_pais.toString().toLowerCase();
-          const descripcion = Pais.descripcion.toLowerCase();
-          return clave.includes(query) || descripcion.includes(query);
-        });
-  
-        console.log('Países filtrados:', this.filteredPais2);
-  
-        const exactMatch = this.listPais2.some(pais =>
-          pais.c_pais.toString().toLowerCase() === query ||
-          pais.descripcion.toLowerCase() === query
-        );
-  
-        if (!exactMatch) {
-          control.setErrors({ notFound: true });
-        } else {
-          control.setErrors(null);
+    private BuscarPais2(query: string): void {
+      const control = this.myForm.get('residenciaFiscalFigura');
+      if (!control) return;
+      if (query.length === 0) {
+        control.setErrors(null);
+        if (control.hasValidator(Validators.required)) {
+          control.setValidators([Validators.required]);
         }
+        control.updateValueAndValidity();
+        this.filteredPais2 = [];
+        this.showLoader = false;
+        return;
       }
-      this.showLoader = false;
-    }, 1000);
-  }
-  
+      if (query.length < 2) {
+        control.setErrors({ notFound: true });
+        this.filteredPais2 = [];
+        this.showLoader = false;
+        return;
+      }
+      this.showLoader = true;
+      this.figuras.getAllPais(query).subscribe({
+        next: (response: ApiResponsepais) => {
+          console.log('Respuesta de la API:', response);
+          this.filteredPais2 = response.data.filter(pais => pais.c_pais !== 'MEX');
+          console.log('Productos obtenidos sin MEX:', this.filteredPais2);
+          const exactMatch = this.filteredPais2.some(pais =>
+            pais.c_pais.toString().toLowerCase() === query ||
+            pais.descripcion.toLowerCase() === query
+          );
+          if (!exactMatch) {
+            control.setErrors({ notFound: true });
+          } else {
+            control.setErrors(null);
+          }
+          this.showLoader = false;
+        },
+        error: (err) => {
+          console.error('Error en la búsqueda de productos:', err);
+          this.showLoader = false;
+        }
+      });
+    }
+    
 
   clavepaisDescription2: string = '';
 
@@ -522,6 +471,8 @@ onValueChanges(): void {
       this.filteredPais = [];
     }
   }
+  estadoDescripcion: string = '';
+  municipioDescripcion:string='';
  onCodigoPostalBlur(): void {
        const codigoPostal = this.myForm.get('codigoPostal')?.value;
        const pais = this.myForm.get('pais')?.value;
@@ -531,15 +482,27 @@ onValueChanges(): void {
          this.figuras.getDireccion(codigoPostal).subscribe({
            next: (data) => {
              this.showLoader = false;
-             this.localidades = data.localidades || [];
-             this.colonias = data.colonias || [];
-   
+             this.localidades = [];
+             this.colonias = [];
+           
+            data.colonias.forEach( (element: string) => {
+              let contenido = element.split("|");
+              this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] })
+            });
+            data.localidades.forEach( (element: string) => {
+              let contenidol = element.split("|");
+              this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] })
+            });
              this.myForm.patchValue({
-               estado: data.estado || '',
-               municipio: data.municipio || '',
-               localidad: this.localidades[0] || '',
-               colonia: this.colonias[0] || '',
+               estado: data.c_estado || '',
+               municipio: data.cat_municipio || '',
+               localidad: '',  
+               colonia: '', 
              });
+             console.log(data.colonias)
+             console.log(data.localidades)
+             this.estadoDescripcion = data.Nombreestado || '';
+             this.municipioDescripcion=data.municipio|| '';
            },
            error: (err) => {
              this.showLoader = false;
@@ -548,4 +511,5 @@ onValueChanges(): void {
          });
        }
      }
+
 }

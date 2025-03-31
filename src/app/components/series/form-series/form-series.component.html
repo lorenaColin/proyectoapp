@@ -12,14 +12,15 @@
         </div>
         <div class="col-span-1">
             <label for="folio" class="block text-sm font-medium">Folio</label>
-            <input id="folio" formControlName="folio" type="number" maxlength="5"
+            <input id="folio" formControlName="folio" type="text" maxlength="5"   pattern="[0-9]{1,5}"
                 class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm"
-                oninput="this.value = this.value.toUpperCase();" />
+                oninput="this.value = this.value.toUpperCase();"   (keypress)="validateNumberInput($event)"
+           />
             <span *ngIf="isValidField('folio')" class="text-[#EE312A]">
                 {{ getFieldError('folio') }}
             </span>
         </div>
-
+        
 
         <div class="col-span-2">
             <label for="tipoComprobante" class="block text-sm font-medium">Tipo de Comprobante</label>

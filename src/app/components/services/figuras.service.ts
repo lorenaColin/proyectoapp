@@ -12,8 +12,8 @@ import { ApiResponsepais, FigurasInterface, FigurasListResponseInterface, Figura
 export class figurasService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/figuras`;
-    private paisesUrl = `${environment.apiUrl}/paises`;
-    private direccionUrl = `${environment.apiUrl}/direccion`;
+    private paisesUrl = `${environment.apiUrl}/paisesF`;
+    private direccionUrl = `${environment.apiUrl}/direccionF`;
   
   
 
@@ -62,9 +62,12 @@ export class figurasService {
     return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
   }
 
-   getAllPais(): Observable<ApiResponsepais> {
-      return this.http.get<ApiResponsepais>(this.paisesUrl);
+  //  getAllPais(): Observable<ApiResponsepais> {
+  //     return this.http.get<ApiResponsepais>(this.paisesUrl);
+  //   }
+
+  getAllPais(query: string): Observable<ApiResponsepais> {
+      const url = `${this.paisesUrl}?termino=${query}`;
+      return this.http.get<ApiResponsepais>(url);
     }
-
-
 }

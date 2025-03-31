@@ -17,8 +17,8 @@ export class ubicacionesService {
   validacionDestino = PATRON_UBICACION_DESTINO;
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ubicacion`;
-  private paisesUrl = `${environment.apiUrl}/paises`;
-  private direccionUrl = `${environment.apiUrl}/direccion`;
+  private paisesUrl = `${environment.apiUrl}/paisesU`;
+  private direccionUrl = `${environment.apiUrl}/direccionU`;
   private getlistaUbicacion = `${environment.apiUrl}/ubicaciones`;
 
 
@@ -29,7 +29,7 @@ export class ubicacionesService {
     console.log(tipo);
     const idUbicacionPattern = tipo === 'ORIGEN' ? PATRON_UBICACION_ORIGEN : PATRON_UBICACION_DESTINO;
     return this.fb.group({
-      rfc: ['', [Validators.required, Validators.pattern(PATRON_RFC)]],
+      rfc: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13), Validators.pattern(PATRON_RFC)]],
       // idUbicacion: ['', tipo === 'ORIGEN' ? [Validators.required] : []], 
       idUbicacion: ['',
         [Validators.pattern(idUbicacionPattern)]
@@ -73,25 +73,20 @@ export class ubicacionesService {
   deleteubicacion(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  // getDireccion(codigoPostal: string): Observable<any> {
-  //   return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
-  // }
-
-
+ 
 
 
   getDireccion(codigoPostal: string): Observable<any> {
     return this.http.get(`${this.direccionUrl}/${codigoPostal}`);
   }
 
-  getAllPais(): Observable<ApiResponsepais> {
-    return this.http.get<ApiResponsepais>(this.paisesUrl);
-  }
+
+  getAllPais(query: string): Observable<ApiResponsepais> {
+      const url = `${this.paisesUrl}?termino=${query}`;
+      return this.http.get<ApiResponsepais>(url);
+    }
 
 
-  // getUbicacionesPorTipo(tipo: string): Observable<ubicacionResponseInterface> {
-  //   return this.http.get<ubicacionResponseInterface>(`${this.apiUrl}?tipoUbicacion=${tipo}`);
-  // }
   getUbicacionesPorTipo(tipo: string): Observable<{ data: ubicacionInterface[] }> {
     return this.http.get<{ data: ubicacionInterface[] }>(`${this.getlistaUbicacion}/${tipo}`);
   }
