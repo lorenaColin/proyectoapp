@@ -70,10 +70,10 @@
         </button>
     </div> -->
 
-    <form [formGroup]="formConcepts">
-        <pre> {{ formConcepts.value | json }} </pre>
-        <div class="m-2 p-2">
-            <div class="grid grid-cols-12 gap-4">
+    <form [formGroup]="formConcepts" (submit)="onSubmit()">
+        <div class="m-1 p-1">
+            <pre>{{ formConcepts.value | json}}</pre>
+            <div class="grid grid-cols-12 gap-2">
                 <div class="col-span-12 sm:col-span-12 md:col-span-6">
                     <label class="block form-label">Código:</label>
                     <input type="text" class="border px-4 py-2 w-full form-control"
@@ -84,13 +84,11 @@
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Producto/Servicio:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product"
-                        readonly />
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product"/>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Unidad:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value"
-                        readonly />
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value"/>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-12">
                     <label class="block form-label">Descripción:</label>
@@ -101,136 +99,124 @@
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Cantidad:</label>
-                    <input numeric type="text" class="border px-4 py-2 w-full form-control" formControlName="quantity" (change)="calculate();" step="0.000001"/>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="quantity"
+                        step="0.000001" />
                     <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
                         {{ getFieldError('quantity') }}
                     </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Precio:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price" (change)="calculate();" step="0.000001"/>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price"
+                        step="0.000001" />
                     <span *ngIf="isValidField('unit_price')" class="text-[#EE312A]">
                         {{ getFieldError('unit_price') }}
                     </span>
                 </div>
-                @if (typeProof !== 'T') {
-                    <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                        <label class="block form-label">Descuento %:</label>
-                        <input type="text" class="border px-4 py-2 w-full form-control" formControlName="discount" (change)="calculate();" />
-                    </div>
-                    <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                        <label class="form-label" for="objeto">ObjetoImp: </label>
-                        <select class="border px-4 py-2 w-full form-control" formControlName="tax_object" (change)="calculate();">
-                            <option value="01">No objeto de impuesto</option>
-                            <option value="02">Sí objeto de impuesto</option>
-                            <option value="03">Sí objeto de impuesto y no oblig</option>
-                        </select>
-                    </div>
-                    
-                    @if (isTax) {
-                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <label for="">Iva</label>
-                            <input type="checkbox" class="form-check-input" name="iva" id="iva" (change)="setTraslado($event)">
-                        </div>
-                        <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <label for="">IEPS</label>
-                            <input type="checkbox" class="form-check-input" name="ieps" id="ieps" (change)="setTraslado($event)">
-                        </div>
-                    
 
-                        <!-- Inicia tabla -->
-                        <div class="col-span-12 sm:col-span-12 md:col-span-12">
-                            <div class="row">
-                                <div class="table-responsive">
-                                    <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
-                                        <thead>
-                                            <tr>
-                                                <th class="py-2 px-4 border-b text-left">Impuesto</th>
-                                                <th class="py-2 px-4 border-b text-center">Traslado</th>
-                                                <th class="py-2 px-4 border-b text-center">Retención</th>
-                                                <th class="py-2 px-4 border-b text-center">Importe</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody formArrayName="traslados">
-                                            @for (traslado of traslados.controls; track i; let i = $index) {
-                                                
-                                                <tr [formGroupName]="i">
-                                                    <td class="py-2 px-4 border-b text-left">
-                                                        <label>
-                                                            {{ traslado.get('impuesto')?.value | uppercase}}
-                                                        </label>
-                                                    </td>
-                                                    <td class="py-2 px-4 border-b text-center">
-                                                        <select class="form-control w-full block mb-1"  formControlName="tasaOCuota" (change)="calculate()">
-                                                            <option value="">Selecciona una tasa</option>
-                                                            @if (traslado.get('impuesto')?.value == 'iva') {
-                                                                <option value="0.000000">0.000000</option>
-                                                                <option value="0.080000">0.080000</option>
-                                                                <option value="0.160000">0.160000</option>
-                                                                <option value="Exento">Exento</option>
-                                                            }@else {
-                                                                <option value="0.000000">0.000000</option>
-                                                                <option value="0.030000">0.030000</option>
-                                                                <option value="0.060000">0.060000</option>
-                                                                <option value="0.070000">0.070000</option>
-                                                                <option value="0.080000">0.080000</option>
-                                                                <option value="0.090000">0.090000</option>
-                                                                <option value="0.250000">0.250000</option>
-                                                                <option value="0.265000">0.265000</option>
-                                                                <option value="0.300000">0.300000</option>
-                                                                <option value="0.304000">0.304000</option>
-                                                                <option value="0.500000">0.500000</option>
-                                                                <option value="0.530000">0.530000</option>
-                                                                <option value="0.160000">0.160000</option>
-                                                            }
-                                                        </select>
-                                                        <span *ngIf="isValidField2(i, 'tasaOCuota')" class="text-[#EE312A]">
-                                                            {{ getFieldError2(i, 'tasaOCuota') }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="py-2 px-4 border-b text-left">
-                                                        <input type="number" class="form-control block" formControlName="retencion"/>
-                                                        <span *ngIf="isValidField2(i, 'retencion')" class="text-[#EE312A]">
-                                                            {{ getFieldError2(i, 'retencion') }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="py-2 px-4 border-b text-center">
-                                                        <input type="number" class="form-control" readonly />
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                }
+                <!--  -->
+                @if (typeProof !== 'T') {
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                    <label class="block form-label">Importe:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="total_product"readonly />
+                    <label class="block form-label">Descuento %:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="discount" />
                 </div>
+                <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                    <label class="form-label" for="objeto">ObjetoImp: </label>
+                    <select class="border px-4 py-2 w-full form-control" formControlName="tax_object">
+                        <option value="01">No objeto de impuesto</option>
+                        <option value="02">Sí objeto de impuesto</option>
+                        <option value="03">Sí objeto de impuesto y no oblig</option>
+                    </select>
+                </div>
+                }
+            </div>
+
+            @if (isTax) {
+
+            <!-- <div class="row" formArrayName="traslados"> -->
+            <div class="grid grid-cols-12 gap-4" formArrayName="traslados">
+                @for (traslado of traslados.controls; track i; let i = $index) {
+
+                <div class="col-span-12 sm:col-span-12 md:col-span-4" [formGroupName]="i">
+                    <label class=" block form-label text-[.875rem] text-black" for="traslados{{ i }}">{{
+                        traslado.get('descripcion')?.value }}:</label>
+                    <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="traslados{{ i }}"
+                        id="traslados{{ i }}" formControlName="tasaOCuota" (change)="calculate()">
+                        @if (traslado.get('descripcion')?.value == 'IVA') {
+                        <option value="0.160000">0.160000</option>
+                        <option value="0.080000">0.080000</option>
+                        <option value="0.000000">0.000000</option>
+                        <option value="Exento">Exento</option>
+                        <option value="N/A">N/A</option>
+                        }@else {
+                        <option value="N/A">N/A</option>
+                        <option value="0.000000">0.000000</option>
+                        <option value="0.030000">0.030000</option>
+                        <option value="0.060000">0.060000</option>
+                        <option value="0.070000">0.070000</option>
+                        <option value="0.080000">0.080000</option>
+                        <option value="0.090000">0.090000</option>
+                        <option value="0.250000">0.250000</option>
+                        <option value="0.265000">0.265000</option>
+                        <option value="0.300000">0.300000</option>
+                        <option value="0.304000">0.304000</option>
+                        <option value="0.500000">0.500000</option>
+                        <option value="0.530000">0.530000</option>
+                        <option value="0.160000">0.160000</option>
+                        }
+                    </select>
+                    @if (isValidField2('traslados', i, 'tasaOCuota')) {
+                    <span class="text-[#EE312A]">
+                        {{ getFieldError2('traslados', i, 'tasaOCuota') }}
+                    </span>
+                    }
+                </div>
+                }
+            </div>
+            <div class="grid grid-cols-12 gap-4" formArrayName="retenidos">
+                @for (retenido of retenidos.controls; track i; let i = $index) {
+                <div class="col-span-4 sm:col-span-12 md:col-span-4" [formGroupName]="i">
+                    <label class="form-label text-[.875rem] text-black" for="retenidos{{ i }}">{{
+                        retenido.get('descripcion')?.value }}:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="tasaOCuota" (change)="calculate()"/>
+                    @if (isValidField2('retenidos', i, 'tasaOCuota')) {
+                    <span class="text-[#EE312A]">
+                        {{ getFieldError2('retenidos', i, 'tasaOCuota') }}
+                    </span>
+                    }
+                </div>
+                }
+            </div>
+            }
+
+            <div class="col-span-12 sm:col-span-12 md:col-span-3">
+                <label class="block form-label">Importe:</label>
+                <input type="text" class="border px-4 py-2 w-full form-control" formControlName="total_product"
+                    readonly />
+                @if (isValidField('total_product')) {
+                <span class="text-[#EE312A]">
+                    {{ getFieldError('total_product') }}
+                </span>
+                }
+            </div>
+        </div>
+        <div class="flex justify-between my-5 p-2 mx-2">
+            <div>
+                <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover"
+                    (click)="closeModal()" data-hs-overlay="#hs-extralarge-modal3">
+                    Cancelar
+                </button>
+            </div>
+            <div>
+                <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
+                    {{ tittleButton }}
+                </button>
             </div>
         </div>
     </form>
 
-    <div class="flex justify-between my-5 p-2 mx-2">
-        <div>
-            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover"
-                (click)="closeModal()" data-hs-overlay="#hs-extralarge-modal3">
-                Cancelar
-            </button>
-        </div>
-        <div>
-            <button type="button" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover"
-                (click)="addProduct()">
-                {{ tittleButton }}
-            </button>
-        </div>
-    </div>
     }
 </div>
-
 
 <div class="flex justify-between mb-4 mt-5">
     @if (isTableActive){

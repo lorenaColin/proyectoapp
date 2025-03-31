@@ -1,6 +1,9 @@
 <div class="col-span-12 sm:col-span-12 md:col-span-12">
   <div class="row">
     <div class="table-responsive">
+      <pre>
+        <!-- {{ this.conceptsService.products() | json }} -->
+      </pre>
       <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
         <thead>
           <tr>
@@ -19,25 +22,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rows; let i = index">
-            <td class="py-2 px-4 border-b text-left">{{ row.codigo }}</td>
-            <td class="py-2 px-4 border-b text-left">{{ row.descripcion }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.cantidad }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.precioUnitario }}</td>
+          <tr *ngFor="let row of this.conceptsService.products(); let i = index">
+            <td class="py-2 px-4 border-b text-left">{{ row.product_service_code }}</td>
+            <td class="py-2 px-4 border-b text-left">{{ row.description }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.quantity }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.unit_price }}</td>
 
             @if (typeProof !== 'T') {
-            <td class="py-2 px-4 border-b text-center">{{ row.descuento }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.objetoImp }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.discount }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.tax_object }}</td>
             }
 
 
-            <td class="py-2 px-4 border-b text-center">{{ row.importe }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.tax_object }}</td>
             <td class="py-2 px-4 border-b text-center">
               <button type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-secondary !rounded-full ti-btn-wave me-1" data-hs-overlay="#hs-extralarge-modal3"
-                (click)="editRow(row.idTemp)">
+                (click)="editRow(row.id || 0)">
                 <i class="ri-edit-line"></i>
               </button>
-              <button  type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave" (click)="removeRow(row.idTemp)">
+              <button  type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave" (click)="removeRow(row.id || 0)">
                 <i class="ri-delete-bin-line"></i>
               </button>
             </td>
@@ -62,8 +65,7 @@
       <div class="ti-modal-header">
         <h6 class="ti-modal-title">Productos/servicios</h6>
       </div>
-      <app-form-invoice-products [typeProof]="typeProof" (productAdded)="addProductToTable($event)"
-        [productToEdit]="concetpEdit" />
+      <app-form-invoice-products [typeProof]="typeProof" />
     </div>
   </div>
 </div>

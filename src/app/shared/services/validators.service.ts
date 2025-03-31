@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, ValidationErrors } from '@angular/forms';
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class ValidatorsService {
   private patternErrorMessages: Record<string, string> = {
@@ -18,13 +18,7 @@ export class ValidatorsService {
     anioModeloVM: 'El año no es valido'
   };
 
-  public isValidField(form: FormGroup, field: string): boolean | null {
-    return form.controls[field].errors && form.controls[field].touched;
-  }
-
-  getFieldError(form: FormGroup, field: string): string | null {
-    if (!form.controls[field]) return null;
-    const errors = form.controls[field].errors || {};
+  menssages (errors: any, field:string):string | null{
     for (const key of Object.keys(errors)) {
       switch (key) {
         case 'required':
@@ -43,10 +37,46 @@ export class ValidatorsService {
           return `El valor debe ser menor o igual a ${errors['max'].max}.`;
         case 'notEqual':
           return 'Las contraseñas no coinciden';
+        case 'noSelect':
+        return 'Debes seleccionar al menos un impuesto';
       }
     }
     return null;
   }
+
+  public isValidField(form: FormGroup, field: string): boolean | null {
+    return form.controls[field].errors && form.controls[field].touched;
+  }
+  getFieldError(control: AbstractControl | FormGroup, field?: string): string | null {
+    const targetControl = control instanceof FormGroup ? control.controls[field || ''] : control;
+    return targetControl?.errors ? this.menssages(targetControl.errors, field || '') : null;
+  }
+  
+  // getFieldError(form: FormGroup, field: string): string | null {
+  //   if (!form.controls[field]) return null;
+  //   const errors = form.controls[field].errors || {};
+  //   for (const key of Object.keys(errors)) {
+  //     switch (key) {
+  //       case 'required':
+  //         return 'El campo es requerido';
+  //       case 'minlength':
+  //         return `Mínimo ${errors['minlength'].requiredLength} caracteres.`;
+  //       case 'maxlength':
+  //         return `Máximo ${errors['maxlength'].requiredLength} caracteres.`;
+  //       case 'pattern':
+  //         return this.patternErrorMessages[field] || 'Formato inválido';
+  //       case 'generic':
+  //         return 'RFC incorrecto, introduce un RFC válido';
+  //       case 'min':
+  //         return `El valor debe ser mayor o igual a ${errors['min'].min}.`;
+  //       case 'max':
+  //         return `El valor debe ser menor o igual a ${errors['max'].max}.`;
+  //       case 'notEqual':
+  //         return 'Las contraseñas no coinciden';
+  //     }
+  //   }
+  //   return null;
+  // }
 
   public isFieldOneEqualFieldTwo(field1: string, field2: string) {
     return (formGroup: AbstractControl): ValidationErrors | null => {
@@ -59,6 +89,32 @@ export class ValidatorsService {
       }
 
       formGroup.get(field2)?.setErrors(null);
+      return null;
+    };
+  }
+
+  public isFieldOneEqualFieldTax(field1: string, field2: string) {
+    console.log({field1}, {field2})
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const fieldValue1 = formGroup.get(field1)?.value;
+      const fieldValue2 = formGroup.get(field2)?.value;
+
+      if (fieldValue1 === "02") {
+        let contador = 0
+        fieldValue2.forEach((elemento:any) => {
+            if(elemento.tasaOCuota == "N/A") {
+              contador++;
+            }
+        });
+        let formulario = formGroup.get(field2) as FormArray;
+        for (let index = 0; index < formulario.controls.length; index++) {
+          let field = formulario.controls[index] as FormArray
+          let banderaError = contador === 2 ? field.get('tasaOCuota')?.setErrors({ noSelect: true }) : field.get('tasaOCuota')?.setErrors(null);
+        }
+
+        if( contador == 2 ) return { noSelect: true };
+
+      }
       return null;
     };
   }

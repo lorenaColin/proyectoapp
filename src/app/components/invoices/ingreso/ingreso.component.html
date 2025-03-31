@@ -166,7 +166,20 @@
 
                     <hr class="my-6 border-gray-300">
                     <!-- <form [formGroup]="forma_pago"> -->
-                    <app-forma-pago></app-forma-pago>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                        <!-- <div class="grid grid-cols-1"> -->
+                            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
+                                <app-forma-pago></app-forma-pago>
+                            </div>
+                        <!-- </div> -->
+                        <!-- <div class="grid grid-cols-1">
+                        </div> -->
+                        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
+                            <app-totales></app-totales>
+    
+                        </div>
+                    </div>
+                    
                     <!-- </form> -->
                     <div class="flex justify-between my-5 p-2 mx-2">
                         <div>
