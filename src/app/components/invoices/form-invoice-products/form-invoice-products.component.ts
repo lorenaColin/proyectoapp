@@ -1,13 +1,12 @@
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ConceptsService } from '../../services/concepts.service';
-import { ConceptInterface } from '../../interfaces/concept';
+import { ConceptInterface, productInterface } from '../../interfaces/concept';
 import { ValidatorsService } from '../../../shared/services/validators.service';
-import { TotalsService } from '../../services/totals.service';
 import Decimal from 'decimal.js';
-import { CurrencyPipe, DecimalPipe } from '@angular/common'
 
 import {  impuestoInterface, } from '../../../shared/interfaces/shared.interface';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 
 @Component({
@@ -16,77 +15,195 @@ import {  impuestoInterface, } from '../../../shared/interfaces/shared.interface
   styleUrl: './form-invoice-products.component.scss'
 })
 export class FormInvoiceProductsComponent implements OnInit, OnChanges {
+
+
   private fb = inject(FormBuilder);
   private conceptsService = inject(ConceptsService);
   private validatorsService = inject(ValidatorsService);
-  private totalsService = inject(TotalsService);
+  private utilsService = inject(UtilsService);
 
-  private cp = inject(CurrencyPipe);
-  private dp = inject(DecimalPipe);
-  
+  @Input() typeProof!: string; 
+  public daniel:any ;
+
   currentTab: number = 1; 
-  formConcepts: FormGroup = this.fb.group({});
+  formConcepts = this.fb.group({
+    id: [Date.now()],
+    name_product: [],
+    product_service_code: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+    description: ['', [Validators.required, Validators.maxLength(1000)]],
+    quantity: [0, [Validators.required, Validators.min( this.typeProof !== 'T' ? 0.000001 : 0)], []],
+    unit_value: [''],
+    unit_price: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
+    unit_key: [''],
+    identification_number: [''],
+    discount: [],
+    valorUnitario: [0],
+    base: [0],
+    total_product: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
+    tax_object: ['01', Validators.required],
+    traslados: this.fb.array([]),
+    retenidos: this.fb.array([]),
+  },{
+    validators: [this.validatorsService.isFieldOneEqualFieldTax('tax_object','traslados')]
+  });
+
   idConcept: number = 0;
   tittleButton: string = 'Crear';
   isTableActive: boolean = false; 
   isCreateActive: boolean = true; 
   isTax: boolean = false;
   public base: number = 0;
-  formTraslados = this.fb.array([]);
+
   
-  @Input() typeProof!: string; 
+  
   @Output() productAdded = new EventEmitter<any>(); 
   @Input() productToEdit!: ConceptInterface; 
   
-  public formFields: any ={}
+
   ngOnInit(): void {
-    this.createForm();
-    this.valueChangesConcepts() 
-    this.initTaxes();
+    this.susb();
+    this.susb2();
   }
+
+  susb(){
+    ['quantity', 'unit_price', 'discount'].forEach(field => {
+      const control = this.formConcepts.get(field);
+      if (control) {
+        control.valueChanges.subscribe((x) => this.calculate());
+      }
+    });
+  }
+  susb2(){
+    this.formConcepts.get('tax_object')?.valueChanges.subscribe(value => {
+      this.isTax = value === '02';   
+      this.traslados.clear();
+      this.retenidos.clear();
+      if(value != '02'){
+        console.log(this.daniel)
+        console.log(this.daniel.unsubscribe());
+        console.log(this.daniel)
+
+      }
+      if (value === '02') {
+        this.traslados.push(this.fb.group({
+          base: 0,
+          descripcion: "IVA",
+          impuesto: "002",
+          tasaOCuota: ["0.160000"],
+          importe: 0
+        }));
+        this.traslados.push(this.fb.group({
+          base: 0,
+          descripcion: "IEPS",
+          impuesto: "003",
+          tasaOCuota: ["N/A"],
+          importe: 0
+        }));
+
+        this.retenidos.push(this.fb.group({
+          base: 0,
+          descripcion: "R.IVA",
+          impuesto: "002",
+          tasaOCuota: ['', [Validators.min(0.000001), Validators.max(0.16000)]],
+          importe: 0
+        }));
+        this.retenidos.push(this.fb.group({
+          base: 0,
+          descripcion: "R. ISR",
+          impuesto: "001",
+          tasaOCuota: ['', [Validators.min(0.000001), Validators.max(0.350000)]],
+          importe: 0
+        }));
+        this.retenidos.push(this.fb.group({
+          base: 0,
+          descripcion: "R. IEPS",
+          impuesto: "003",
+          tasaOCuota: ['', [], []],
+          importe: 0
+        }));
+        this.susb3();
+      }
+      this.calculate();
+    });
+  }
+
+  susb3(){
+    this.retenidos.controls.map(control => {
+      let field =control.get('tasaOCuota');
+      if(field){
+        this.daniel = field.valueChanges.subscribe((x) => this.calculate());
+      }
+    });
+  }
+
     
   ngOnChanges(): void {
-    console.log(this.idConcept);
-    this.idConcept = this.productToEdit.idTemp || 0;
-    if (this.idConcept !== 0) {
-      this.tittleButton = 'Actualizar';
+    // console.log(this.idConcept);
+    // this.idConcept = this.productToEdit.idTemp || 0;
+    // if (this.idConcept !== 0) {
+    //   this.tittleButton = 'Actualizar';
   
-      const productData = {
-        ...this.productToEdit,
-        ...this.productToEdit.traslados,
-        ...this.productToEdit.retenciones
-      };
+    //   const productData = {
+    //     ...this.productToEdit,
+    //     ...this.productToEdit.traslados,
+    //     ...this.productToEdit.retenciones
+    //   };
   
-      this.formConcepts.patchValue(productData);
-      // console.log(this.productToEdit);
-    }
+    //   // this.formConcepts.patchValue(productData);
+    //   // console.log(this.productToEdit);
+    // }
   }
   
-  
-  createForm(): void {
-    
-    this.formFields = {
-      name_product: [''],
-      product_service_code: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      description: ['', [Validators.required, Validators.maxLength(1000)]],
-      quantity: [0, [Validators.required, Validators.min( this.typeProof !== 'T' ? 0.000001 : 0)], []],
-      unit_value: [''],
-      unit_price: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
-      unit_key: [''],
-      identification_number: [''],
-      discount: [0],
-      valorUnitario: [0],
-      base: [this.base],
-      total_product: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
-      tax_object: ['01', Validators.required],
-      traslados: this.formTraslados
-    };
-  
-    if (this.typeProof !== 'T') {
-
+  onSubmit() {
+    if (this.formConcepts.invalid) {
+      this.formConcepts.markAllAsTouched();
+      return;
     }
-  
-    this.formConcepts = this.fb.group(this.formFields);
+    const { tax_object, retenidos }   = this.formConcepts.value;
+    if(tax_object == '02'){
+      let index:number = 0;
+      this.traslados.controls.map( field => {
+        let tasaOCuota = field.get('tasaOCuota')?.value;
+        if(tasaOCuota === 'N/A') {
+          this.traslados.removeAt(index);
+        }
+        index++;
+      });
+
+      let retEl = retenidos!.filter((r:any) => r.base !== 0);
+      this.retenidos.clear()
+      if(retEl.length> 0){
+        retEl.forEach((element:any) => {
+          this.retenidos.push(this.fb.group(element))
+        });
+      }
+    }
+    let data: any  = this.formConcepts.value;
+    console
+    this.conceptsService.products.update(value =>[...value, data]);
+    this.conceptsService.calculateTotals();
+    this.formConceptsReset();
+  }
+
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.formConcepts, field);
+  }
+
+  isValidField(field: string): boolean | null {
+    return this.validatorsService.isValidField( this.formConcepts, field );
+  }
+
+  isValidField2(formulario: string, index: number, fieldName: string): boolean {
+    const formArray = this.formConcepts.get(formulario) as FormArray;
+    const control = formArray.at(index)?.get(fieldName);
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
+
+  getFieldError2(formulario: string, index: number, fieldName: string): string | null {
+    const formArray = this.formConcepts.get(formulario) as FormArray;
+    const errors = formArray.at(index)?.get(fieldName)?.errors || {};
+    return this.validatorsService.menssages(errors, fieldName);
   }
   closeModal() {
     this.formConceptsReset();
@@ -97,265 +214,81 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
     this.isCreateActive = !isTable;
   }
 
-
-  setTraslado(event: any): void{
-    const ischecked = (<HTMLInputElement>event.target).checked
-    let elemento = event.target.id;
-    let trasladosArray = this.formConcepts.get('traslados') as FormArray;
-
-    if(!ischecked){
-      let { value:traslados } = trasladosArray;
-      let transladosTemp: impuestoInterface[] = traslados;
-      trasladosArray.removeAt(transladosTemp.findIndex(x => x.impuesto === elemento ));
-      return;
-    }
-
-    let validations = elemento === "iva" ? [Validators.required, Validators.min(0.000001), Validators.max(0.16000)]: [Validators.required];
-
-
-    let impuestoD = this.fb.group({
-        base: [this.base, [Validators.required]],
-        impuesto: event.target.id,
-        tasaOCuota: [0, [Validators.required]],
-        retencion: [0, validations],
-        importe: 0 
-      });
-
-    trasladosArray.push(impuestoD)
-  }
-
   get traslados(): FormArray {
     return this.formConcepts.get('traslados') as FormArray;
   }
 
-  calculate(){
+  get retenidos(): FormArray {
+    return this.formConcepts.get('retenidos') as FormArray;
+  }
 
-    let {quantity:cantidad, unit_price, discount:descuento, tax_object, traslados}  = this.formConcepts.value;
+  calculate(){
+    const cantidad = this.formConcepts.get('quantity')!.value || 0;
+    const unit_price = this.formConcepts.get('unit_price')!.value || 0;
+    const descuento = this.formConcepts.get('discount')!.value  || 0;
+    const tax_object = this.formConcepts.get('tax_object')!.value  || 0;
     if( Number(cantidad) === 0 || Number(unit_price) === 0 ) return;
 
-    cantidad = this.dp.transform(new Decimal(cantidad).toString(), '1.6-6')
-    let valorUnitario = new Decimal(cantidad).mul(new Decimal(unit_price)).toString();
-    let base = new Decimal(valorUnitario).sub(descuento).toString();
-    this.base = Number(base);
+
+    let cantidadBase = parseFloat(new Decimal(this.utilsService.decimales(cantidad.toString())).toString());
+    console.log(new Decimal(cantidadBase).mul(new Decimal(this.utilsService.decimales(unit_price.toString()))).toString())
+    let valorUnitario = parseFloat(new Decimal(cantidadBase).mul(new Decimal(this.utilsService.decimales(unit_price.toString()))).toString());
+    let base = parseFloat((new Decimal(valorUnitario).sub(descuento.toString())).toString());
+    console.log(cantidadBase, valorUnitario, base)
     let trasladosTotal = new Decimal(0);
     let retencionesTotal = new Decimal(0);
+
     if(tax_object === "02"){
-      traslados.forEach(( element: impuestoInterface) => {
-        let { tasaOCuota } = element;
-        let tasa = tasaOCuota === "Exento" ? "0.00000": tasaOCuota;
-        let importe = new Decimal(new Decimal(base)).mul(new Decimal(tasa))
-        trasladosTotal = new Decimal(this.calculos(new Decimal(trasladosTotal).toString())).add(new Decimal(importe));
-        
+      let index: number = 0;
+      this.traslados.controls.map(control => {
+        let tasaOCuota = control.get('tasaOCuota')!.value;
+        let importe = new Decimal(0.0);
+
+        if(!isNaN(parseFloat(tasaOCuota))){
+          let tasa = tasaOCuota === "Exento" ? "0.00000": tasaOCuota;
+          importe = new Decimal(new Decimal(base)).mul(new Decimal(tasa))
+          trasladosTotal = new Decimal(this.utilsService.decimales(new Decimal(trasladosTotal).toString())).add(new Decimal(importe));
+        }
+        this.traslados.controls[index].get('base')?.setValue(parseFloat(base.toString()));
+        this.traslados.controls[index].get('importe')?.setValue(parseFloat(importe.toString()));
+        index++;
+      });
+
+      index = 0;
+      this.retenidos.controls.map(control => {
+        let tasaOCuota = control.get('tasaOCuota')?.value
+        let importe = 0;
+        let baseTemp = 0; 
+        if(!isNaN(parseFloat(tasaOCuota))){
+          baseTemp = base;
+          let tasa = tasaOCuota === "Exento" ? "0.00000": tasaOCuota;
+          importe = parseFloat(new Decimal(new Decimal(base)).mul(new Decimal(tasa)).toString())
+          retencionesTotal = new Decimal(this.utilsService.decimales(new Decimal(retencionesTotal).toString())).add(new Decimal(importe));
+        }
+        this.retenidos.controls[index].get('base')?.setValue(baseTemp);
+        this.retenidos.controls[index].get('importe')?.setValue(importe);
+        index++;
       });
     }
-    let total_product =  this.cp.transform((new Decimal(valorUnitario).sub(descuento).add(trasladosTotal)).sub(retencionesTotal).toString(), 'USD', 'symbol', '1.2-2');;
-    this.formConcepts.patchValue({quatiry:cantidad,valorUnitario, base, total_product});
-
-  }
-
-  calculos(valor:string): string{
-    let cadenaNumero = valor.toString();
-    let posicionPunto = cadenaNumero.lastIndexOf('.');
-    let esDecimal = posicionPunto != -1;
-    let numeroEntero  = ( esDecimal ) ? cadenaNumero.substr(0, posicionPunto) : cadenaNumero;
-    let decimales = ( esDecimal ) ? cadenaNumero.substr(posicionPunto + 1 ) : "";
-    decimales = decimales.length > 6 ? decimales.substr( 0, 6 ) : decimales.padEnd(6, "0");
-    numeroEntero = numeroEntero.length === 0 ? "0": numeroEntero;
-    return `${ numeroEntero }.${ decimales }`;
+    let total_product =  parseFloat((new Decimal(valorUnitario).sub(descuento).add(new Decimal(trasladosTotal.toString()))).sub(new Decimal(retencionesTotal.toString())).toString());
+    this.formConcepts.patchValue({total_product, valorUnitario, base: base});
+    
   }
 
 
-
-
-
-
-addProduct(): void {
-  console.log("Formulario invalido");
-  if (this.formConcepts.invalid) {
-    this.formConcepts.markAllAsTouched();
-  
-    Object.keys(this.formConcepts.controls).forEach(controlName => {
-      const control = this.formConcepts.get(controlName);
-      if (control && control.invalid) {
-      }
-    });
-  
-    return;
-  }
-  
-  const productData = this.formConcepts.value;
-  const idTemp = this.idConcept !== 0 ? this.idConcept : Date.now();
-  const productGroup = this.createProductGroup(productData, idTemp);
-  const formArray = this.conceptsService.getProductosFormArray();
-  
-  (this.idConcept !== 0) ? this.updateProduct(formArray, productGroup, idTemp, productData) : this.addNewProduct(formArray, productGroup, idTemp, productData);
-  
-  this.formConcepts.reset();
-  this.formConceptsReset();
-  this.typeProof !== 'T' ? this.totalsService.calculateTotals() : '';
-}
-
-private createProductGroup(productData: any, idTemp: number): any {
-  const productGroup: any = {
-    idTemp: idTemp,
-    product_service_code: productData.product_service_code,
-    name_product: productData.name_product,
-    description: productData.description,
-    quantity: productData.quantity,
-    unit_value: productData.unit_value,
-    unit_price: productData.unit_price,
-    predial: productData.predial,
-    unit_key: productData.unit_key,
-    identification_number: productData.identification_number,
-    discount: productData.discount,
-    discount_percentage: productData.discount_percentage,
-    base: productData.base,
-    total_product: productData.total_product,
-    tax_object: this.typeProof !== 'T' ? productData.tax_object : '01',
-    ...(this.typeProof !== 'T' && {
-    // validate_iva: productData.validate_iva,
-    // validate_ieps: productData.validate_ieps,
-    // validate_ish: productData.validate_ish,
-    // validate_r_iva: productData.validate_r_iva,
-    // validate_r_ieps: productData.validate_r_ieps,
-    // validate_r_isr: productData.validate_r_isr,
-    })
-  };
-   if (this.typeProof !== 'T') {
-      productGroup.traslados = this.fb.group({
-      //  base_iva: productData.base_iva,
-      //  valor_iva: productData.valor_iva,
-      //  importe_iva: productData.importe_iva,
-      //  base_ieps: productData.base_ieps,
-      //  valor_ieps: productData.valor_ieps,
-      //  importe_ieps: productData.importe_ieps,
-      //  base_ish: productData.base_ish,
-      //  valor_ish: productData.valor_ish,
-      //  importe_ish: productData.importe_ish
-      });
-      productGroup.retenciones = this.fb.group({
-      //  base_r_iva: productData.base_r_iva,
-      //  valor_r_iva: productData.valor_r_iva,
-      //  importe_r_iva: productData.importe_r_iva,
-      //  base_r_ieps: productData.base_r_ieps,
-      //  valor_r_ieps: productData.valor_r_ieps,
-      //  importe_r_ieps: productData.importe_r_ieps,
-      //  base_r_isr: productData.base_r_isr,
-      //  valor_r_isr: productData.valor_r_isr,
-      //  importe_r_isr: productData.importe_r_isr,
-      });
-     }
-
-  return productGroup;
-}
-
-updateProduct(formArray: FormArray, productGroup: any, idTemp: number, productData: any): void {
-  const index = formArray.controls.findIndex(control => control.value.idTemp === this.idConcept);
-  if (index !== -1) {
-
-    formArray.at(index).patchValue({
-      ...productGroup,
-      ...(this.typeProof !== 'T' && {
-        traslados: productGroup.traslados.value,  
-        retenciones: productGroup.retenciones.value  
-      })
-    });
-
-    this.emitProductEvent(productData, idTemp, true);
-  }
-}
-
-
-  addNewProduct(formArray: FormArray, productGroup: any, idTemp: number, productData: any): void {
-  formArray.push(this.fb.group(productGroup));
-
-  this.emitProductEvent(productData, idTemp, false);
-
-}
-
-  emitProductEvent(productData: any, idTemp: number, isUpdate: boolean): void {
-  this.productAdded.emit({
-    idTemp: idTemp,
-    codigo: productData.product_service_code,
-    descripcion: productData.description,
-    cantidad: productData.quantity,
-    precioUnitario: productData.unit_price,
-    descuento: productData.discount,
-    objetoImp: productData.tax_object,
-    importe: productData.total_product,
-    isUpdate: isUpdate,
-  });
-}
 
   formConceptsReset(): void{
     console.log("resetting");
-    this.formConcepts.reset(
-      {
-        tax_object: '01',
-        quantity: 0,
-        unit_price: 0,
-        total_product: 0,
-      }
-    );
+    this.formConcepts.reset({
+      id: Date.now(),
+      tax_object: '01',
+      quantity: 0,
+      unit_price: 0,
+      total_product: 0,
+    });
     this.tittleButton = 'Crear';
     this.idConcept = 0;
   }
 
-  valueChangesConcepts() {
-    this.formConcepts.get('tax_object')?.valueChanges.subscribe(value => {
-      this.isTax = value === '02';
-    });
-  }
-
-  getFieldError(field: string): string | null {
-    return this.validatorsService.getFieldError(this.formConcepts, field);
-  }
-  
-  isValidField(field: string): boolean | null {
-    return this.validatorsService.isValidField( this.formConcepts, field );
-  }
-
-  isValidField2(index: number, fieldName: string): boolean {
-    const formArray = this.formConcepts.get('traslados') as FormArray;
-    const control = formArray.at(index)?.get(fieldName);
-    return control ? control.invalid && (control.touched || control.dirty) : false;
-  }
-  getFieldError2(index: number, fieldName: string): string | null {
-    const formArray = this.formConcepts.get('traslados') as FormArray;
-    const control = formArray.at(index)?.get(fieldName);
-
-    if (control && control.errors) {
-      console.log(Object.values(control.errors)[0])
-      return Object.values(control.errors)[0];
-    }
-    return null;
-  }
-  
-  onCheckChange(tasaOCuota: string): void{
-    console.log(tasaOCuota);
-  }
-
-  initTaxes(): void {
-    const taxTypes = ['iva', 'ieps', 'r_iva', 'r_ieps', 'r_isr', 'ish'];
-  
-    taxTypes.forEach((tax) => {
-      const isChecked = this.formConcepts.get(`validate_${tax}`)?.value;
-      this.toggleTaxFields(tax, isChecked);
-  
-      this.formConcepts.get(`validate_${tax}`)?.valueChanges.subscribe((value) => {
-        this.toggleTaxFields(tax, value);
-      });
-    });
-  }
-
-  toggleTaxFields(tax: string, enable: boolean): void {
-    [`base_${tax}`, `valor_${tax}`, `importe_${tax}`].forEach((field) => {
-      const control = this.formConcepts.get(field);
-      control?.[enable ? 'enable' : 'disable']();
-      if (!enable) control?.setValue(null);
-    });
-  }
-  
-  
 
 }

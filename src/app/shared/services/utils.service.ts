@@ -25,4 +25,20 @@ export class UtilsService {
     getTasaOcuota(impuesto:string): tasaOCuotaInterface[]{
         return TASAOCUOTA.filter(i => i.impuesto === impuesto);
     }
+
+    decimales(valor:string): number{
+        let cadenaNumero = valor.toString();
+        let posicionPunto = cadenaNumero.lastIndexOf('.');
+        let esDecimal = posicionPunto != -1;
+        let numeroEntero  = ( esDecimal ) ? cadenaNumero.substring(0, posicionPunto) : cadenaNumero;
+        let decimales = ( esDecimal ) ? cadenaNumero.substring(posicionPunto + 1 ) : "";
+        decimales = decimales.length > 6 ? decimales.substring(0, 6) : decimales.padEnd(7, "0");
+        numeroEntero = numeroEntero.length === 0 ? "0": numeroEntero;
+        return parseFloat(`${ numeroEntero }.${ decimales }`);
+    }
+
+    // truncar(numero:string, decimales: number): string{
+    //     let expresion = ( decimales === 6 ) ? /(\d*.\d{0,6})/ : /(\d*.\d{0,2})/;
+    //     return numero.match(expresion)[0] || 'null';
+    // }
 }

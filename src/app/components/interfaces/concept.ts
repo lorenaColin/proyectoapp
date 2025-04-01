@@ -64,3 +64,21 @@ export interface ListConceptInterface {
     tax_object?: string;
     predial?: string;
 }
+export interface productInterface{
+    id?: number;
+    name_product: string;
+    product_service_code: string;
+    description: string;
+    quantity: number;
+    unit_value: string;
+    unit_price: number;
+    unit_key: string;
+    discount: number;
+    valorUnitario: number;
+    base: number;
+    total_product: number;
+    tax_object: string;
+    traslados: any[];
+    retenidos: any[];
+  } 
+

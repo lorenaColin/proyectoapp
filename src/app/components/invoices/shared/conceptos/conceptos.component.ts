@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit } from '@angular/core';
 import { ConceptsService } from '../../../services/concepts.service';
-import { ConceptInterface } from '../../../interfaces/concept';
+import { ConceptInterface, productInterface } from '../../../interfaces/concept';
 
 @Component({
   selector: 'app-conceptos',
@@ -9,12 +9,13 @@ import { ConceptInterface } from '../../../interfaces/concept';
 })
 export class ConceptosComponent implements OnInit {
   rows: any[] = []; 
-  private conceptsService = inject(ConceptsService);
+  public conceptsService = inject(ConceptsService);
   @Input() typeProof!: string; 
   @Input() concetpEdit: ConceptInterface = {} as ConceptInterface;
 
   ngOnInit(): void {
     console.log('init', this.typeProof);
+    console.log(this.conceptsService.products())
   }
 
   
@@ -27,23 +28,19 @@ export class ConceptosComponent implements OnInit {
     (index !== -1) ? this.rows[index] = product :  this.rows.push(product);
   }
 
-  removeRow(idTemp: number): void {
-    const rowIndex = this.rows.findIndex(row => row.idTemp === idTemp);
-  
-    if (rowIndex !== -1) {
-      this.rows.splice(rowIndex, 1);
-  
-      const formArray = this.conceptsService.getProductosFormArray();
-      const formIdTemp = formArray.controls.findIndex(control => control.value.idTemp === idTemp);
-  
-      (formIdTemp !== -1) ? formArray.removeAt(formIdTemp) : '';
-    }
+  removeRow(id: number): void {
+    let productosTemp = this.conceptsService.products().filter(p => p.id !== id);
+    this.conceptsService.products.set(productosTemp);
+    this.conceptsService.calculateTotals();
   }
 
-  editRow(idTemp: number): void {
-    const formArray = this.conceptsService.getProductosFormArray();
-    const formIndex = formArray.controls.findIndex(control => control.value.idTemp === idTemp);
-    (formIndex !== -1) ? this.concetpEdit = Object.assign({}, formArray.at(formIndex).value) : console.error("Producto no encontrado");
+  editRow(id: number): void {
+    let producto = this.conceptsService.products().find(p => p.id === id) as productInterface;
+    this.conceptsService.setConcept(producto);
+    console.log(this.conceptsService.getConcept());
+    this.removeRow(id);
   }
+
+
   
 }
