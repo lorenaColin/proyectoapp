@@ -114,8 +114,7 @@ private Buscar(query:string):void{
             console.log('Productos obtenidos:', this.filteredConcepto);
     
             const exactMatch = this.filteredConcepto.some(producto =>
-              producto.internal_key.toString().toLowerCase() === query ||
-              producto.identifier_number.toLowerCase() === query
+              producto.internal_key.toString().toLowerCase() === query 
             );
     
             if (!exactMatch) {
