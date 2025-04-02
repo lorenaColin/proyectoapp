@@ -9,8 +9,9 @@ export interface ConceptInterface {
     unit_value?: string;
     unit_price: string;
     unit_key?: string;
-    identification_number?: string;
+    identifier_number?: string;
     discount?: number;
+    unit_description?:string;
     discount_percentage?: number;
     base: number;
     total_product: number;
@@ -81,4 +82,9 @@ export interface productInterface{
     traslados: any[];
     retenidos: any[];
   } 
-
+  export interface ApiResponseConcepto {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: ConceptInterface[];  
+  }

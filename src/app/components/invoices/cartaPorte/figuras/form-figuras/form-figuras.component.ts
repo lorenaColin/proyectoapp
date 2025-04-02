@@ -43,13 +43,13 @@ export class FormFigurasComponent {
 
   ngOnChanges(): void {
     this.idFiguras = this.figuraHijo.id || 0;
-    
+
     this.myForm.patchValue(this.figuraHijo);
     this.isDomicilioChecked = Boolean(this.figuraHijo.domicilio);
-  this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
+    this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
     this.idFiguras != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
   }
- 
+
   get currentUbicacion(): FigurasInterface {
     const figurass = this.myForm.value as FigurasInterface;
     console.log(figurass)
@@ -66,7 +66,7 @@ export class FormFigurasComponent {
     domicilio: [false],
     pais: ['', []],
     codigoPostal: ['', []],
-    estado: ['', [ Validators.maxLength(30), Validators.minLength(1)]],
+    estado: ['', [Validators.maxLength(30), Validators.minLength(1)]],
     municipio: ['', []],
     localidad: ['', []],
     colonia: ['', []],
@@ -90,8 +90,8 @@ export class FormFigurasComponent {
     this.buttonTitle = 'Crear';
 
   }
-    private subscription: Subscription = new Subscription();
-  
+  private subscription: Subscription = new Subscription();
+
   onSubmit(): void {
     this.showLoader = true;
     const uuidCompany = this.authService.getUuid();
@@ -107,7 +107,7 @@ export class FormFigurasComponent {
       ...this.myForm.value,
       uuid_company: uuidCompany || '',
     };
-    
+
     console.log('Datos a enviar:', formData);
 
     const submitCustomer = this.idFiguras
@@ -129,7 +129,7 @@ export class FormFigurasComponent {
       )
     );
   }
-  
+
   resetFiguras(): void {
     this.myForm.reset({
 
@@ -201,29 +201,29 @@ export class FormFigurasComponent {
   listPais: catpais[] = [];
   filteredPais: catpais[] = [];
   selectedIndex: number = -1;
-  isEstadoReadonly: boolean = false;  
+  isEstadoReadonly: boolean = false;
   buscar1 = new Subject<string>();
   buscar2 = new Subject<string>();
   ngOnInit(): void {
-    
+
     this.buscar1.pipe(
-              debounceTime(500),
-            ).subscribe((query: string) => {
-              this.BuscarPais(query);
-            });
-            this.buscar2.pipe(
-              debounceTime(500),
-            ).subscribe((query: string) => {
-              this.BuscarPais2(query);
-            });
+      debounceTime(500),
+    ).subscribe((query: string) => {
+      this.BuscarPais(query);
+    });
+    this.buscar2.pipe(
+      debounceTime(500),
+    ).subscribe((query: string) => {
+      this.BuscarPais2(query);
+    });
     this.onValueChanges();
 
     if (this.myForm.get('pais')) {
       this.myForm.get('pais')?.valueChanges.subscribe(pais => {
         console.log('Nuevo valor de país:', pais);
-  
+
         this.isEstadoReadonly = pais === 'MEX';
-  
+
         if (!pais || pais.trim() === '') {
           console.log('Limpiando los campos de ubicación...');
           this.myForm.patchValue({
@@ -237,54 +237,54 @@ export class FormFigurasComponent {
             numeroInterior: '',
             referencia: ''
           }, { emitEvent: false });
-  
+
         }
       });
     }
-    
+
   }
 
-  
+
   showRfcFigura = true;
-showNumRegIdTribFigura = true;
-showResidenciaFiscalFigura = true;
+  showNumRegIdTribFigura = true;
+  showResidenciaFiscalFigura = true;
 
-onValueChanges(): void {
-  this.myForm.get('rfcFigura')?.setValidators( [Validators.minLength(12), Validators.maxLength(13),Validators.pattern(PATRON_RFC),Validators.required]);
+  onValueChanges(): void {
+    this.myForm.get('rfcFigura')?.setValidators([Validators.minLength(12), Validators.maxLength(13), Validators.pattern(PATRON_RFC), Validators.required]);
 
 
-  this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required, Validators.minLength(6),Validators.maxLength(40)]);
+    this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(40)]);
 
-  this.myForm.get('rfcFigura')?.valueChanges.subscribe((rfcValue) => {
-    setTimeout(() => {
-      if (rfcValue) {
-        this.showNumRegIdTribFigura = false;
-        this.showResidenciaFiscalFigura = false;
-        this.myForm.get('numRegIdTribFigura')?.clearValidators();
-        this.myForm.get('numRegIdTribFigura')?.updateValueAndValidity({ emitEvent: false });
-      } else {
-        this.showNumRegIdTribFigura = true;
-        this.showResidenciaFiscalFigura = true;
-        this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required]);
-        this.myForm.get('numRegIdTribFigura')?.updateValueAndValidity({ emitEvent: false });
-      }
+    this.myForm.get('rfcFigura')?.valueChanges.subscribe((rfcValue) => {
+      setTimeout(() => {
+        if (rfcValue) {
+          this.showNumRegIdTribFigura = false;
+          this.showResidenciaFiscalFigura = false;
+          this.myForm.get('numRegIdTribFigura')?.clearValidators();
+          this.myForm.get('numRegIdTribFigura')?.updateValueAndValidity({ emitEvent: false });
+        } else {
+          this.showNumRegIdTribFigura = true;
+          this.showResidenciaFiscalFigura = true;
+          this.myForm.get('numRegIdTribFigura')?.setValidators([Validators.required]);
+          this.myForm.get('numRegIdTribFigura')?.updateValueAndValidity({ emitEvent: false });
+        }
+      });
     });
-  });
 
-  this.myForm.get('numRegIdTribFigura')?.valueChanges.subscribe((numRegId) => {
-    setTimeout(() => {
-      if (numRegId) {
-        this.showRfcFigura = false;
-        this.myForm.get('rfcFigura')?.clearValidators();
-        this.myForm.get('rfcFigura')?.updateValueAndValidity({ emitEvent: false });
-      } else {
-        this.showRfcFigura = true;
-        this.myForm.get('rfcFigura')?.setValidators([Validators.required]);
-        this.myForm.get('rfcFigura')?.updateValueAndValidity({ emitEvent: false });
-      }
+    this.myForm.get('numRegIdTribFigura')?.valueChanges.subscribe((numRegId) => {
+      setTimeout(() => {
+        if (numRegId) {
+          this.showRfcFigura = false;
+          this.myForm.get('rfcFigura')?.clearValidators();
+          this.myForm.get('rfcFigura')?.updateValueAndValidity({ emitEvent: false });
+        } else {
+          this.showRfcFigura = true;
+          this.myForm.get('rfcFigura')?.setValidators([Validators.required]);
+          this.myForm.get('rfcFigura')?.updateValueAndValidity({ emitEvent: false });
+        }
+      });
     });
-  });
-}
+  }
 
 
 
@@ -293,19 +293,19 @@ onValueChanges(): void {
     return regex.test(rfc);
   }
 
- 
-  
-onInput(event: any): void {
+
+
+  onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Buscando pais:', query);
     this.buscar1.next(query);
   }
-  private BuscarPais(query:string):void{
+  private BuscarPais(query: string): void {
     const control = this.myForm.get('pais');
     if (!control) return;
     if (query.length === 0) {
       control.setErrors(null);
-      
+
       if (control.hasValidator(Validators.required)) {
         control.setValidators([Validators.required]);
       }
@@ -321,30 +321,30 @@ onInput(event: any): void {
       return;
     }
     this.showLoader = true;
-     this.figuras.getAllPais(query).subscribe({
-          next: (response: ApiResponsepais) => {
-            console.log('Respuesta de la API:', response);
-            this.filteredPais = response.data || [];
-            console.log('Productos obtenidos:', this.filteredPais);
-    
-            const exactMatch = this.filteredPais.some(producto =>
-              producto.c_pais.toString().toLowerCase() === query ||
-              producto.descripcion.toLowerCase() === query
-            );
-    
-            if (!exactMatch) {
-              control.setErrors({ notFound: true });
-            } else {
-              control.setErrors(null);
-            }
-    
-            this.showLoader = false;
-          },
-          error: (err) => {
-            console.error('Error en la búsqueda de productos:', err);
-            this.showLoader = false;
-          }
-        });
+    this.figuras.getAllPais(query).subscribe({
+      next: (response: ApiResponsepais) => {
+        console.log('Respuesta de la API:', response);
+        this.filteredPais = response.data || [];
+        console.log('Productos obtenidos:', this.filteredPais);
+
+        const exactMatch = this.filteredPais.some(producto =>
+          producto.c_pais.toString().toLowerCase() === query ||
+          producto.descripcion.toLowerCase() === query
+        );
+
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+
+        this.showLoader = false;
+      },
+      error: (err) => {
+        console.error('Error en la búsqueda de productos:', err);
+        this.showLoader = false;
+      }
+    });
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -396,55 +396,55 @@ onInput(event: any): void {
   // ---------------------------------------------------------
   listPais2: catpais[] = [];
   filteredPais2: catpais[] = [];
-  
+
   onInput1(event: any): void {
-      const query = (event.target.value || '').trim().toLowerCase();
-      console.log('Buscando pais:', query);
-      this.buscar2.next(query);
-    }
-    private BuscarPais2(query: string): void {
-      const control = this.myForm.get('residenciaFiscalFigura');
-      if (!control) return;
-      if (query.length === 0) {
-        control.setErrors(null);
-        if (control.hasValidator(Validators.required)) {
-          control.setValidators([Validators.required]);
-        }
-        control.updateValueAndValidity();
-        this.filteredPais2 = [];
-        this.showLoader = false;
-        return;
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Buscando pais:', query);
+    this.buscar2.next(query);
+  }
+  private BuscarPais2(query: string): void {
+    const control = this.myForm.get('residenciaFiscalFigura');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
       }
-      if (query.length < 2) {
-        control.setErrors({ notFound: true });
-        this.filteredPais2 = [];
-        this.showLoader = false;
-        return;
-      }
-      this.showLoader = true;
-      this.figuras.getAllPais(query).subscribe({
-        next: (response: ApiResponsepais) => {
-          console.log('Respuesta de la API:', response);
-          this.filteredPais2 = response.data.filter(pais => pais.c_pais !== 'MEX');
-          console.log('Productos obtenidos sin MEX:', this.filteredPais2);
-          const exactMatch = this.filteredPais2.some(pais =>
-            pais.c_pais.toString().toLowerCase() === query ||
-            pais.descripcion.toLowerCase() === query
-          );
-          if (!exactMatch) {
-            control.setErrors({ notFound: true });
-          } else {
-            control.setErrors(null);
-          }
-          this.showLoader = false;
-        },
-        error: (err) => {
-          console.error('Error en la búsqueda de productos:', err);
-          this.showLoader = false;
-        }
-      });
+      control.updateValueAndValidity();
+      this.filteredPais2 = [];
+      this.showLoader = false;
+      return;
     }
-    
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredPais2 = [];
+      this.showLoader = false;
+      return;
+    }
+    this.showLoader = true;
+    this.figuras.getAllPais(query).subscribe({
+      next: (response: ApiResponsepais) => {
+        console.log('Respuesta de la API:', response);
+        this.filteredPais2 = response.data.filter(pais => pais.c_pais !== 'MEX');
+        console.log('Productos obtenidos sin MEX:', this.filteredPais2);
+        const exactMatch = this.filteredPais2.some(pais =>
+          pais.c_pais.toString().toLowerCase() === query ||
+          pais.descripcion.toLowerCase() === query
+        );
+        if (!exactMatch) {
+          control.setErrors({ notFound: true });
+        } else {
+          control.setErrors(null);
+        }
+        this.showLoader = false;
+      },
+      error: (err) => {
+        console.error('Error en la búsqueda de productos:', err);
+        this.showLoader = false;
+      }
+    });
+  }
+
 
   clavepaisDescription2: string = '';
 
@@ -472,44 +472,44 @@ onInput(event: any): void {
     }
   }
   estadoDescripcion: string = '';
-  municipioDescripcion:string='';
- onCodigoPostalBlur(): void {
-       const codigoPostal = this.myForm.get('codigoPostal')?.value;
-       const pais = this.myForm.get('pais')?.value;
-   
-       if (pais === 'MEX' && codigoPostal) {
-         this.showLoader = true;
-         this.figuras.getDireccion(codigoPostal).subscribe({
-           next: (data) => {
-             this.showLoader = false;
-             this.localidades = [];
-             this.colonias = [];
-           
-            data.colonias.forEach( (element: string) => {
-              let contenido = element.split("|");
-              this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] })
-            });
-            data.localidades.forEach( (element: string) => {
-              let contenidol = element.split("|");
-              this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] })
-            });
-             this.myForm.patchValue({
-               estado: data.c_estado || '',
-               municipio: data.cat_municipio || '',
-               localidad: '',  
-               colonia: '', 
-             });
-             console.log(data.colonias)
-             console.log(data.localidades)
-             this.estadoDescripcion = data.Nombreestado || '';
-             this.municipioDescripcion=data.municipio|| '';
-           },
-           error: (err) => {
-             this.showLoader = false;
-             Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
-           },
-         });
-       }
-     }
+  municipioDescripcion: string = '';
+  onCodigoPostalBlur(): void {
+    const codigoPostal = this.myForm.get('codigoPostal')?.value;
+    const pais = this.myForm.get('pais')?.value;
+
+    if (pais === 'MEX' && codigoPostal) {
+      this.showLoader = true;
+      this.figuras.getDireccion(codigoPostal).subscribe({
+        next: (data) => {
+          this.showLoader = false;
+          this.localidades = [];
+          this.colonias = [];
+
+          data.colonias.forEach((element: string) => {
+            let contenido = element.split("|");
+            this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] })
+          });
+          data.localidades.forEach((element: string) => {
+            let contenidol = element.split("|");
+            this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] })
+          });
+          this.myForm.patchValue({
+            estado: data.c_estado || '',
+            municipio: data.cat_municipio || '',
+            localidad: '',
+            colonia: '',
+          });
+          console.log(data.colonias)
+          console.log(data.localidades)
+          this.estadoDescripcion = data.Nombreestado || '';
+          this.municipioDescripcion = data.municipio || '';
+        },
+        error: (err) => {
+          this.showLoader = false;
+          Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
+        },
+      });
+    }
+  }
 
 }

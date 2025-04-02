@@ -1,12 +1,15 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ConceptsService } from '../../services/concepts.service';
-import { ConceptInterface, productInterface } from '../../interfaces/concept';
+import { ApiResponseConcepto, ConceptInterface, productInterface } from '../../interfaces/concept';
 import { ValidatorsService } from '../../../shared/services/validators.service';
 import Decimal from 'decimal.js';
 
 import {  impuestoInterface, } from '../../../shared/interfaces/shared.interface';
 import { UtilsService } from '../../../shared/services/utils.service';
+import { debounceTime, Subject } from 'rxjs';
+import { productoServicio } from '../../services/productoServicio.service';
+import { ApiResponseConceptos, ApiResponseProducto, ProductInterface } from '../../interfaces/producto.interface';
 
 
 @Component({
@@ -19,6 +22,8 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
 
   private fb = inject(FormBuilder);
   private conceptsService = inject(ConceptsService);
+  private conceptService = inject(productoServicio);
+
   private validatorsService = inject(ValidatorsService);
   private utilsService = inject(UtilsService);
 
@@ -28,7 +33,7 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   currentTab: number = 1; 
   formConcepts = this.fb.group({
     id: [Date.now()],
-    name_product: [],
+    name_product: [''],
     product_service_code: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
     description: ['', [Validators.required, Validators.maxLength(1000)]],
     quantity: [0, [Validators.required, Validators.min( this.typeProof !== 'T' ? 0.000001 : 0)], []],
@@ -43,6 +48,9 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
     tax_object: ['01', Validators.required],
     traslados: this.fb.array([]),
     retenidos: this.fb.array([]),
+    unit_description: [''],
+    identifier_number: [''],
+
   },{
     validators: [this.validatorsService.isFieldOneEqualFieldTax('tax_object','traslados')]
   });
@@ -58,12 +66,147 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   
   @Output() productAdded = new EventEmitter<any>(); 
   @Input() productToEdit!: ConceptInterface; 
-  
+    buscar1 = new Subject<string>();
 
   ngOnInit(): void {
     this.susb();
     this.susb2();
+    this.buscar1.pipe(
+                  debounceTime(500),
+                ).subscribe((query: string) => {
+                  this.Buscar(query);
+                });
+
   }
+  showLoader = false;
+  filteredConcepto: ProductInterface[] = [];
+
+  onInput(event: any): void {
+    const query = (event.target.value || '').trim().toLowerCase();
+    console.log('Buscando pais:', query);
+    this.buscar1.next(query);
+  }
+private Buscar(query:string):void{
+    const control = this.formConcepts.get('product_service_code');
+    if (!control) return;
+    if (query.length === 0) {
+      control.setErrors(null);
+      
+      if (control.hasValidator(Validators.required)) {
+        control.setValidators([Validators.required]);
+      }
+      control.updateValueAndValidity();
+      this.filteredConcepto = [];
+      this.showLoader = false;
+      return;
+    }
+    if (query.length < 2) {
+      control.setErrors({ notFound: true });
+      this.filteredConcepto = [];
+      this.showLoader = false;
+      return;
+    }
+    this.showLoader = true;
+    this.conceptService.getAllConceptos(query).subscribe({
+          next: (response: ApiResponseConceptos) => {
+            console.log('Respuesta de la API:', response);
+            this.filteredConcepto = response.data || [];
+            console.log('Productos obtenidos:', this.filteredConcepto);
+    
+            const exactMatch = this.filteredConcepto.some(producto =>
+              producto.internal_key.toString().toLowerCase() === query ||
+              producto.identifier_number.toLowerCase() === query
+            );
+    
+            if (!exactMatch) {
+              control.setErrors({ notFound: true });
+              this.limpiarCampos();
+            } else {
+              control.setErrors(null);
+            }
+    
+            this.showLoader = false;
+          },
+          error: (err) => {
+            console.error('Error en la búsqueda de productos:', err);
+            this.showLoader = false;
+          }
+        });
+  }
+  private limpiarCampos(): void {
+    this.formConcepts.get('name_product')?.setValue('');
+    this.formConcepts.get('unit_value')?.setValue('');
+    this.formConcepts.get('unit_description')?.setValue('');
+    this.formConcepts.get('identifier_number')?.setValue('');
+    this.formConcepts.get('description')?.setValue('');
+    this.formConcepts.get('quantity')?.setValue(0);
+    this.formConcepts.get('unit_price')?.setValue(0);
+    this.claveConcepto = '';
+  
+  }
+  
+  selectedIndex: number = -1;
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown') {
+      if (this.selectedIndex < this.filteredConcepto.length - 1) {
+        this.selectedIndex++;
+      }
+      event.preventDefault();
+    } else if (event.key === 'ArrowUp') {
+      if (this.selectedIndex > 0) {
+        this.selectedIndex--;
+      }
+      event.preventDefault();
+    } else if (event.key === 'Enter') {
+      if (this.selectedIndex >= 0) {
+        this.selectConcepto(this.filteredConcepto[this.selectedIndex]);
+
+
+
+      }
+    }
+  }
+  claveConcepto: string = '';
+
+
+
+
+  selectConcepto(conceptos: ProductInterface): void {
+    const description = conceptos.description ?? ''; 
+    const descriptionUnit = conceptos.unit_description ?? ''; 
+
+
+    this.claveConcepto = conceptos.internal_key;
+    this.formConcepts.get('product_service_code')?.setValue(conceptos.internal_key.toString());
+    this.formConcepts.get('name_product')?.setValue(conceptos.product_key.toString());
+    this.formConcepts.get('unit_value')?.setValue(conceptos.unit.toString());
+    this.formConcepts.get('description')?.setValue(description);
+    this.formConcepts.get('quantity')?.setValue(conceptos.quantity);
+    this.formConcepts.get('unit_price')?.setValue(conceptos.unit_price);
+    this.formConcepts.get('identifier_number')?.setValue(conceptos.identifier_number);
+      if (this.formConcepts.get('unit_description')) {
+      this.formConcepts.get('unit_description')?.setValue(descriptionUnit);
+    }
+    this.filteredConcepto = [];
+    this.selectedIndex = -1;
+
+    this.formConcepts.get('product_service_code')?.setErrors(null);
+    const inputElement = document.getElementById('product_service_codes') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = this.claveConcepto;
+    }
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+    if (!targetElement.closest('#product_service_code')) {
+      this.filteredConcepto = [];
+    }
+  }
+
 
   susb(){
     ['quantity', 'unit_price', 'discount'].forEach(field => {

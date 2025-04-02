@@ -25,7 +25,7 @@ export class IngresoComponent implements OnInit {
   private seriesService = inject(SeriesService);
   private customerService = inject(CustomerService);
   private relatedsService = inject(RelatedsService);
-
+ 
   listaCfdi = LISTADOUSOCFDI;
   formaPagoForm = this.formaPagoService.getFormFormaPago();
   relacionForm = this.relatedsService.getFormRelateds();
@@ -54,28 +54,12 @@ export class IngresoComponent implements OnInit {
     concepts: this.conceptsService.getProductosFormArray(),
   });
 
-  // private filterMap = {
-  //   series: (item: any, query: string) => item.serie.toLowerCase().includes(query) || item.folio.toString().includes(query),
-  //   receptors: (item: any, query: string) => item.name.toLowerCase().includes(query),
-  //   categorias: (item: any, query: string) => item.categoria.toLowerCase().includes(query)
-  // };
 
-  // onInput(event: any, listType: keyof typeof this.filterMap): void {
-  //   const query = event.target.value.toLowerCase();
-  //   if (query.length >= 2) {  
-  //     this.filteredSeries = this.listSeries.filter((listSeries) =>
-  //       listSeries.serie.toLowerCase().includes(query) || listSeries.folio.toString().includes(query)
-  //     );
-  //   } else {
-  //     this.filteredSeries = []; 
-  //   }
-  // }
   ngOnInit(): void {
     console.log(this.listaCfdi);
     this.loadSerie();
     this.loadReceptor();
 
-   
   }
 
 
@@ -278,6 +262,8 @@ export class IngresoComponent implements OnInit {
     }
     console.log(this.formIngreso.value);
   }
+
+
 
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.formIngreso, field);

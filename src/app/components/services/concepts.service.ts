@@ -103,6 +103,10 @@ export class ConceptsService {
   getConcept() {
     return this.concepto;
   }
+  getConcepts(): productInterface[] {
+    return this.products();
+  }
+  
 
   calculateTotals() {
     let subtotal = new Decimal(0.0);

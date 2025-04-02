@@ -38,6 +38,12 @@ export interface ProductInterface {
     error: boolean;
     data: catproducto[];  
   }
+  export interface ApiResponseConceptos {
+    message: string;
+    statusCode: number;
+    error: boolean;
+    data: ProductInterface[];  
+  }
   export interface catUnidad {
     c_claveunidad: string;
     nombre: string;

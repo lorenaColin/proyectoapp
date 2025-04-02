@@ -72,27 +72,65 @@
 
     <form [formGroup]="formConcepts" (submit)="onSubmit()">
         <div class="m-1 p-1">
-            <pre>{{ formConcepts.value | json}}</pre>
+            <!-- <pre>{{ formConcepts.value | json}}</pre> -->
             <div class="grid grid-cols-12 gap-2">
-                <div class="col-span-12 sm:col-span-12 md:col-span-6">
-                    <label class="block form-label">Código:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control"
-                        formControlName="product_service_code" />
-                    <span *ngIf="isValidField('product_service_code')" class="text-[#EE312A]">
+            
+                <div  class="col-span-6 relative">
+                    <label for="product_service_codes" class="form-label text-[.875rem] text-black">Codigo:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="product_service_codes" id="residenciaFiscalFiguras"
+                            formControlName="product_service_code" oninput="this.value = this.value.toUpperCase();"
+                            [value]="claveConcepto" (input)="onInput($event)" (keydown)="onKeyDown($event)"
+                            [ngClass]="{'is-invalid': formConcepts.get('product_service_code')?.hasError('notFound') && formConcepts.get('product_service_code')?.touched}">
+        
+                    </div>
+        
+                    <span *ngIf="formConcepts.get('product_service_code')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                        Este código de producto no se encuentra en el catálogo.
+                    </span>
+                    <span *ngIf="isValidField('product_service_code')" class="text-[#EE312A] text-sm">
                         {{ getFieldError('product_service_code') }}
                     </span>
+        
+                    <ul *ngIf="filteredConcepto.length > 0" class="absolute rounded-lg mt-2 w-full">
+                        <li *ngFor="let conceptos of filteredConcepto; let i = index" (click)="selectConcepto(conceptos)"
+                            [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                            {{ conceptos.identifier_number }} - {{ conceptos.internal_key }}
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Producto/Servicio:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product"/>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product" readonly />
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Unidad:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value"/>
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value" readonly />
+                </div>
+                <div class="col-span-6">
+                    <label for="unit_description" class=" form-label text-[.875rem] block text-sm font-medium">Descripción de
+                        Unidad:</label>
+                    <input type="text" class="form-control" id="unit_description" name="unit_description" 
+                        formControlName="unit_description"  />
+                    @if (isValidField('unit_description')) {
+                    <span class="text-[#EE312A]">
+                        {{ getFieldError("unit_description") }}
+                    </span>
+        
+                    }
+                </div>
+                <div class="col-span-6">
+                    <label for="identifier_number" class="block text-sm font-medium">Numero de Identificación:</label>
+                    <input id="identifier_number" formControlName="identifier_number"
+                        oninput="this.value = this.value.toUpperCase(); readonly"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" />
+                    <span *ngIf="isValidField('identifier_number')" class="text-[#EE312A]">
+                        {{ getFieldError('identifier_number') }}
+                    </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-12">
                     <label class="block form-label">Descripción:</label>
-                    <textarea class="border px-4 py-2 w-full" rows="4" formControlName="description"></textarea>
+                    <textarea class="border px-4 py-2 w-full" rows="3" formControlName="description"></textarea>
                     <span *ngIf="isValidField('description')" class="text-[#EE312A]">
                         {{ getFieldError('description') }}
                     </span>
@@ -228,4 +266,7 @@
         </button>
     </div>
     }
+</div>
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
 </div>

@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Observable } from 'rxjs';
 import { CompanyListResponseInterface, CompanyInterface, CompanyResponseInterface } from '../interfaces/company.interface';
-import { ApiResponseProducto, ApiResponseUnidad, ProductInterface, ProductListResponseInterface, ProductResponseInterface } from '../interfaces/producto.interface';
+import { ApiResponseConceptos, ApiResponseProducto, ApiResponseUnidad, ProductInterface, ProductListResponseInterface, ProductResponseInterface } from '../interfaces/producto.interface';
 
 @Injectable({
   providedIn: 'any'
@@ -14,6 +14,8 @@ export class productoServicio {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/products`;
   private catproductApiUrl = `${environment.apiUrl}/catProductos`;
+  private ConceptosApiUrl = `${environment.apiUrl}/conceptos`;
+
   private catunidadApiUrl = `${environment.apiUrl}/catUnidad`;
 
   
@@ -40,6 +42,10 @@ export class productoServicio {
   getAllCatProducto(query: string): Observable<ApiResponseProducto> {
     const url = `${this.catproductApiUrl}?termino=${query}`;
     return this.http.get<ApiResponseProducto>(url);
+  }
+  getAllConceptos(query: string): Observable<ApiResponseConceptos> {
+    const url = `${this.ConceptosApiUrl}?termino=${query}`;
+    return this.http.get<ApiResponseConceptos>(url);
   }
   
   // getAllCatUnidad(): Observable<ApiResponseUnidad> {
