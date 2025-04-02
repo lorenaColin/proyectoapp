@@ -179,9 +179,10 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
       }
     }
     let data: any  = this.formConcepts.value;
-    console
+    
     this.conceptsService.products.update(value =>[...value, data]);
     this.conceptsService.calculateTotals();
+    this.conceptsService.setDataForm();
     this.formConceptsReset();
   }
 
@@ -231,10 +232,8 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
 
 
     let cantidadBase = parseFloat(new Decimal(this.utilsService.decimales(cantidad.toString())).toString());
-    console.log(new Decimal(cantidadBase).mul(new Decimal(this.utilsService.decimales(unit_price.toString()))).toString())
     let valorUnitario = parseFloat(new Decimal(cantidadBase).mul(new Decimal(this.utilsService.decimales(unit_price.toString()))).toString());
     let base = parseFloat((new Decimal(valorUnitario).sub(descuento.toString())).toString());
-    console.log(cantidadBase, valorUnitario, base)
     let trasladosTotal = new Decimal(0);
     let retencionesTotal = new Decimal(0);
 

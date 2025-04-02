@@ -35,7 +35,7 @@ export class TrasladoComponent {
     // lugar_expedicion: '42501', ??
     ...this.totalsForm.controls,
     // subtotal: this.totalsService.getFormTotals().get('subtotal')?.value(6.200),
-    concepts: this.conceptsService.getProductosFormArray(),
+    // concepts: this.conceptsService.getProductosFormArray(),
   });
 
   agregarCartaP(event: Event) {

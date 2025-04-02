@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LISTADORFCSGENERICOS, LISTADOREGIMEN, LISTADOFORMAPAGO, TASAOCUOTA } from '../utils/sat';
-import { FormaPagoInterface,  RegimenInterface, tasaOCuotaInterface } from '../interfaces/shared.interface';
+import { fechaInterface, FormaPagoInterface,  RegimenInterface, tasaOCuotaInterface } from '../interfaces/shared.interface';
+import moment from 'moment';
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +25,12 @@ export class UtilsService {
 
     getTasaOcuota(impuesto:string): tasaOCuotaInterface[]{
         return TASAOCUOTA.filter(i => i.impuesto === impuesto);
+    }
+    
+    getDates(): fechaInterface[] {
+        let listadoFechas: fechaInterface[] = [{fecha: moment().format('YYYY-MM-DD')}];
+        [1,2,3].forEach((dia:number) => listadoFechas.push({fecha: moment().subtract(dia, 'days').format('YYYY-MM-DD')}));
+        return listadoFechas;
     }
 
     decimales(valor:string): number{

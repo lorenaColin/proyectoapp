@@ -72,7 +72,7 @@
 
     <form [formGroup]="formConcepts" (submit)="onSubmit()">
         <div class="m-1 p-1">
-            <pre>{{ formConcepts.value | json}}</pre>
+            <!-- <pre>{{ formConcepts.value | json}}</pre> -->
             <div class="grid grid-cols-12 gap-2">
                 <div class="col-span-12 sm:col-span-12 md:col-span-6">
                     <label class="block form-label">Código:</label>
@@ -120,15 +120,19 @@
                     <label class="block form-label">Descuento %:</label>
                     <input type="number" class="border px-4 py-2 w-full form-control" formControlName="discount" />
                 </div>
+                }
+
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="form-label" for="objeto">ObjetoImp: </label>
                     <select class="border px-4 py-2 w-full form-control" formControlName="tax_object">
                         <option value="01">No objeto de impuesto</option>
+                        @if (typeProof !== 'T') {
                         <option value="02">Sí objeto de impuesto</option>
                         <option value="03">Sí objeto de impuesto y no oblig</option>
+                        }
                     </select>
                 </div>
-                }
+                
             </div>
 
             @if (isTax) {
