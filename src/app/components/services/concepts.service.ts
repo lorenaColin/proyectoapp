@@ -30,10 +30,7 @@ export class ConceptsService {
   }
 
   setDataForm(){
-    console.log(this.products())
-    console.log(this.formulario.value)
     this.formulario.patchValue({concepts: this.products()});
-    console.log(this.formulario.value)
   }
   
 
@@ -58,15 +55,15 @@ export class ConceptsService {
     let total = new Decimal(0.0);
 
     this.products().map((element) => {
-      let { base, discount, traslados, retenidos } = element;
+      let { base, descuento, traslados, retenciones } = element;
 
       subtotal = new Decimal(new Decimal(subtotal).toString()).add(
         new Decimal(base)
       );
-      if(discount !== null){
-        descuento = new Decimal(new Decimal(descuento).toString()).add(
-          new Decimal(discount)
-        );
+      if(descuento !== null){
+        // descuento = Parsnew Decimal(new Decimal(descuento).toString()).add(
+        //   new Decimal(descuento)
+        // );
       }
 
       traslados.forEach(({ importe }) => {
@@ -75,7 +72,7 @@ export class ConceptsService {
         );
       });
 
-      retenidos.forEach(({ importe }) => {
+      retenciones.forEach(({ importe }) => {
         impuestoRetenidos = new Decimal(
           new Decimal(impuestoRetenidos).toString()
         ).add(new Decimal(importe));

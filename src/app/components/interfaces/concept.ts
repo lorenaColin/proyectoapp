@@ -66,22 +66,31 @@ export interface ListConceptInterface {
     predial?: string;
 }
 export interface productInterface{
-    id?: number;
-    name_product: string;
-    product_service_code: string;
-    description: string;
-    quantity: number;
-    unit_value: string;
-    unit_price: number;
-    unit_key: string;
-    discount: number;
+    id: number;
+    claveInterna: string;
+    claveProdServ: string;
+    noIdentificacion: string;
+    cantidad: number;
+    descripcion: string;
+    claveUnidad: string;
+    unidad: string;
     valorUnitario: number;
-    base: number;
+    importe: number;
+    descuento: string;
+    objetoImp: string;
+    base: string;
     total_product: number;
-    tax_object: string;
-    traslados: any[];
-    retenidos: any[];
-  } 
+    traslados: impuestosRetencionesInterface[];
+    retenciones: impuestosRetencionesInterface[];
+  }
+  export interface impuestosRetencionesInterface {
+    base:        number;
+    descripcion: string;
+    impuesto:    string;
+    tasaOCuota:  string;
+    importe:     number;
+}
+
   export interface ApiResponseConcepto {
     message: string;
     statusCode: number;

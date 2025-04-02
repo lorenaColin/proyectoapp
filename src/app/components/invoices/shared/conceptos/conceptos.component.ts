@@ -32,12 +32,12 @@ export class ConceptosComponent implements OnInit {
     let productosTemp = this.conceptsService.products().filter(p => p.id !== id);
     this.conceptsService.products.set(productosTemp);
     this.conceptsService.calculateTotals();
+    this.conceptsService.setDataForm();
   }
 
   editRow(id: number): void {
     let producto = this.conceptsService.products().find(p => p.id === id) as productInterface;
     this.conceptsService.setConcept(producto);
-    console.log(this.conceptsService.getConcept());
     this.removeRow(id);
   }
 

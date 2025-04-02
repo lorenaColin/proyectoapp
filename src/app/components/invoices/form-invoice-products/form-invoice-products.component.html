@@ -70,26 +70,26 @@
         </button>
     </div> -->
 
-    <form [formGroup]="formConcepts" (submit)="onSubmit()">
+    <form [formGroup]="formConcepts" autocomplete="off">
         <div class="m-1 p-1">
             <!-- <pre>{{ formConcepts.value | json}}</pre> -->
             <div class="grid grid-cols-12 gap-2">
             
                 <div  class="col-span-6 relative">
-                    <label for="product_service_codes" class="form-label text-[.875rem] text-black">Codigo:</label>
+                    <label for="claveInterna" class="form-label text-[.875rem] text-black">Codigo:</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="product_service_codes" id="residenciaFiscalFiguras"
-                            formControlName="product_service_code" oninput="this.value = this.value.toUpperCase();"
+                        <input type="text" class="form-control" name="claveInterna" id="claveInterna"
+                            formControlName="claveInterna" oninput="this.value = this.value.toUpperCase();"
                             [value]="claveConcepto" (input)="onInput($event)" (keydown)="onKeyDown($event)"
-                            [ngClass]="{'is-invalid': formConcepts.get('product_service_code')?.hasError('notFound') && formConcepts.get('product_service_code')?.touched}">
+                            [ngClass]="{'is-invalid': formConcepts.get('claveInterna')?.hasError('notFound') && formConcepts.get('claveInterna')?.touched}" autocomplete="off">
         
                     </div>
         
-                    <span *ngIf="formConcepts.get('product_service_code')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                    <span *ngIf="formConcepts.get('claveInterna')?.hasError('notFound') " class="text-[#EE312A] text-sm">
                         Este código de producto no se encuentra en el catálogo.
                     </span>
-                    <span *ngIf="isValidField('product_service_code')" class="text-[#EE312A] text-sm">
-                        {{ getFieldError('product_service_code') }}
+                    <span *ngIf="isValidField('claveInterna')" class="text-[#EE312A] text-sm">
+                        {{ getFieldError('claveInterna') }}
                     </span>
         
                     <ul *ngIf="filteredConcepto.length > 0" class="absolute rounded-lg mt-2 w-full">
@@ -101,54 +101,51 @@
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Producto/Servicio:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="name_product" readonly />
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="claveProdServ" readonly />
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Unidad:</label>
-                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="unit_value" readonly />
+                    <input type="text" class="border px-4 py-2 w-full form-control" formControlName="claveUnidad" readonly />
                 </div>
                 <div class="col-span-6">
-                    <label for="unit_description" class=" form-label text-[.875rem] block text-sm font-medium">Descripción de
-                        Unidad:</label>
-                    <input type="text" class="form-control" id="unit_description" name="unit_description" 
-                        formControlName="unit_description"  />
-                    @if (isValidField('unit_description')) {
+                    <label for="unidad" class=" form-label block text-sm font-medium">Descripción de Unidad:</label>
+                    <input type="text" class="form-control" id="unidad" name="unidad" formControlName="unidad" maxlength="20" autocomplete="off"/>
+                    @if (isValidField('unidad')) {
                     <span class="text-[#EE312A]">
-                        {{ getFieldError("unit_description") }}
+                        {{ getFieldError("unidad") }}
                     </span>
         
                     }
                 </div>
                 <div class="col-span-6">
-                    <label for="identifier_number" class="block text-sm font-medium">Numero de Identificación:</label>
-                    <input id="identifier_number" formControlName="identifier_number"
-                        oninput="this.value = this.value.toUpperCase(); readonly"
-                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" />
-                    <span *ngIf="isValidField('identifier_number')" class="text-[#EE312A]">
-                        {{ getFieldError('identifier_number') }}
+                    <label for="noIdentificacion" class="block text-sm font-medium">Num. de Identificación:</label>
+                    <input id="noIdentificacion" formControlName="noIdentificacion" maxlength="100"
+                        class="mt-1 block w-full rounded-md focus:border-blue-500 sm:text-sm" autocomplete="off"/>
+                    <span *ngIf="isValidField('noIdentificacion')" class="text-[#EE312A]">
+                        {{ getFieldError('noIdentificacion') }}
                     </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-12">
                     <label class="block form-label">Descripción:</label>
-                    <textarea class="border px-4 py-2 w-full" rows="3" formControlName="description"></textarea>
-                    <span *ngIf="isValidField('description')" class="text-[#EE312A]">
-                        {{ getFieldError('description') }}
+                    <textarea class="border px-4 py-2 w-full" rows="3" formControlName="descripcion" autocomplete="off"></textarea>
+                    <span *ngIf="isValidField('descripcion')" class="text-[#EE312A]">
+                        {{ getFieldError('descripcion') }}
                     </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Cantidad:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="quantity"
-                        step="0.000001" />
-                    <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
-                        {{ getFieldError('quantity') }}
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="cantidad"
+                        step="0.000001" autocomplete="off"/>
+                    <span *ngIf="isValidField('cantidad')" class="text-[#EE312A]">
+                        {{ getFieldError('cantidad') }}
                     </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Precio:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price"
-                        step="0.000001" />
-                    <span *ngIf="isValidField('unit_price')" class="text-[#EE312A]">
-                        {{ getFieldError('unit_price') }}
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="valorUnitario"
+                        step="0.000001" autocomplete="off"/>
+                    <span *ngIf="isValidField('valorUnitario')" class="text-[#EE312A]">
+                        {{ getFieldError('valorUnitario') }}
                     </span>
                 </div>
 
@@ -156,13 +153,13 @@
                 @if (typeProof !== 'T') {
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Descuento %:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="discount" />
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="descuento" autocomplete="off"/>
                 </div>
                 }
 
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="form-label" for="objeto">ObjetoImp: </label>
-                    <select class="border px-4 py-2 w-full form-control" formControlName="tax_object">
+                    <select class="border px-4 py-2 w-full form-control" formControlName="objetoImp">
                         <option value="01">No objeto de impuesto</option>
                         @if (typeProof !== 'T') {
                         <option value="02">Sí objeto de impuesto</option>
@@ -215,15 +212,15 @@
                 </div>
                 }
             </div>
-            <div class="grid grid-cols-12 gap-4" formArrayName="retenidos">
-                @for (retenido of retenidos.controls; track i; let i = $index) {
+            <div class="grid grid-cols-12 gap-4" formArrayName="retenciones">
+                @for (retencion of retenciones.controls; track i; let i = $index) {
                 <div class="col-span-4 sm:col-span-12 md:col-span-4" [formGroupName]="i">
-                    <label class="form-label text-[.875rem] text-black" for="retenidos{{ i }}">{{
-                        retenido.get('descripcion')?.value }}:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="tasaOCuota" (change)="calculate()"/>
-                    @if (isValidField2('retenidos', i, 'tasaOCuota')) {
+                    <label class="form-label text-[.875rem] text-black" for="retenciones{{ i }}">{{
+                        retencion.get('descripcion')?.value }}:</label>
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="tasaOCuota" (change)="calculate()" autocomplete="off"/>
+                    @if (isValidField2('retenciones', i, 'tasaOCuota')) {
                     <span class="text-[#EE312A]">
-                        {{ getFieldError2('retenidos', i, 'tasaOCuota') }}
+                        {{ getFieldError2('retenciones', i, 'tasaOCuota') }}
                     </span>
                     }
                 </div>
@@ -250,7 +247,7 @@
                 </button>
             </div>
             <div>
-                <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
+                <button type="button" class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover" (click)="addProduct()">
                     {{ tittleButton }}
                 </button>
             </div>
