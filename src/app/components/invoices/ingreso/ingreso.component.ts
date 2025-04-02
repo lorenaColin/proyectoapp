@@ -9,7 +9,11 @@ import { SerietInterface } from '../../interfaces/series.interface';
 import { CustomersInterface } from '../../interfaces/customers.interface';
 import { CustomerService } from '../../services/customer.service';
 import { RelatedsService } from '../../services/relateds.service';
-import { LISTADOUSOCFDI } from '../../../shared/utils/sat';
+import { LISTADOFORMAPAGO, LISTADOMETODOPAGO, LISTADOUSOCFDI } from '../../../shared/utils/sat';
+import { UtilsService } from '../../../shared/services/utils.service';
+import { FormaPagoInterface, MetodoPagoInterface } from '../../../shared/interfaces/shared.interface';
+import { InvoicesService } from '../../services/invoices.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-ingreso',
@@ -26,6 +30,13 @@ export class IngresoComponent implements OnInit {
   private customerService = inject(CustomerService);
   private relatedsService = inject(RelatedsService);
  
+  private utilsService = inject(UtilsService);
+  private invoicesService = inject(InvoicesService);
+  private authService = inject(AuthService);
+
+  listadoFechas = this.utilsService.getDates();
+  listadoMetodoPago: MetodoPagoInterface[]= LISTADOMETODOPAGO;
+  listadoFormaPago: FormaPagoInterface[] = [];
   listaCfdi = LISTADOUSOCFDI;
   formaPagoForm = this.formaPagoService.getFormFormaPago();
   relacionForm = this.relatedsService.getFormRelateds();
@@ -39,19 +50,27 @@ export class IngresoComponent implements OnInit {
   filteredReceptors: CustomersInterface[] = [];
   selectedIndex: number = -1;
 
-  constructor() { }
+  constructor() {
+    this.totalsService.setForm(this.formIngreso);
+    this.conceptsService.setForm(this.formIngreso);
+  }
+
 
   formIngreso: FormGroup = this.fb.group({
-    invoice_type: ['I', [Validators.required]],
-    serie_folio: ['', [Validators.required]],
+    invoice_type: ['I'],
+    serie_folio: [''],
     fecha: ['', [Validators.required]],
-
-    receptor: ['', [Validators.required]],
-    uso_cfdi: ['', [Validators.required]],
-    ...this.formaPagoForm.controls,
+    receptor: ['1', [Validators.required]],
+    uso_cfdi: ['1', [Validators.required]],
+    metodo_pago: ['1', [Validators.required]],
+    forma_pago: ['1', [Validators.required]],
+    moneda: ['1', [Validators.required]],
+    condiciones: ['1', [Validators.required]],
+    tipo_cambio: ['1', [Validators.required]],
     ...this.totalsForm.controls,
     relaciones: this.relacionForm.get('relaciones') as FormArray,
-    concepts: this.conceptsService.getProductosFormArray(),
+    concepts: [this.fb.array([])],
+    // totals: this.totalsService.getFormTotals().controls,
   });
 
 
@@ -59,7 +78,39 @@ export class IngresoComponent implements OnInit {
     console.log(this.listaCfdi);
     this.loadSerie();
     this.loadReceptor();
+    
+  }
 
+  onSubmitIngreso() {
+    console.log('Ingreso');
+    console.log(this.formIngreso.value);
+    if (this.formIngreso.invalid) {
+      this.formIngreso.markAllAsTouched();
+      return;
+    }
+    // let { concepts } = this.formIngreso.value;
+    // if(concepts.length === 0){
+    //   console.log("debes agregar un concepto")
+    //   return
+    // }
+    const uuidCompany = this.authService.getUuid();
+    let formulario = {
+      ...this.formIngreso.value,
+      uuid_company: uuidCompany || '',
+    }
+    this.invoicesService.createInvoice(formulario).subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+      }
+    )
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.formIngreso, field);
+  }
+
+  isValidField(field: string): boolean | null {
+    return this.validatorsService.isValidField(this.formIngreso, field);
   }
 
 
@@ -235,6 +286,13 @@ export class IngresoComponent implements OnInit {
       }
     }
   }
+
+  searchFormaPago(){
+    const { metodo_pago:metodoPago } = this.formIngreso.value;
+    this.listadoFormaPago = [];
+    if(metodoPago === "") return;
+    this.listadoFormaPago = LISTADOFORMAPAGO.filter(forma => forma.metodoPago === metodoPago);
+  }
   
 
  
@@ -254,23 +312,6 @@ export class IngresoComponent implements OnInit {
     console.log('Checkbox is:', isChecked ? 'Checked' : 'Unchecked');
   }
 
-  onSubmitIngreso() {
-    console.log('Ingreso');
-    if (this.formIngreso.invalid) {
-      this.formIngreso.markAllAsTouched();
-      return;
-    }
-    console.log(this.formIngreso.value);
-  }
 
-
-
-  getFieldError(field: string): string | null {
-    return this.validatorsService.getFieldError(this.formIngreso, field);
-  }
-
-  isValidField(field: string): boolean | null {
-    return this.validatorsService.isValidField(this.formIngreso, field);
-  }
 
 }

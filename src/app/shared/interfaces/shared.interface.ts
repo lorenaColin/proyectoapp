@@ -45,3 +45,9 @@ export interface tasaOCuotaInterface {
     impuesto:   string
     tasaOCuota: string;
 }
+
+
+
+export interface fechaInterface {
+    fecha: string;
+}
