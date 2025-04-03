@@ -134,18 +134,18 @@
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Cantidad:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="cantidad"
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="quantity"
                         step="0.000001" autocomplete="off"/>
-                    <span *ngIf="isValidField('cantidad')" class="text-[#EE312A]">
-                        {{ getFieldError('cantidad') }}
+                    <span *ngIf="isValidField('quantity')" class="text-[#EE312A]">
+                        {{ getFieldError('quantity') }}
                     </span>
                 </div>
                 <div class="col-span-12 sm:col-span-12 md:col-span-3">
                     <label class="block form-label">Precio:</label>
-                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="valorUnitario"
+                    <input type="number" class="border px-4 py-2 w-full form-control" formControlName="unit_price"
                         step="0.000001" autocomplete="off"/>
-                    <span *ngIf="isValidField('valorUnitario')" class="text-[#EE312A]">
-                        {{ getFieldError('valorUnitario') }}
+                    <span *ngIf="isValidField('unit_price')" class="text-[#EE312A]">
+                        {{ getFieldError('unit_price') }}
                     </span>
                 </div>
 

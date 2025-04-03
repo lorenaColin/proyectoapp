@@ -1,9 +1,9 @@
 
 
 export interface totalsInterface {
-    subtotal: number;
-    total: number;
-    descuento: number;
-    retenciones: number;
-    traslados: number;
+    subtotal: string;
+    total: string;
+    descuento: string;
+    retenciones: string;
+    traslados: string;
 }

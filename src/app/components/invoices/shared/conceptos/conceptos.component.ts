@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, input, Input, OnChanges, OnInit } from '@angular/core';
 import { ConceptsService } from '../../../services/concepts.service';
 import { ConceptInterface, productInterface } from '../../../interfaces/concept';
 
@@ -11,8 +11,7 @@ export class ConceptosComponent implements OnInit {
   rows: any[] = []; 
   public conceptsService = inject(ConceptsService);
   @Input() typeProof!: string; 
-  @Input() concetpEdit: ConceptInterface = {} as ConceptInterface;
-
+  public idProduct:number = 0;
   ngOnInit(): void {
     console.log('init', this.typeProof);
     console.log(this.conceptsService.products())
@@ -38,6 +37,7 @@ export class ConceptosComponent implements OnInit {
   editRow(id: number): void {
     let producto = this.conceptsService.products().find(p => p.id === id) as productInterface;
     this.conceptsService.setConcept(producto);
+    this.idProduct = id;
     this.removeRow(id);
   }
 
