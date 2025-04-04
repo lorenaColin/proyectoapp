@@ -1,14 +1,13 @@
 export interface ProductInterface {
     id:string
     product_key: string;
-    // descripcion_producto:string;
+    description:string;
     unit: string;
     unit_description?: string;
     unit_price: number;
     quantity: number;
     identifier_number: string;
     internal_key: string;
-    description?: string;
     uuid_company: string;
     status: string;
   }

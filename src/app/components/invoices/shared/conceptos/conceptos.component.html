@@ -23,18 +23,18 @@
         </thead>
         <tbody>
           <tr *ngFor="let row of this.conceptsService.products(); let i = index">
-            <td class="py-2 px-4 border-b text-left">{{ row.product_service_code }}</td>
-            <td class="py-2 px-4 border-b text-left">{{ row.description }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.quantity }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.unit_price }}</td>
+            <td class="py-2 px-4 border-b text-left">{{ row.claveProdServ }}</td>
+            <td class="py-2 px-4 border-b text-left">{{ row.descripcion }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.cantidad }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.valorUnitario }}</td>
 
             @if (typeProof !== 'T') {
-            <td class="py-2 px-4 border-b text-center">{{ row.discount }}</td>
-            <td class="py-2 px-4 border-b text-center">{{ row.tax_object }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.descuento }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.objetoImp }}</td>
             }
 
 
-            <td class="py-2 px-4 border-b text-center">{{ row.tax_object }}</td>
+            <td class="py-2 px-4 border-b text-center">{{ row.importe }}</td>
             <td class="py-2 px-4 border-b text-center">
               <button type="button" aria-label="button" class="ti-btn ti-btn-icon ti-btn-outline-secondary !rounded-full ti-btn-wave me-1" data-hs-overlay="#hs-extralarge-modal3"
                 (click)="editRow(row.id || 0)">
@@ -65,7 +65,7 @@
       <div class="ti-modal-header">
         <h6 class="ti-modal-title">Productos/servicios</h6>
       </div>
-      <app-form-invoice-products [typeProof]="typeProof" />
+      <app-form-invoice-products [typeProof]="typeProof" [idProduct]="idProduct" />
     </div>
   </div>
 </div>

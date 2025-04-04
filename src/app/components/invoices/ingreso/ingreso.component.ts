@@ -61,12 +61,12 @@ export class IngresoComponent implements OnInit {
     serie_folio: [''],
     fecha: ['', [Validators.required]],
     receptor: ['1', [Validators.required]],
-    uso_cfdi: ['1', [Validators.required]],
-    metodo_pago: ['1', [Validators.required]],
-    forma_pago: ['1', [Validators.required]],
-    moneda: ['1', [Validators.required]],
-    condiciones: ['1', [Validators.required]],
-    tipo_cambio: ['1', [Validators.required]],
+    uso_cfdi: ['', [Validators.required]],
+    metodo_pago: ['', [Validators.required]],
+    forma_pago: ['', [Validators.required]],
+    moneda: ['', [Validators.required]],
+    condiciones: ['', []],
+    tipo_cambio: ['', [Validators.required]],
     ...this.totalsForm.controls,
     relaciones: this.relacionForm.get('relaciones') as FormArray,
     concepts: [this.fb.array([])],
@@ -75,15 +75,13 @@ export class IngresoComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.listaCfdi);
     this.loadSerie();
     this.loadReceptor();
     
   }
 
   onSubmitIngreso() {
-    console.log('Ingreso');
-    console.log(this.formIngreso.value);
+    
     if (this.formIngreso.invalid) {
       this.formIngreso.markAllAsTouched();
       return;
@@ -118,7 +116,6 @@ export class IngresoComponent implements OnInit {
 
     this.seriesService.getAllSeries().subscribe((response) => {
       const { error, data } = response;
-      console.log('Datos recibidos:', data);
       (!error) ? this.listSeries = data : '';
     });
   }
@@ -127,7 +124,6 @@ export class IngresoComponent implements OnInit {
 
   onInputReceptorJun(event: any, listType: 'series' | 'receptors'): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Texto ingresado:', query);
   
     const control = this.formIngreso.get(listType === 'series' ? 'serie_folio' : 'receptor');
     if (!control) return;
@@ -210,7 +206,6 @@ export class IngresoComponent implements OnInit {
 
 
   selectSerie(series: any): void {
-    console.log(series);
     this.formIngreso.get('serie_folio')?.setValue(`${series.serie} - ${series.folio}`);
     this.filteredSeries = [];
     this.selectedIndex = -1;
