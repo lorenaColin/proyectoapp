@@ -52,18 +52,16 @@ export class ConceptsService {
     let descuento = new Decimal(0.0);
     let impuestos = new Decimal(0.0);
     let impuestoRetenidos = new Decimal(0.0);
-    let total:number = parseFloat(new Decimal(0.0).toString());
+    // let total:number = parseFloat(new Decimal(0.0).toString());
 
     this.products().map((element) => {
-      let { base, descuento, traslados, retenciones } = element;
+      let { importe, descuento:descuntoTemp, traslados, retenciones } = element;
 
       subtotal = new Decimal(new Decimal(subtotal).toString()).add(
-        new Decimal(base)
+        new Decimal(importe)
       );
-      if(descuento !== null){
-        // descuento = Parsnew Decimal(new Decimal(descuento).toString()).add(
-        //   new Decimal(descuento)
-        // );
+      if(descuntoTemp !== null){
+        descuento = new Decimal(new Decimal(descuento).toString()).add(new Decimal(descuntoTemp));
       }
 
       traslados.forEach(({ importe }) => {

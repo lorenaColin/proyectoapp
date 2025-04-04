@@ -17,7 +17,7 @@ import { ApiResponseConceptos, ApiResponseProducto, ProductInterface } from '../
   templateUrl: './form-invoice-products.component.html',
   styleUrl: './form-invoice-products.component.scss'
 })
-export class FormInvoiceProductsComponent implements OnInit, OnChanges {
+export class FormInvoiceProductsComponent implements OnInit {
 
 
   private fb = inject(FormBuilder);
@@ -65,6 +65,7 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
     unit_price: [0, [Validators.required, Validators.min(this.typeProof !== 'T' ? 0.000001 : 0)]],
     valorUnitario: [''],
     importe: [''],
+    discount: ['',],
     descuento: ['',],
     objetoImp: ['01', Validators.required],
     base: [''],
@@ -87,7 +88,7 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
   
   @Output() productAdded = new EventEmitter<any>(); 
   @Input() productToEdit!: ConceptInterface; 
-    buscar1 = new Subject<string>();
+  buscar1 = new Subject<string>();
 
   ngOnInit(): void {
     this.susb();
@@ -104,7 +105,7 @@ export class FormInvoiceProductsComponent implements OnInit, OnChanges {
 
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Buscando pais:', query);
+    // console.log('Buscando pais:', query);
     this.buscar1.next(query);
   }
 private Buscar(query:string):void{
@@ -130,9 +131,9 @@ private Buscar(query:string):void{
     this.showLoader = true;
     this.productoService.getAllConceptos(query).subscribe({
           next: (response: ApiResponseConceptos) => {
-            console.log('Respuesta de la API:', response);
+            // console.log('Respuesta de la API:', response);
             this.filteredConcepto = response.data || [];
-            console.log('Productos obtenidos:', this.filteredConcepto);
+            // console.log('Productos obtenidos:', this.filteredConcepto);
     
             const exactMatch = this.filteredConcepto.some(producto =>
               producto.internal_key.toString().toLowerCase() === query 
@@ -148,7 +149,7 @@ private Buscar(query:string):void{
             this.showLoader = false;
           },
           error: (err) => {
-            console.error('Error en la búsqueda de productos:', err);
+            // console.error('Error en la búsqueda de productos:', err);
             this.showLoader = false;
           }
         });
@@ -193,7 +194,7 @@ private Buscar(query:string):void{
 
 
   selectConcepto(concepto: ProductInterface): void {
-    console.log(concepto)
+    // console.log(concepto)
     let {
         internal_key: claveInterna, 
         product_key: claveProdServ,  
@@ -220,7 +221,7 @@ private Buscar(query:string):void{
     
     // console.log({producto})
     this.formConcepts.patchValue(producto);
-    console.log(descripcion)
+    // console.log(descripcion)
     // this.formConcepts.get('descripcion')?.setValue(descripcion.toString());
     // this.formConcepts.patchValue({descripcion});
     this.claveConcepto = concepto.internal_key;
@@ -258,7 +259,7 @@ private Buscar(query:string):void{
 
 
   susb(){
-    ['quantity', 'unit_price', 'descuento'].forEach(field => {
+    ['quantity', 'unit_price', 'discount'].forEach(field => {
       const control = this.formConcepts.get(field);
       if (control) {
         control.valueChanges.subscribe((x) => this.calculate());
@@ -271,9 +272,9 @@ private Buscar(query:string):void{
       this.traslados.clear();
       this.retenciones.clear();
       if(value != '02'){
-        console.log(this.daniel)
-        console.log(this.daniel.unsubscribe());
-        console.log(this.daniel)
+        // console.log(this.daniel)
+        // console.log(this.daniel.unsubscribe());
+        // console.log(this.daniel)
 
       }
       if (value === '02') {
@@ -328,31 +329,12 @@ private Buscar(query:string):void{
     });
   }
 
-    
-  ngOnChanges(): void {
-    // console.log(this.idConcept);
-    // this.idConcept = this.productToEdit.idTemp || 0;
-    // if (this.idConcept !== 0) {
-    //   this.tittleButton = 'Actualizar';
-  
-    //   const productData = {
-    //     ...this.productToEdit,
-    //     ...this.productToEdit.traslados,
-    //     ...this.productToEdit.retenciones
-    //   };
-  
-    //   // this.formConcepts.patchValue(productData);
-    //   // console.log(this.productToEdit);
-    // }
-  }
-  
+
   addProduct() {
-    console.log(this.formConcepts.value)
     if (this.formConcepts.invalid) {
       this.formConcepts.markAllAsTouched();
       return;
     }
-    console.log(this.formConcepts.value)
     const { objetoImp, retenciones } = this.formConcepts.value;
     if(objetoImp == '02'){
       let index:number = 0;
@@ -373,7 +355,7 @@ private Buscar(query:string):void{
       }
     }
     let data: any  = this.formConcepts.value;
-    console.log(data)
+    // console.log(data)
     this.conceptsService.products.update(value =>[...value, data]);
     this.conceptsService.calculateTotals();
     this.conceptsService.setDataForm();
@@ -420,8 +402,8 @@ private Buscar(query:string):void{
   calculate(){
     let cantidad = this.formConcepts.get('quantity')!.value?.toString() || '0';
     let valorUnitario = this.formConcepts.get('unit_price')!.value?.toString() || '0';
-    let descuento = '0'
-    // let descuento = this.formConcepts.get('descuento')?.value? || 0;
+    let descuento = this.formConcepts.get('discount')?.value?.toString() || 0
+    // let descuento = this.formConcepts.get('discount')?.value? || 0;
     let objetoImp = this.formConcepts.get('objetoImp')!.value?.toString()  || '0';
     if( Number(cantidad) === 0 || Number(valorUnitario) === 0 ) return;
 
@@ -468,7 +450,7 @@ private Buscar(query:string):void{
     }
     let total_product = parseFloat(parseFloat((new Decimal(importe).sub(descuento).add(new Decimal(trasladosTotal.toString()))).sub(new Decimal(retencionesTotal.toString())).toString()).toFixed(2));
     
-    this.formConcepts.patchValue({total_product, cantidad, valorUnitario, importe, base});
+    this.formConcepts.patchValue({total_product, cantidad, valorUnitario, descuento, importe, base});
     console.log(this.formConcepts.value)
   }
 

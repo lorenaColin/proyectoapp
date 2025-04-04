@@ -128,14 +128,14 @@ export class NavService implements OnDestroy {
     {
       title: 'Comprobantes',
       type: 'sub',
-      active: false,
       selected : false,
+      active: false,
       icon: 'file',
       badgeClass: 'secondary',
       badgeText: 'secondary',
       badgeValue: 'New',
       children: [
-        { path: '/invoices/create-invoice', title: 'CFDI 4.0', type: 'link' },
+        { path: '/invoices/ingreso', title: 'CFDI 4.0', type: 'link' },
         { path: '/invoices/payment', title: 'Recepción de Pago 4.0', type: 'link' },
         { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
         { path: '/invoices/list', title: 'Listar', type: 'link' },
