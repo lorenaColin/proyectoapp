@@ -6,9 +6,9 @@
             {{ myForm.value | json }}
         </pre> -->
         <div class="col-span-3 relative">
-            <label for="descripcionProducto" class="form-label text-[.875rem] text-black">Mercancia:</label>
+            <label for="descripcionMercancia" class="form-label text-[.875rem] text-black">Mercancia:</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="descripcionProducto" id="descripcionProducto"
+                <input type="text" class="form-control" name="descripcionMercancia" id="descripcionMercancia"
                     formControlName="claveProdServCP" [value]="claveProdServDescription" maxlength="8"
                     (input)="onInput($event)" (keydown)="onKeyDown($event)"
                     [ngClass]="{'is-invalid': myForm.get('claveProdServCP')?.hasError('notFound') && myForm.get('claveProdServCP')?.touched}">

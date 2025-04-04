@@ -176,7 +176,7 @@
             @if (isTax) {
 
             <!-- <div class="row" formArrayName="traslados"> -->
-            <div class="grid grid-cols-12 gap-4" formArrayName="traslados">
+            <div class="grid grid-cols-12 gap-4 mt-3" formArrayName="traslados">
                 @for (traslado of traslados.controls; track i; let i = $index) {
 
                 <div class="col-span-12 sm:col-span-12 md:col-span-4" [formGroupName]="i">
@@ -215,7 +215,7 @@
                 </div>
                 }
             </div>
-            <div class="grid grid-cols-12 gap-4" formArrayName="retenidos">
+            <div class="grid grid-cols-12 gap-4 mt-3" formArrayName="retenidos">
                 @for (retenido of retenidos.controls; track i; let i = $index) {
                 <div class="col-span-4 sm:col-span-12 md:col-span-4" [formGroupName]="i">
                     <label class="form-label text-[.875rem] text-black" for="retenidos{{ i }}">{{

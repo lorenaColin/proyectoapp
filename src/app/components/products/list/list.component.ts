@@ -47,11 +47,7 @@ export class ListComponent {
   
 
   }
-  
 
-  
-
-  
   editCustomer(id: string): void {
     this.showLoader = true;
 

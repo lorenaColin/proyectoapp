@@ -51,11 +51,24 @@ export class FormUbicacionesComponent {
         ...this.ubicacionHijo,
         domicilio: this.isDomicilioChecked, 
       });
+      this.clavepaisDescription = '';
+      if (this.ubicacionHijo && this.ubicacionHijo.id !== 0 && this.ubicacionHijo.pais)  {
+        this.obtenerDescripcionPais(this.ubicacionHijo.pais);
+      }
+      if (this.ubicacionHijo.estado && this.ubicacionHijo.municipio && this.ubicacionHijo.pais === 'MEX') {
+        const estado = this.colonias.find(colonia => colonia.valor === this.ubicacionHijo.estado);
+        const municipio = this.localidades.find(localidad => localidad.valor === this.ubicacionHijo.municipio);
+        this.estadoDescripcion = estado ? estado.descripcion : this.ubicacionHijo.estado;
+        this.municipioDescripcion = municipio ? municipio.descripcion : this.ubicacionHijo.municipio;
+      } else {
+        this.estadoDescripcion = '';
+        this.municipioDescripcion = '';
+      }
+
     }
   
     this.onValueChanges();
   
-    // console.log('myForm after patchValue:', this.myForm.value);
   
     if (this.myForm.get('pais')) {
       this.myForm.get('pais')?.valueChanges.subscribe(pais => {
@@ -79,8 +92,12 @@ export class FormUbicacionesComponent {
   
           // console.log('Valores actuales del formulario:', this.myForm.value);
         }
+        if (pais === 'MEX') {
+          this.onCodigoPostalBlur(); // Llamada para obtener las descripciones de estado y municipio
+        }
       });
     }
+    
   }
   
   get currentUbicacion(): ubicacionInterface {
@@ -89,7 +106,28 @@ export class FormUbicacionesComponent {
     return ubicacion;
   }
 
-
+  obtenerDescripcionPais(clave: string): void {
+    if (!clave) {
+      this.clavepaisDescription = '';
+      return;
+    }
+  
+    this.ubicaciones.getAllPais(clave).subscribe({
+      next: (response: ApiResponsepais) => {
+        const paisEncontrado = response.data.find(p => p.c_pais.toString() === clave);
+        if (paisEncontrado) {
+          this.clavepaisDescription = paisEncontrado.descripcion;
+          this.myForm.patchValue({ pais: clave });
+        } else {
+          this.clavepaisDescription = '';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener la descripción del país:', err);
+        this.clavepaisDescription = '';
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.myForm.valid) {

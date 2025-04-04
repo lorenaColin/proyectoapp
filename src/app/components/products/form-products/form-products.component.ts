@@ -28,12 +28,10 @@ export class FormProductsComponent {
   idProducto: string = '';
   listadoRegimen: RegimenInterface[] = [];
   private validatorsService = inject(ValidatorsService);
-  // private prodServ = inject(prodServ)
   private productoservicio = inject(productoServicio)
 
   private authService = inject(AuthService);
-  // filteredClavProdServ$: Observable<any[]> = new Observable();
-  // filteredClavUnidad$: Observable<any[]> = new Observable();
+ 
 
   constructor(private cat_Clave_Unidad: cat_Clave_Unidad
 
@@ -46,25 +44,91 @@ export class FormProductsComponent {
     unit: ['', [Validators.required, Validators.minLength(2)]],
     unit_description: ['', [Validators.minLength(1), Validators.maxLength(20)]],
     unit_price: ['',[Validators.pattern(DECIMALESPRODU)]],
-    identifier_number: ['', [Validators.required, Validators.maxLength(100), Validators.minLength(5) ,Validators.maxLength(20)]],
+    identifier_number: ['', [Validators.required, Validators.maxLength(100), Validators.minLength(1)]],
     internal_key: ['', [Validators.required,Validators.maxLength(20),Validators.minLength(5)]],
     description: ['', [Validators.required]],
     quantity: ['', [Validators.required,Validators.pattern(DECIMALESPRODU)]],
     status: [true],
   });
+  // ngOnChanges(): void {
+  //   if (this.productoHijo) {
+  //     this.idProducto = this.productoHijo?.id || '0';
+  //     this.buttonTitle = this.idProducto !== '0' ? 'Actualizar' : 'Crear';
+  //     this.myForm.patchValue({
+  //       ...this.productoHijo,
+  //       status: this.productoHijo.status ?? true,
+  //     });
+  //   } else {
+  //     this.myForm.reset({ status: true });
+  //   }
+  // }
   ngOnChanges(): void {
     if (this.productoHijo) {
       this.idProducto = this.productoHijo?.id || '0';
       this.buttonTitle = this.idProducto !== '0' ? 'Actualizar' : 'Crear';
+  
       this.myForm.patchValue({
         ...this.productoHijo,
         status: this.productoHijo.status ?? true,
       });
+      this.claveProdServDescription = '';
+      this.claveProdServUnidad = '';
+      if (this.idProducto !== '0' && this.productoHijo.product_key) {
+        this.obtenerDescripcionProducto(this.productoHijo.product_key);
+      }
+      if (this.productoHijo.unit) {
+        this.obtenerDescripcionUnidad(this.productoHijo.unit);
+      }
+      
     } else {
       this.myForm.reset({ status: true });
+      this.claveProdServDescription = ''; 
     }
   }
-
+  obtenerDescripcionUnidad(clave: string): void {
+    if (!clave) {
+      this.claveProdServUnidad = '';
+      return;
+    }
+  
+    this.productoservicio.getAllCatUnidad(clave).subscribe({
+      next: (response: ApiResponseUnidad) => {
+        const unidadEncontrada = response.data.find(u => u.c_claveunidad.toString() === clave);
+        if (unidadEncontrada) {
+          this.claveProdServUnidad = unidadEncontrada.nombre;
+          this.myForm.patchValue({ unit: clave });
+        } else {
+          this.claveProdServUnidad = '';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener la descripción de la unidad:', err);
+        this.claveProdServUnidad = '';
+      }
+    });
+  }
+  obtenerDescripcionProducto(clave: string): void {
+    if (!clave) {
+      this.claveProdServDescription = '';
+      return;
+    }
+    this.productoservicio.getAllCatProducto(clave).subscribe({
+      next: (response: ApiResponseProducto) => {
+        const productoEncontrado = response.data.find(p => p.c_ClaveProdServ.toString() === clave);
+        if (productoEncontrado) {
+          this.claveProdServDescription = productoEncontrado.descripcion; 
+          this.myForm.patchValue({ product_key: clave }); 
+        } else {
+          this.claveProdServDescription = ''; 
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener la descripción del producto:', err);
+        this.claveProdServDescription = ''; 
+      }
+    });
+  }
+  
   get currentProducto(): ProductInterface {
     const produts = this.myForm.value as ProductInterface;
     console.log(produts)
@@ -134,6 +198,7 @@ export class FormProductsComponent {
       quantity: "",
       status: true
     })
+    this.claveProdServDescription = '';
   }
   buscar = new Subject<string>();
   buscarUnidad = new Subject<string>();
@@ -155,42 +220,7 @@ export class FormProductsComponent {
     });
   }
 
-  // ngOnInit(): void {
-  //   this.loadProducto();
-  //   this.loadUnidad();
-  //   this.buscar.pipe(debounceTime(500)).subscribe(query => {
-  //     this.filterProducts(query);
-  //   });
-  //   this.buscarUnidad.pipe(debounceTime(500)).subscribe(query => {
-  //     this.filterUnidad(query);
-  //   });
-
-
-  // }
-  // loadProducto(): void {
-  //   this.productoservicio.getAllCatProducto().subscribe({
-  //     next: (response: ApiResponseProducto) => {
-  //       console.log('Datos recibidos desde el servicio:', response);
-  //       if (Array.isArray(response.data)) {
-  //         this.listProducto = response.data;
-  //         console.log('listProducto:', this.listProducto);
-  //       } else {
-  //         console.error('La respuesta no contiene un array en "data":', response.data);
-  //         this.listProducto = [];
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al cargar los datos:', err);
-  //       this.showLoader = false;
-  //     }
-  //   });
-  // }
-
-  // onInput(event: any): void {
-  //   const query = (event.target.value || '').trim().toLowerCase();
-  //   console.log('Texto ingresado:', query);
-  //   this.buscar.next(query);
-  // }
+  
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Buscando producto:', query);
@@ -244,54 +274,7 @@ export class FormProductsComponent {
       }
     });
   }
-  // private filterProducts(query: string): void {
-  //   const control = this.myForm.get('product_key');
-  //   if (!control) return;
-
-  //   if (query.length === 0) {
-  //     control.setErrors(null);
-  //     if (control.hasValidator(Validators.required)) {
-  //       control.setValidators([Validators.required]);
-  //     }
-  //     control.updateValueAndValidity();
-  //     this.filteredProducto = [];
-  //     this.showLoader = false;
-  //     return;
-  //   }
-
-  //   if (query.length < 4) {
-  //     control.setErrors({ notFound: true });
-  //     this.filteredProducto = [];
-  //     this.showLoader = false;
-  //     return;
-  //   }
-
-  //   this.showLoader = true;
-
-  //   if (Array.isArray(this.listProducto)) {
-  //     this.filteredProducto = this.listProducto.filter((producto) => {
-  //       const clave = producto.c_ClaveProdServ.toString().toLowerCase();
-  //       const descripcion = producto.descripcion.toLowerCase();
-  //       return clave.includes(query) || descripcion.includes(query);
-  //     });
-
-  //     console.log('Productos filtrados:', this.filteredProducto);
-
-  //     const exactMatch = this.listProducto.some(producto =>
-  //       producto.c_ClaveProdServ.toString().toLowerCase() === query ||
-  //       producto.descripcion.toLowerCase() === query
-  //     );
-
-  //     if (!exactMatch) {
-  //       control.setErrors({ notFound: true });
-  //     } else {
-  //       control.setErrors(null);
-  //     }
-  //   }
-
-  //   this.showLoader = false;
-  // }
-
+  
 
 
   onKeyDown(event: KeyboardEvent): void {
@@ -308,7 +291,7 @@ export class FormProductsComponent {
     } else if (event.key === 'Enter') {
       if (this.selectedIndex >= 0) {
         this.selectProducto(this.filteredProducto[this.selectedIndex]);
-        this.selectUnidad(this.filteredUnidad[this.selectedIndex]);
+        // this.selectUnidad(this.filteredUnidad[this.selectedIndex]);
 
 
 
@@ -343,29 +326,15 @@ export class FormProductsComponent {
   // -------------------------------------------------------------------
   listUnidad: catUnidad[] = [];
   filteredUnidad: catUnidad[] = [];
-
-  // loadUnidad(): void {
-  //   this.productoservicio.getAllCatUnidad().subscribe({
-  //     next: (response: ApiResponseUnidad) => {
-  //       console.log('Datos recibidos desde el servicio:', response);
-  //       if (Array.isArray(response.data)) {
-  //         this.listUnidad = response.data;
-  //         console.log('listUnidad:', this.listUnidad);
-  //       } else {
-  //         console.error('La respuesta no contiene un array en "data":', response.data);
-  //         this.listUnidad = [];
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al cargar los datos:', err);
-  //       this.showLoader = false;
-  //     }
-  //   });
-  // }
+  hasSelected: boolean = false;
+  hasTyped: boolean = false;
+  
 
   onInput1(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
     console.log('Texto ingresado:', query);
+    this.hasTyped = query.length > 0;
+    this.hasSelected = false; 
     this.buscarUnidad.next(query);
   }
   private filterUnidad(query: string): void {
@@ -383,7 +352,7 @@ export class FormProductsComponent {
       return;
     }
   
-    if (query.length < 4) {
+    if (query.length < 3) {
       control.setErrors({ notFound: true });
       this.filteredUnidad = [];
       this.showLoader = false;
@@ -441,20 +410,12 @@ export class FormProductsComponent {
   }
 
 
-  // claveProdServUnidad: string = '';
-
-  // selectUnidad(unidad: catUnidad): void {
-  //   console.log(unidad);
-  //   let { c_claveunidad, nombre } = unidad;
-  //   this.myForm.get('unidad')?.setValue(c_claveunidad);
-  //   this.claveProdServUnidad = nombre;
-  //   this.filteredUnidad = [];
-  //   this.selectedIndex = -1;
-  // }
   claveProdServUnidad: string = '';
   selectUnidad(unidad: catUnidad): void {
     this.claveProdServUnidad = unidad.nombre;
     this.myForm.get('unit')?.setValue(unidad.c_claveunidad);
+    this.hasSelected = true; // Se ha seleccionado una opción
+  this.hasTyped = false; 
     this.filteredUnidad = [];
     this.selectedIndex = -1;
 
@@ -465,19 +426,17 @@ export class FormProductsComponent {
     }
   }
 
-
-
-
-
-
-
   @HostListener('document:click', ['$event'])
   onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
     if (!targetElement.closest('#unit')) {
       this.filteredUnidad = [];
+      if (this.hasTyped && !this.hasSelected) {
+        this.myForm.get('unit')?.setErrors({ notSelected: true });
+      }
     }
   }
+
   validateNumberInput(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     if (!/^\d$/.test(event.key) || input.value.length >= 30) {

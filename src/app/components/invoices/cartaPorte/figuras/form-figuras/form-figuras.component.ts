@@ -43,13 +43,55 @@ export class FormFigurasComponent {
 
   ngOnChanges(): void {
     this.idFiguras = this.figuraHijo.id || 0;
-
     this.myForm.patchValue(this.figuraHijo);
     this.isDomicilioChecked = Boolean(this.figuraHijo.domicilio);
     this.myForm.patchValue({ domicilio: this.isDomicilioChecked });
     this.idFiguras != 0 ? (this.buttonTitle = 'Actualizar') : 'Guardar';
+    this.clavepaisDescription = '';
+    
+    if (this.figuraHijo && this.figuraHijo.id !== 0 && this.figuraHijo.pais) {
+      this.obtenerDescripcionPais(this.figuraHijo.pais);
+    }
+    if (this.figuraHijo.estado && this.figuraHijo.municipio && this.figuraHijo.pais === 'MEX') {
+      const estado = this.colonias.find(colonia => colonia.valor === this.figuraHijo.estado);
+      const municipio = this.localidades.find(localidad => localidad.valor === this.figuraHijo.municipio);
+      this.estadoDescripcion = estado ? estado.descripcion : this.figuraHijo.estado;
+      this.municipioDescripcion = municipio ? municipio.descripcion : this.figuraHijo.municipio;
+    } else {
+      this.estadoDescripcion = '';
+      this.municipioDescripcion = '';
+    }
+  
+    if (this.myForm.get('pais')) {
+      this.myForm.get('pais')?.valueChanges.subscribe(pais => {
+        if (pais === 'MEX') {
+          this.onCodigoPostalBlur(); 
+        }
+      });
+    }
   }
-
+obtenerDescripcionPais(clave: string): void {
+    if (!clave) {
+      this.clavepaisDescription = '';
+      return;
+    }
+  
+    this.figuras.getAllPais(clave).subscribe({
+      next: (response: ApiResponsepais) => {
+        const paisEncontrado = response.data.find(p => p.c_pais.toString() === clave);
+        if (paisEncontrado) {
+          this.clavepaisDescription = paisEncontrado.descripcion;
+          this.myForm.patchValue({ pais: clave });
+        } else {
+          this.clavepaisDescription = '';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener la descripción del país:', err);
+        this.clavepaisDescription = '';
+      }
+    });
+  }
   get currentUbicacion(): FigurasInterface {
     const figurass = this.myForm.value as FigurasInterface;
     console.log(figurass)
@@ -225,7 +267,7 @@ export class FormFigurasComponent {
         this.isEstadoReadonly = pais === 'MEX';
 
         if (!pais || pais.trim() === '') {
-          console.log('Limpiando los campos de ubicación...');
+          // console.log('Limpiando los campos de ubicación...');
           this.myForm.patchValue({
             codigoPostal: '',
             estado: '',
@@ -294,11 +336,16 @@ export class FormFigurasComponent {
   }
 
 
+  hasSelected: boolean = false;
+  hasTyped: boolean = false;
 
   onInput(event: any): void {
     const query = (event.target.value || '').trim().toLowerCase();
-    console.log('Buscando pais:', query);
+    // console.log('Buscando pais:', query);
+    this.hasTyped = query.length > 0;
+    this.hasSelected = false; 
     this.buscar1.next(query);
+
   }
   private BuscarPais(query: string): void {
     const control = this.myForm.get('pais');
@@ -374,11 +421,13 @@ export class FormFigurasComponent {
   selectPais(Pais: catpais): void {
     this.clavepaisDescription = Pais.descripcion;
     this.myForm.get('pais')?.setValue(Pais.c_pais.toString());
+    this.hasSelected = true; // Se ha seleccionado una opción
+    this.hasTyped = false; 
     this.filteredPais = [];
     this.selectedIndex = -1;
 
     this.myForm.get('pais')?.setErrors(null);
-    const inputElement = document.getElementById('product_keys') as HTMLInputElement;
+    const inputElement = document.getElementById('paises') as HTMLInputElement;
     if (inputElement) {
       inputElement.value = this.clavepaisDescription;
     }
@@ -389,10 +438,15 @@ export class FormFigurasComponent {
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-    if (!targetElement.closest('#product_key')) {
+    if (!targetElement.closest('#paises')) {
+      if (this.hasTyped && !this.hasSelected) {
+        this.myForm.get('pais')?.setErrors({ notSelected: true });
+        this.myForm.get('pais')?.setValue(''); // Limpia el campo si no se seleccionó
+      }
       this.filteredPais = [];
     }
   }
+  
   // ---------------------------------------------------------
   listPais2: catpais[] = [];
   filteredPais2: catpais[] = [];
@@ -473,10 +527,48 @@ export class FormFigurasComponent {
   }
   estadoDescripcion: string = '';
   municipioDescripcion: string = '';
+  // onCodigoPostalBlur(): void {
+  //   const codigoPostal = this.myForm.get('codigoPostal')?.value;
+  //   const pais = this.myForm.get('pais')?.value;
+
+  //   if (pais === 'MEX' && codigoPostal) {
+  //     this.showLoader = true;
+  //     this.figuras.getDireccion(codigoPostal).subscribe({
+  //       next: (data) => {
+  //         this.showLoader = false;
+  //         this.localidades = [];
+  //         this.colonias = [];
+
+  //         data.colonias.forEach((element: string) => {
+  //           let contenido = element.split("|");
+  //           this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] })
+  //         });
+  //         data.localidades.forEach((element: string) => {
+  //           let contenidol = element.split("|");
+  //           this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] })
+  //         });
+  //         this.myForm.patchValue({
+  //           estado: data.c_estado || '',
+  //           municipio: data.cat_municipio || '',
+  //           localidad: '',
+  //           colonia: '',
+  //         });
+  //         console.log(data.colonias)
+  //         console.log(data.localidades)
+  //         this.estadoDescripcion = data.Nombreestado || '';
+  //         this.municipioDescripcion = data.municipio || '';
+  //       },
+  //       error: (err) => {
+  //         this.showLoader = false;
+  //         Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
+  //       },
+  //     });
+  //   }
+  // }
   onCodigoPostalBlur(): void {
     const codigoPostal = this.myForm.get('codigoPostal')?.value;
     const pais = this.myForm.get('pais')?.value;
-
+  
     if (pais === 'MEX' && codigoPostal) {
       this.showLoader = true;
       this.figuras.getDireccion(codigoPostal).subscribe({
@@ -484,26 +576,36 @@ export class FormFigurasComponent {
           this.showLoader = false;
           this.localidades = [];
           this.colonias = [];
-
           data.colonias.forEach((element: string) => {
             let contenido = element.split("|");
-            this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] })
+            this.colonias.push({ "valor": contenido[0], "descripcion": contenido[1] });
           });
           data.localidades.forEach((element: string) => {
             let contenidol = element.split("|");
-            this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] })
+            this.localidades.push({ "valor": contenidol[0], "descripcion": contenidol[1] });
           });
+          const estado = this.colonias.find(colonia => colonia.valor === data.c_estado);
+          const municipio = this.localidades.find(localidad => localidad.valor === data.cat_municipio);
+  
+          this.estadoDescripcion = estado ? estado.descripcion : data.Nombreestado || '';
+          this.municipioDescripcion = municipio ? municipio.descripcion : data.municipio || '';
+          if (!this.myForm.get('estado')?.value) {
+            this.myForm.patchValue({
+              estado: data.c_estado || '',
+            });
+          }
+          if (!this.myForm.get('municipio')?.value) {
+            this.myForm.patchValue({
+              municipio: data.cat_municipio || '',
+            });
+          }
+  
           this.myForm.patchValue({
-            estado: data.c_estado || '',
-            municipio: data.cat_municipio || '',
-            localidad: '',
-            colonia: '',
+            localidad: '',  
+            colonia: '', 
           });
-          console.log(data.colonias)
-          console.log(data.localidades)
-          this.estadoDescripcion = data.Nombreestado || '';
-          this.municipioDescripcion = data.municipio || '';
         },
+  
         error: (err) => {
           this.showLoader = false;
           Swal.fire('Error', err.error?.msg || 'No se pudo obtener la dirección.', 'error');
@@ -511,5 +613,5 @@ export class FormFigurasComponent {
       });
     }
   }
-
+   
 }

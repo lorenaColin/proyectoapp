@@ -65,28 +65,6 @@ export class ListUbicacionesComponent {
     });
   }
   
-  // editUbicacion(id: number): void {
-  //   this.showLoader = true;
-  //   console.log("ID que se pasa al backend:", id);
-  //   this.ubicacionServicio.getubicacionById(id).subscribe({
-  //     next: (response) => {
-  //       this.ubicacion = response.data;
-  //       console.log(this.ubicacion);
-
-  //       this.showLoader = false;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al obtener la ubicacion:', err);
-  //       Swal.fire({
-  //         title: 'Error al obtener la ubicacion',
-  //         text: err.message || 'Error desconocido',
-  //         icon: 'error',
-  //       });
-  //       this.showLoader = false;
-  //     },
-
-  //   });
-  // }
 
   responseUbicacion(response: ubicacionInterface): void {
     const adaptedResponse: ubicacionResponseInterface = {

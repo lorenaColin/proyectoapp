@@ -33,13 +33,44 @@ export class FormMercanciasComponent {
     if (this.mercanciaHijo) {
       this.idMercancia = this.mercanciaHijo.id || 0;
       this.buttonTitle = this.idMercancia !== 0 ? 'Actualizar' : 'Crear';
+      this.claveProdServDescription = '';
+    
+      if (this.mercanciaHijo && this.mercanciaHijo.id !== 0 && this.mercanciaHijo.claveProdServCP) {
+        this.obtenerDescripcionPais(this.mercanciaHijo.claveProdServCP);
+      }
       this.myForm.patchValue({
         ...this.mercanciaHijo,
       });
+      
     } else {
       this.myForm.reset();
     }
 
+  }
+
+
+ 
+obtenerDescripcionPais(clave: string): void {
+    if (!clave) {
+      this.claveProdServDescription = '';
+      return;
+    }
+  
+    this.mercanciSer.getAllProductsAndServices(clave).subscribe({
+      next: (response: ApiResponse) => {
+        const pclaveEncontrado = response.data.find(p => p.c_ClaveProdServ.toString() === clave);
+        if (pclaveEncontrado) {
+          this.claveProdServDescription = pclaveEncontrado.descripcion;
+          this.myForm.patchValue({ claveProdServCP: clave });
+        } else {
+          this.claveProdServDescription = '';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener la descripción del país:', err);
+        this.claveProdServDescription = '';
+      }
+    });
   }
   get currentUbicacion(): MercanciaInterface {
     const mercancia = this.myForm.value as MercanciaInterface;
@@ -237,7 +268,7 @@ export class FormMercanciasComponent {
     this.myForm.get('claveProdServCP')?.setValue(c_ClaveProdServ);
     this.claveProdServDescription = descripcion;
     this.myForm.get('claveProdServCP')?.setErrors(null);
-    const inputElement = document.getElementById('descripcionProducto') as HTMLInputElement;
+    const inputElement = document.getElementById('descripcionMercancia') as HTMLInputElement;
     if (inputElement) {
       inputElement.value = this.claveProdServDescription;
     }
@@ -280,9 +311,11 @@ export class FormMercanciasComponent {
     const isChecked = event.target.checked;
 
     if (isChecked) {
+      this.bandera = true;
       this.myForm.get('cveMaterialPeligroso')?.setValidators([Validators.required]);
       this.myForm.get('embalaje')?.setValidators([Validators.required]);
     } else {
+      this.bandera = false; 
       this.myForm.get('cveMaterialPeligroso')?.clearValidators();
       this.myForm.get('embalaje')?.clearValidators();
     }

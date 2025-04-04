@@ -1,10 +1,10 @@
 <div>
     <form [formGroup]="myForm"  autocomplete="off" class="grid grid-cols-4 gap-6 p-6  rounded-lg">
-        <!-- <pre>
+        <pre>
             
 
             {{ myForm.value | json }}
-        </pre> -->
+        </pre>
         <div class="col-span-2">
             <label for="tipoFigura" class="block text-sm font-medium">Tipo:</label>
             <select id="tipoFigura" formControlName="tipoFigura" class="mt-1 block w-full rounded-md"
@@ -105,9 +105,9 @@
             <div class="grid grid-cols-4 gap-6">
 
                 <div class="col-span-4 relative">
-                    <label for="product_keys" class="form-label text-[.875rem] text-black">Pais:</label>
+                    <label for="paises" class="form-label text-[.875rem] text-black">Pais:</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="product_keys" id="product_keys"
+                        <input type="text" class="form-control" name="paises" id="paises"
                             formControlName="pais" [value]="clavepaisDescription" (input)="onInput($event)"
                             (keydown)="onKeyDown($event)"
                             [ngClass]="{'is-invalid': myForm.get('pais')?.hasError('notFound') && myForm.get('pais')?.touched}"
@@ -121,7 +121,9 @@
                     <span *ngIf="isValidField('pais')" class="text-[#EE312A] text-sm">
                         {{ getFieldError('pais') }}
                     </span>
-
+                    <span *ngIf="myForm.get('pais')?.hasError('notSelected')" class="text-[#EE312A] text-sm">
+                        Debe seleccionar una opción de la lista.
+                    </span>
                     <ul *ngIf="filteredPais.length > 0" class="absolute rounded-lg mt-2 w-full">
                         <li *ngFor="let pais of filteredPais; let i = index" (click)="selectPais(pais)"
                             [ngClass]="{'bg-gray-200': i === selectedIndex}">
