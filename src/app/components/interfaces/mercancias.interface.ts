@@ -26,6 +26,12 @@ export interface MercanciaInterface {
     data: MercanciaInterface[];
     
   }
+    export interface ApiResponseMercnaica {
+      message: string;
+      statusCode: number;
+      error: boolean;
+      data: MercanciaInterface[];  
+    }
  // mercancias.interface.ts
 
 export interface CatProdServCP {

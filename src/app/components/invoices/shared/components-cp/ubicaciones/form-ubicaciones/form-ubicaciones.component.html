@@ -1,8 +1,8 @@
 <form [formGroup]="formCartaPorte" autocomplete="off">
-    <pre>
+    <!-- <pre>
 
         {{ ubicaciones.value | json }}
-    </pre>
+    </pre> -->
     <div class="grid grid-cols-12 gap-4">
         <h5 class="col-span-12 mt-3">Ubicaciones</h5>
         <div class="col-span-12">
@@ -41,23 +41,23 @@
                                     <span
                                         *ngIf="ubicacion.get('rfc')?.hasError('required') && ubicacion.get('rfc')?.touched"
                                         class="text-[#EE312A] text-sm mt-2">
-                                        El RFC es obligatorio.
+                                        El nombre es obligatorio.
                                     </span>
 
                                     <span *ngIf="ubicacion.get('rfc')?.hasError('notFound')"
                                         class="text-[#EE312A] text-sm mt-2">
-                                        Este RFC no se encuentra en el catálogo.
+                                        Este nombre no se encuentra en el catálogo.
                                     </span>
                                     <ul *ngIf="filteredRFC.length > 0 && activeIndex === i"
                                         class="absolute rounded-lg mt-2 w-full bg-white border border-gray-300 z-10 rfc-container">
                                         <li *ngFor="let ubic of filteredRFC; let j = index"
-                                        (click)="selectSerieWrapper(ubic, i, ubicacion.get('tipo')?.value)"
+                                            (click)="selectSerieWrapper(ubic, i, ubicacion.get('tipo')?.value)"
                                             [ngClass]="{'bg-gray-200': j === selectedIndex}"
                                             class="p-2 cursor-pointer hover:bg-gray-300">
                                             {{ ubic.idUbicacion }} - {{ ubic.rfc }}
                                         </li>
                                     </ul>
-                                    
+
                                 </div>
                             </td>
 
@@ -99,17 +99,13 @@
 
 
                             <td *ngIf="buttonDelete && i >= 2">
-                                <a 
-                                  aria-label="anchor" 
-                                  href="javascript:void(0);"
-                                  (click)="removeProducto(i)"
-                                  class="ti-btn ti-btn-danger !rounded-full"
-                                >
-                                  <i class="ri-delete-bin-line"></i>
+                                <a aria-label="anchor" href="javascript:void(0);" (click)="removeProducto(i)"
+                                    class="ti-btn ti-btn-danger !rounded-full">
+                                    <i class="ri-delete-bin-line"></i>
                                 </a>
-                              </td>
-                              
-                              
+                            </td>
+
+
 
 
 
@@ -136,8 +132,9 @@
     <!-- Información adicional debajo de la tabla -->
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 sm:col-span-12 md:col-span-4">
-            <label for="pBruto" class="form-label">P. Bruto: </label>
-            <input type="text" class="form-control" disabled>
+            <label for="PesoBrutoTotal" class="form-label">P. Bruto: </label>
+            <!-- Usar el getter para obtener el valor -->
+            <input type="text" class="form-control" [value]="PesoBrutoTotal" disabled>
         </div>
         <div class="col-span-12 sm:col-span-12 md:col-span-4">
             <label for="uPeso" class="form-label">U. Peso: </label>

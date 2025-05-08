@@ -20,6 +20,7 @@ private cartaPorteService = inject(CartaPorteService);
    this.mercancias=this.cartaPorteService.getMercanciasFormArray();
      }
    
+  
      ngOnInit(): void {
        this.loadMercancias();
      }
@@ -35,4 +36,8 @@ private cartaPorteService = inject(CartaPorteService);
        }
      });
    }
+   removeMercancia(index: number): void {
+    this.mercancias.removeAt(index);
+  }
+  
 }

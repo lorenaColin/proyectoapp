@@ -1,16 +1,47 @@
-<app-switcher/>
+<app-switcher />
 
 <div class="page">
-  <app-header/>
+  <app-header />
   <app-sidebar appHoverEffectSidebar />
   <div class="content">
     <div class="main-content" (click)="togglesidemenuBody()">
       <router-outlet></router-outlet>
     </div>
+    <div class="bienvenida-container" *ngIf="mostrarContenido">
+      Bienvenido a <span class="underline">{{ empresaNombre }}</span>
+    </div>
+    <div class="contenedor-facturas" *ngIf="mostrarContenido">
+      <button class="boton-amarillo" (click)="navegarConLoader('/invoices/ingreso')">Emitir Factura</button>
+      <button class="boton-amarillo" (click)="navegarConLoader('/invoices/list')">Ver mis facturas</button>
+    </div>
+    
+    
+    
+    <div class="contenedor-facturas" *ngIf="mostrarContenido">
+      <button class="boton-rojo">Adquiere más Timbres</button>
+      <p>T. Restantes: {{ Timbres }}</p>
+      <p>Fecha Vence: {{ Fecha }}</p>
+    </div>
+    
+    <div class="contenedor-facturase" *ngIf="mostrarContenido">
+      <h3>Soporte</h3>
+      <p>Horario de Atencion.</p>
+      <p>Lunes a Viernes 9:00-17:00.</p>
+      <button class="boton-azul">729-490-15-82</button>
+      <button class="boton-azul">722 131-6259</button>
+      <button class="boton-azul">soporteeasysweb.com.mx</button>
+    </div>
+    
+
   </div>
-  <app-footer/>
+  <app-footer />
   <app-tab-to-top />
 </div>
 
 
 <div id="responsive-overlay" (click)="clearToggle()"></div>
+
+
+<div id="loader" *ngIf="showLoader">
+  <img src="images/loader.svg" alt="" />
+</div>

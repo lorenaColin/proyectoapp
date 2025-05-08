@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 })
 export class CartaPorteService {
   formInvoice: FormGroup;
-// autotransporte:FormGroup
+  // autotransporte:FormGroup
   constructor(private fb: FormBuilder) {
     this.formInvoice = this.fb.group({
       selectIstmo: [''],
@@ -14,34 +14,36 @@ export class CartaPorteService {
       uPoloDestino: [''],
       serieFolio: [''],
       ubicaciones: this.fb.array([
-        
+
       ]),
       mercancias: this.fb.array([]),
-     
+      PesoBrutoTotal: [''],
+      UnidadPeso: [''],
+      NumTotalMercancias: [''],
       remolques: this.fb.group({
-        sAmbientr:[''],
-        placaRem:[''],
-        sAmbient1:[''],
-        placaRem1:[''],
+        sAmbientr: [''],
+        placaRem: [''],
+        sAmbient1: [''],
+        placaRem1: [''],
       }),
       seguros: this.fb.group({
-        sAmbients:[''],
-        sCarge:[''],
-        pSeguro:[''],
+        sAmbients: [''],
+        sCarge: [''],
+        pSeguro: [''],
       }),
       figuras: this.fb.array([]),
-      autotransporte:this.fb.group({
-        placa:[''],
-        PermSCT2:[''],
-        NumPermisoSCT:[''],
-        aCivil:[''],
-        cVehicle:[''],
-        anioVehicle:[''],
-        weighVehicle:['']
-  
+      autotransporte: this.fb.group({
+        placa: [''],
+        PermSCT2: [''],
+        NumPermisoSCT: [''],
+        aCivil: [''],
+        cVehicle: [''],
+        anioVehicle: [''],
+        weighVehicle: ['']
+
       })
     });
-  
+
   }
 
   getFormCarta(): FormGroup {
@@ -55,7 +57,7 @@ export class CartaPorteService {
   }
   getRemolques(): FormGroup {
     return this.formInvoice.get('remolques') as FormGroup;
-   
+
   }
   getseguros(): FormGroup {
     return this.formInvoice.get('seguros') as FormGroup;

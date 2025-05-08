@@ -1,0 +1,108 @@
+.bienvenida-container {
+    background-color: #4fa2cc; 
+    color: white;
+    text-align: center;
+    font-size: 1.875rem; 
+    font-weight: bold;
+    padding: 2rem 1.5rem;
+    border-radius: 0.75rem; 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05); // shadow-lg
+    max-width: 90%;
+    margin: 2.5rem auto; 
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  .contenedor-facturas {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;              // ocupa todo el ancho
+    max-width: none;          // sin límite máximo
+    margin: 2rem 0;           // separación vertical
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    text-align: center;
+  }
+  .contenedor-facturase {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;              // ocupa todo el ancho
+    max-width: none;          // sin límite máximo
+    margin: 2rem 0;           // separación vertical
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    // text-align: center;
+    // position: relative;
+  }
+  
+  .contenedor-facturase p {
+    margin: 10;                 /* Elimina el espacio entre los párrafos */
+    top: 0;                    /* Coloca los párrafos en la parte superior */
+    left: 0;                   /* Alinea los párrafos a la izquierda */
+    text-align: left;          /* Alineación de texto a la izquierda */
+    padding-left: 1rem;        /* Asegura que los párrafos no queden pegados al borde */
+    gap: 0;                    /* Elimina el espacio entre los párrafos */
+  }
+  
+  
+  .boton-amarillo {
+    background-color: #ffc107;
+    color: black;
+    font-size: 1.1rem;
+    width: 100%;              // ocupa todo el ancho
+    font-weight: 600;
+    // padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  .boton-azul {
+    background-color: #4fa2cc;
+    color: black;
+    font-size: 1.1rem;
+    width: 100%;              // ocupa todo el ancho
+    font-weight: 600;
+    // padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  .boton-rojo {
+    background-color: #f34444;
+    color: black;
+    font-size: 1.1rem;
+    width: 100%;              // ocupa todo el ancho
+    font-weight: 600;
+    // padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  

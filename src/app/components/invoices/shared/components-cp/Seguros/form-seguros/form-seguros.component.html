@@ -1,47 +1,47 @@
 
 <form [formGroup]="formSeguros">
-<!-- <pre> {{ formSeguros.value | json }} </pre> -->
-<hr class="my-6 border-gray-300">
-<h5 class="mt-3 mb-3">Seguros</h5>
-<div class="grid grid-cols-12 gap-4">
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+    <hr class="my-6 border-gray-300">
+    <h5 class="mt-3 mb-3">Seguros</h5>
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-12 sm:col-span-12 md:col-span-4">
         <label class="form-label" for="sAmbients">A. Ambiental:</label>
         <div class="input-group">
-
-            <select class="form-control"   formControlName="sAmbients" name="sAmbients" id="sAmbients">
-                <option value="" disabled selected>Selecciona una opción</option>
-
-                <option *ngFor="let seguros of segurosAmbientales" [value]="seguros.id">
-                    {{ seguros.polize }} - {{ seguros.asegure }}
-                  </option>
-                <!-- @foreach($safes->where('type', 'Ambiental')  as $safe)
-                    <option value="{{ $safe->id }}">{{ $safe->polize }}</option>
-                @endforeach -->
-            </select>
-            <!-- <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
-                <i class="ri-add-line"></i>
-            </div> -->
+          <select
+            class="form-control"
+            formControlName="sAmbients"
+            name="sAmbients"
+            id="sAmbients"
+            (change)="onAmbientSelected($event)"
+          >
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option *ngFor="let seguros of segurosAmbientales" [value]="seguros.asegure">
+              {{ seguros.polize }} - {{ seguros.asegure }}
+            </option>
+          </select>
         </div>
-    </div>
-    <div class="col-span-12 sm:col-span-12 md:col-span-4">
+      </div>
+      <div class="col-span-12 sm:col-span-12 md:col-span-4">
         <label class="form-label" for="sCarge">A. Carga:</label>
         <div class="input-group">
-            <select class="form-control" name="sCarge" id="sCarge"  (change)="cargarSeguroCarga($event)">
-                <option value="">Selecciona S. Carga</option>
-                <option *ngFor="let seguro of segurosCarga" [value]="seguro.id">
-                    {{ seguro.polize }} - {{ seguro.asegure }}
-                </option>
-                <!-- @foreach($safes->where('type', 'Carga') as $safe)
-                    <option value="{{ $safe->id }}">{{ $safe->polize }}</option>
-                @endforeach -->
-            </select>
-            <!-- <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
-                <i class="ri-add-line"></i>
-            </div> -->
+          <select class="form-control" name="sCarge" id="sCarge" (change)="cargarSeguroCarga($event)">
+            <option value="">Selecciona S. Carga</option>
+            <option *ngFor="let seguro of segurosCarga" [value]="seguro.id">
+              {{ seguro.polize }} - {{ seguro.asegure }}
+            </option>
+          </select>
         </div>
-    </div>
-    <div class="col-span-12 sm:col-span-12 md:col-span-4" id="pSeguro">
+      </div>
+      
+      <div class="col-span-12 sm:col-span-12 md:col-span-4" id="pSeguro">
         <label class="form-label" for="pSeguro">P. Seguro:</label>
-        <input type="text" class="form-control" name="pSeguro" formControlName="pSeguro" id="pSeguro">
+        <input
+          type="text"
+          class="form-control"
+          name="pSeguro"
+          formControlName="pSeguro"
+          id="pSeguro"
+        />
+      </div>
     </div>
-</div>
+  </form>
+  

@@ -14,6 +14,9 @@ import { UtilsService } from '../../../shared/services/utils.service';
 import { FormaPagoInterface, MetodoPagoInterface } from '../../../shared/interfaces/shared.interface';
 import { InvoicesService } from '../../services/invoices.service';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { CartaPorteService } from '../../services/carta-porte.service';
 
 @Component({
   selector: 'app-ingreso',
@@ -21,6 +24,9 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './ingreso.component.scss'
 })
 export class IngresoComponent implements OnInit {
+  private cartaPorteService = inject(CartaPorteService);
+  formCartaPorte: FormGroup = this.cartaPorteService.getFormCarta();
+
   private fb = inject(FormBuilder);
   private formaPagoService = inject(FormaPagoService);
   private totalsService = inject(TotalsService);
@@ -50,14 +56,15 @@ export class IngresoComponent implements OnInit {
   filteredReceptors: CustomersInterface[] = [];
   selectedIndex: number = -1;
 
-  constructor() {
+  constructor(  private router: Router) {
     this.totalsService.setForm(this.formIngreso);
     this.conceptsService.setForm(this.formIngreso);
+    
   }
 
 
   formIngreso: FormGroup = this.fb.group({
-    invoice_type: ['I'],
+    invoice_type: [],
     serie_folio: [''],
     fecha: ['', [Validators.required]],
     receptor: ['1', [Validators.required]],
@@ -70,6 +77,7 @@ export class IngresoComponent implements OnInit {
     ...this.totalsForm.controls,
     relaciones: this.relacionForm.get('relaciones') as FormArray,
     concepts: [this.fb.array([])],
+    complemento_carta_porte: this.formCartaPorte
     // totals: this.totalsService.getFormTotals().controls,
   });
 
@@ -79,30 +87,91 @@ export class IngresoComponent implements OnInit {
     this.loadReceptor();
     
   }
+  // onSubmitIngreso() {
+    
+  //   if (this.formIngreso.invalid) {
+  //     this.formIngreso.markAllAsTouched();
+  //     return;
+  //   }
+  //   // let { concepts } = this.formIngreso.value;
+  //   // if(concepts.length === 0){
+  //   //   console.log("debes agregar un concepto")
+  //   //   return
+  //   // }
+  //   const uuidCompany = this.authService.getUuid();
+  //   console.log(uuidCompany)
+
+  //   let formulario = {
+  //     ...this.formIngreso.value,
+  //     uuid_company: uuidCompany || '',
+  //   }
+  //   this.invoicesService.createInvoice(formulario).subscribe(
+  //     (respuesta) => {
+  //       console.log(respuesta);
+  //     }
+  //   )
+  // }
+  onTipoChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const tipo = selectElement.value;
+    this.formIngreso.get('invoice_type')?.setValue(tipo);
+    this.typeProof = tipo;
+  }
+  
 
   onSubmitIngreso() {
-    
+    console.log('Form valid:', this.formIngreso.valid);
+  console.log('Value:', this.formIngreso.value);
+
+  // Nuevo: listamos los controles inválidos
+  const invalidControls = Object.keys(this.formIngreso.controls)
+    .filter(key => this.formIngreso.get(key)?.invalid);
+  console.log('Invalid controls:', invalidControls);
     if (this.formIngreso.invalid) {
       this.formIngreso.markAllAsTouched();
       return;
     }
-    // let { concepts } = this.formIngreso.value;
-    // if(concepts.length === 0){
-    //   console.log("debes agregar un concepto")
-    //   return
-    // }
+  
     const uuidCompany = this.authService.getUuid();
-    let formulario = {
+  
+    const formulario = {
       ...this.formIngreso.value,
       uuid_company: uuidCompany || '',
-    }
+    };
+  
     this.invoicesService.createInvoice(formulario).subscribe(
-      (respuesta) => {
+      (respuesta: any) => {
         console.log(respuesta);
+  
+        const rutaXml = respuesta?.xml_path;
+        if (rutaXml) {
+          localStorage.setItem('ultimoXmlGenerado', rutaXml);
+        }
+  
+        Swal.fire({
+          title: '¡Comprobante creado!',
+          text: 'El comprobante se ha generado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Ver comprobantes'
+        }).then(() => {
+          this.router.navigate(['/invoices/list']);
+        });
+      },
+      (error) => {
+        console.error('Error al crear comprobante:', error);
+  
+        Swal.fire({
+          title: '¡Comprobante creado!',
+          text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
+          icon: 'success',
+          confirmButtonText: 'Ver comprobantes'
+        }).then(() => {
+          this.router.navigate(['/invoices/list']);
+        });
       }
-    )
+    );
   }
-
+  
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.formIngreso, field);
   }
@@ -301,12 +370,23 @@ export class IngresoComponent implements OnInit {
     }
   }
 
+  // agregarCartaP(event: Event) {
+  //   const isChecked = (event.target as HTMLInputElement).checked;
+  //   this.mostrarCP = isChecked;
+  //   console.log('Checkbox is:', isChecked ? 'Checked' : 'Unchecked');
+  // }
+
   agregarCartaP(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    this.mostrarCP = isChecked;
-    console.log('Checkbox is:', isChecked ? 'Checked' : 'Unchecked');
+    this.mostrarCP = (event.target as HTMLInputElement).checked;
+  
+    if (this.mostrarCP) {
+      // al mostrar, añadimos el sub-form
+      this.formIngreso.addControl('complemento_carta_porte', this.formCartaPorte);
+    } else {
+      // al ocultar, quitamos el sub-form
+      this.formIngreso.removeControl('complemento_carta_porte');
+    }
   }
-
-
+  
 
 }

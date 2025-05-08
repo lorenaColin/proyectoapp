@@ -136,9 +136,41 @@ export class NavService implements OnDestroy {
       badgeValue: 'New',
       children: [
         { path: '/invoices/ingreso', title: 'CFDI 4.0', type: 'link' },
-        { path: '/invoices/payment', title: 'Recepción de Pago 4.0', type: 'link' },
+        { path: '/invoices/traslado', title: 'Carta Porte', type: 'link' },
         { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
         { path: '/invoices/list', title: 'Listar', type: 'link' },
+      ],
+    },  
+
+
+    { headTitle: 'lealtad' },
+    {
+      title: 'Referidos',
+      type: 'sub',
+      selected : false,
+      active: false,
+      icon: 'file',
+      badgeClass: 'secondary',
+      badgeText: 'secondary',
+      badgeValue: 'New',
+      children: [
+        { path: '/lealtad', title: 'Lealtad', type: 'link' },
+      
+      ],
+    },  
+    { headTitle: 'Herramientas' },
+    {
+      title: 'Herramientas',
+      type: 'sub',
+      selected : false,
+      active: false,
+      icon: 'file',
+      badgeClass: 'secondary',
+      badgeText: 'secondary',
+      badgeValue: 'New',
+      children: [
+        { path: '/herramienta', title: 'Recuperacion de certificados', type: 'link' },
+      
       ],
     },  
   ];

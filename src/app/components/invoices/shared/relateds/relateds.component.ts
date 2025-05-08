@@ -3,6 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { PATRON_UUID } from '../../../../shared/utils/expressions';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
 import { RelatedsService } from '../../../services/relateds.service';
+import { InvoicesService } from '../../../services/invoices.service';
 
 @Component({
   selector: 'app-relateds',
@@ -10,11 +11,26 @@ import { RelatedsService } from '../../../services/relateds.service';
   styleUrl: './relateds.component.scss'
 })
 export class RelatedsComponent {
+  uuidsDisponibles: string[] = [];
   private relacionService = inject(RelatedsService);
   mostrarTablaR: boolean = false;
+    private invoicesService = inject(InvoicesService);
+  
   formulario = this.relacionService.getFormRelateds();
   // private validatorsService = inject(ValidatorsService);
-
+  ngOnInit(): void {
+    this.cargarUUIDs();
+  }
+  cargarUUIDs(): void {
+    this.invoicesService.obtenerUUIDs().subscribe(
+      (res) => {
+        this.uuidsDisponibles = res.uuids;
+      },
+      (error) => {
+        console.error('Error al cargar UUIDs', error);
+      }
+    );
+  }
   agregarRel(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked; 
     this.mostrarTablaR = isChecked; 

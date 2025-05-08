@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Observable } from 'rxjs';
 import { CompanyListResponseInterface, CompanyInterface, CompanyResponseInterface } from '../interfaces/company.interface';
-import { MercanciaInterface, MercanciaListResponseInterface, MercanciaResponseInterface, CatProdServCP, ApiResponse, ApiResponseClave, ApiResponseMatPeligroso, ApiResponseEmbalaje } from '../interfaces/mercancias.interface';
+import { MercanciaInterface, MercanciaListResponseInterface, MercanciaResponseInterface, CatProdServCP, ApiResponse, ApiResponseClave, ApiResponseMatPeligroso, ApiResponseEmbalaje, ApiResponseMercnaica } from '../interfaces/mercancias.interface';
 
 @Injectable({
   providedIn: 'any'
@@ -17,6 +17,7 @@ export class MercanciasService {
   private catClaveUnidadApiUrl = `${environment.apiUrl}/catClaveUnidad`;
   private catMatPeligrosoApiUrl = `${environment.apiUrl}/catMatpeligroso`;
   private catEmbalajeApiUrl = `${environment.apiUrl}/catEmbalaje`;
+  private ConceptosApiUrl = `${environment.apiUrl}/mercanciaquery`;
 
 
 
@@ -25,6 +26,10 @@ export class MercanciasService {
   getAllmercancias(): Observable<MercanciaListResponseInterface> {
     return this.http.get<MercanciaListResponseInterface>(this.apiUrl);
   }
+   getAllMercanciaQuery(query: string): Observable<ApiResponseMercnaica> {
+      const url = `${this.ConceptosApiUrl}?termino=${query}`;
+      return this.http.get<ApiResponseMercnaica>(url);
+    }
 
   createmercancias(mercancias: MercanciaInterface): Observable<MercanciaResponseInterface> {
     return this.http.post<MercanciaResponseInterface>(this.apiUrl, mercancias);

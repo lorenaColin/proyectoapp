@@ -1,0 +1,92 @@
+<!-- form-invoice-mercancia.component.html -->
+<form [formGroup]="form" (ngSubmit)="guardar()" class="p-4 space-y-6">
+    <!-- Campo Código y Autocompletado -->
+    <div class="relative">
+      <label for="claveInterna" class="form-label text-[.875rem] text-black">Código:</label>
+      <div class="input-group">
+        <input type="text" class="form-control" name="claveInterna" id="claveInterna"
+            formControlName="BienesTransp" oninput="this.value = this.value.toUpperCase();"
+            [value]="claveConcepto" (input)="onInput($event)" (keydown)="onKeyDown($event)"
+            [ngClass]="{'is-invalid': form.get('claveInterna')?.hasError('notFound') && form.get('BienesTransp')?.touched}" autocomplete="off" >
+      </div>
+  
+      <span *ngIf="form.get('BienesTransp')?.hasError('notFound')" class="text-[#EE312A] text-sm">
+        Este código de producto no se encuentra en el catálogo.
+      </span>
+      <span *ngIf="isValidField('BienesTransp')" class="text-[#EE312A] text-sm">
+        {{ getFieldError('BienesTransp') }}
+      </span>
+  
+      <ul *ngIf="filteredMercancia.length > 0" class="absolute rounded-lg mt-2 w-full bg-white shadow z-10">
+        <li *ngFor="let conceptos of filteredMercancia; let i = index" (click)="selectMercancia(conceptos)"
+            class="cursor-pointer p-2 hover:bg-gray-200"
+            [ngClass]="{'bg-gray-200': i === selectedIndex}">
+          {{ conceptos.claveProdServCP }} - {{ conceptos.descripcion }}
+        </li>
+      </ul>
+    </div>
+  
+    <!-- 1ra fila: 3 columnas -->
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <label>Cantidad</label>
+        <input formControlName="Cantidad" class="form-control"  />
+        <span *ngIf="isValidField('Cantidad')" class="text-[#EE312A]">
+            {{ getFieldError('Cantidad') }}
+        </span>
+      </div>
+      <div>
+        <label>Descripción</label>
+        <input formControlName="descripcion" class="form-control" readonly/>
+      </div>
+      <div>
+        <label>Unidad</label>
+        <input formControlName="ClaveUnidad" class="form-control"readonly />
+      </div>
+    </div>
+  
+    <!-- 2da fila: 2 columnas -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label>Dimensiones</label>
+        <input formControlName="dimensiones" class="form-control" readonly/>
+      </div>
+      <div>
+        <label>Peso en Kg</label>
+        <input formControlName="pesoKg" class="form-control" />
+        <span *ngIf="isValidField('pesoKg')" class="text-[#EE312A]">
+            {{ getFieldError('pesoKg') }}
+        </span>
+      </div>
+    </div>
+  
+    <!-- 3ra fila: 3 columnas -->
+    <div class="grid grid-cols-3 gap-4 items-end">
+      <div>
+        <label>Valor de Mercancía</label>
+        <input formControlName="ValorMercancia" class="form-control" />
+      </div>
+      <div>
+        <label>Moneda</label>
+        <select formControlName="Moneda" class="form-control">
+          <option value="mxn">Peso Mexicano</option>
+          <option value="usd">Estados Unidos</option>
+        </select>
+      </div>
+      <div class="flex justify-end pt-6">
+        <button type="button" (click)="guardar()" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </form>
+  
+  
+<div class="flex justify-between mb-4 mt-5">
+
+    <div class="ms-3">
+        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+            data-hs-overlay="#hs-extralarge-modal8">
+            Cancelar
+        </button>
+    </div>
+    
+</div>

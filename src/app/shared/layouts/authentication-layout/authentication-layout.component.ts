@@ -60,9 +60,9 @@ export class AuthenticationLayoutComponent {
   activeSlides!: SlidesOutputData;
 
   slidesStore: any[] = [
-    {img:'./images/authentication/1.png'},
-    { img:'./images/authentication/2.png'},
-    { img:"./images/authentication/3.png"},
+    {img:'./images/cintegran.jpg'},
+    { img:'./images/cintegran2.jpg'},
+    { img:'./images/cintegran3.jpg'},
   ];
 
   getPassedData(data: SlidesOutputData) {

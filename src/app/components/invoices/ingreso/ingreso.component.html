@@ -8,28 +8,41 @@
                     <div class="contact-header">
                         <div class="sm:flex block items-center justify-between">
                             <div class="h5 font-semibold mb-5">CFDI 4.0</div>
+
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-4">
-                       
+                        <div class="col-span-12 md:col-span-3">
+                            <label for="invoice_type" class="form-label">Tipo Comprobante:</label>
+                            <select id="invoice_type" class="form-select mt-1 block w-full"
+                                formControlName="invoice_type" (change)="onTipoChange($event)"
+                                >
+                                <option value="I">Ingreso</option>
+                                <option value="E">Egreso</option>
+                            </select>
+                            <span *ngIf="isValidField('invoice_type')" class="text-red-600 text-sm">
+                                {{ getFieldError('invoice_type') }}
+                            </span>
+                        </div>
                         <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
                             <label for="serie_folio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="serie_folio" id="serie_folio"
-                                    formControlName="serie_folio"  (input)="onInputReceptorJun($event, 'series')"
+                                    formControlName="serie_folio" (input)="onInputReceptorJun($event, 'series')"
                                     (keydown)="onKeyDown($event)"
                                     [ngClass]="{'is-invalid': isValidField('serie_folio')}">
                                 <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                                     <i class="ri-add-line"></i>
                                 </div>
                             </div>
-                            <span *ngIf="formIngreso.get('serie_folio')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                            <span *ngIf="formIngreso.get('serie_folio')?.hasError('notFound') "
+                                class="text-[#EE312A] text-sm">
                                 Este código de serie no se encuentra .
                             </span>
                             <span *ngIf="isValidField('serie_folio')" class="text-[#EE312A] text-sm">
                                 {{ getFieldError('serie_folio') }}
                             </span>
-                           
+
 
                             <ul *ngIf="filteredSeries.length > 0"
                                 class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full">
@@ -45,11 +58,11 @@
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="fecha" class="form-label text-[.875rem] text-black">Fecha:</label>
-                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="fecha" id="fecha"
-                                formControlName="fecha">
+                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="fecha"
+                                id="fecha" formControlName="fecha">
                                 <option value="">Selecciona la fecha</option>
                                 @for (fecha of listadoFechas; track $index) {
-                                    <option value="{{fecha.fecha}}">{{ fecha.fecha }}</option>
+                                <option value="{{fecha.fecha}}">{{ fecha.fecha }}</option>
                                 }
                             </select>
                             @if (isValidField('fecha')) {
@@ -58,42 +71,20 @@
                             </span>
                             }
                         </div>
-                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <label for="regimenEmisor" class="form-label text-[.875rem] text-black">Régimen Emisor:</label>
-                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" formControlName="regimen_emisor" name="regimenEmisor" id="regimenEmisor">
-                                <option>Selecciona</option>
-                            </select>
-                            <span *ngIf="isValidField('regimen_emisor')" class="text-[#EE312A] text-sm">
-                                {{ getFieldError('regimen_emisor') }}
-                            </span>
-                        </div> -->
-                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="receptor" id="receptor"
-                                    formControlName="receptor">
-                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal1">
-                                    <i class="ri-add-line"></i>
-                                </div>
-                            </div>
-                            <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
-                                {{ getFieldError('receptor') }}
-                            </span>
-                        </div> -->
+
                         <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
-                            <!-- <app-autocomplete [listItems]="series" [formGroup]="formIngreso" formControlName="serie_folio"
-                                (itemSelected)="onSerieSelected($event)">
-                            </app-autocomplete> -->
+
                             <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="receptor" id="receptor"
-                                    formControlName="receptor"  (input)="onInputReceptorJun($event, 'receptors')"
+                                    formControlName="receptor" (input)="onInputReceptorJun($event, 'receptors')"
                                     (keydown)="onKeyDown2($event)" [ngClass]="{'is-invalid': isValidField('receptor')}">
                                 <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                                     <i class="ri-add-line"></i>
                                 </div>
                             </div>
-                            <span *ngIf="formIngreso.get('receptor')?.hasError('notFound') " class="text-[#EE312A] text-sm">
+                            <span *ngIf="formIngreso.get('receptor')?.hasError('notFound') "
+                                class="text-[#EE312A] text-sm">
                                 Este Receptor no se encuentra .
                             </span>
                             <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
@@ -110,19 +101,7 @@
                             </ul>
 
                         </div>
-                        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3">
-                            <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
-                            <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
-                                formControlName="uso_cfdi" id="usoCfdi">
-                                <option value="">Selecciona</option>
-                                <option *ngFor="let cfdi of listaCfdi" [value]="cfdi.uso">
-                                    {{ cfdi.nombre }}
-                                </option>
-                            </select>
-                            <span *ngIf="isValidField('uso_cfdi')" class="text-[#EE312A] text-sm">
-                                {{ getFieldError('uso_cfdi') }}
-                            </span>
-                        </div> -->
+
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
                             <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
@@ -162,20 +141,20 @@
 
                     <hr class="my-6 border-gray-300">
 
-                    @if (mostrarCP) {
-                    <app-complemento-cp />
-                    }
+                    <app-complemento-cp *ngIf="mostrarCP"></app-complemento-cp>
 
                     <hr class="my-6 border-gray-300">
                     <!-- <form [formGroup]="forma_pago"> -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
                         <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
                             <div class="">
-                                <label for="metodoPago" class="form-label text-[.875rem] text-black">Método Pago:</label>
-                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago" id="metodoPago" (change)="searchFormaPago()" formControlName="metodo_pago">
+                                <label for="metodoPago" class="form-label text-[.875rem] text-black">Método
+                                    Pago:</label>
+                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="metodoPago"
+                                    id="metodoPago" (change)="searchFormaPago()" formControlName="metodo_pago">
                                     <option value="">Selecciona una opción</option>
                                     @for (metodoPago of listadoMetodoPago; track $index) {
-                                        <option value="{{ metodoPago.metodo }}">{{ metodoPago.descripcion }}</option>
+                                    <option value="{{ metodoPago.metodo }}">{{ metodoPago.descripcion }}</option>
                                     }
                                 </select>
                                 <span *ngIf="isValidField('metodo_pago')" class="text-[#EE312A]">
@@ -184,7 +163,8 @@
                             </div>
                             <div class="-mt-5 mb-8">
                                 <label for="moneda" class="form-label text-[.875rem] text-black">Moneda:</label>
-                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="moneda" id="moneda" formControlName="moneda" >
+                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="moneda" id="moneda"
+                                    formControlName="moneda">
                                     <option value="">Selecciona una opción</option>
                                     <option value="MXN">Peso Mexicano</option>
                                     <option value="USD">Dolar Americano</option>
@@ -194,34 +174,37 @@
                                 </span>
                             </div>
                         </div>
-                            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
 
-                                <div class="">
-                                    <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
-                                    <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago" formControlName="forma_pago">
-                                        <option value="">Selecciona una opción</option>
-                                        @for (formaPago of listadoFormaPago; track $index) {
-                                            <option value="{{ formaPago.clave }}">{{ formaPago.descripcion }}</option>
-                                        }
-                                    </select>
-                                    <span *ngIf="isValidField('forma_pago')" class="text-[#EE312A]">
-                                        {{ getFieldError('forma_pago') }}
-                                    </span>
-                                </div>
-                                <div class="-mt-5 mb-8">
-                                    <label for="tipo-cambio" class="form-label text-[.875rem] text-black">Tipo de Cambio:</label>
-                                    <input id="tipo-cambio" type="text" class="mt-1 block w-full rounded-md sm:text-sm" formControlName="tipo_cambio">
-                                    <span *ngIf="isValidField('tipo_cambio')" class="text-[#EE312A]">
-                                        {{ getFieldError('tipo_cambio') }}
-                                    </span>
-                                </div>
+                            <div class="">
+                                <label for="formaPago" class="form-label text-[.875rem] text-black">Forma Pago:</label>
+                                <select class="mt-1 block w-full rounded-md sm:text-sm" name="formaPago" id="formaPago"
+                                    formControlName="forma_pago">
+                                    <option value="">Selecciona una opción</option>
+                                    @for (formaPago of listadoFormaPago; track $index) {
+                                    <option value="{{ formaPago.clave }}">{{ formaPago.descripcion }}</option>
+                                    }
+                                </select>
+                                <span *ngIf="isValidField('forma_pago')" class="text-[#EE312A]">
+                                    {{ getFieldError('forma_pago') }}
+                                </span>
                             </div>
+                            <div class="-mt-5 mb-8">
+                                <label for="tipo-cambio" class="form-label text-[.875rem] text-black">Tipo de
+                                    Cambio:</label>
+                                <input id="tipo-cambio" type="text" class="mt-1 block w-full rounded-md sm:text-sm"
+                                    formControlName="tipo_cambio">
+                                <span *ngIf="isValidField('tipo_cambio')" class="text-[#EE312A]">
+                                    {{ getFieldError('tipo_cambio') }}
+                                </span>
+                            </div>
+                        </div>
 
                         <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6">
                             <app-totales></app-totales>
                         </div>
                     </div>
-                    
+
                     <!-- </form> -->
                     <div class="flex justify-between my-5 p-2 mx-2">
                         <div>
@@ -237,11 +220,7 @@
                             </button>
                         </div>
                     </div>
-                    <!-- <div>
-                        @for (serie of listSeries; track $index) {
-                            {{  serie }}
-                        }
-                    </div> -->
+
                 </div>
             </div>
 

@@ -1,0 +1,269 @@
+<!-- NAVBAR FIJO -->
+<nav class="bg-white shadow fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <img src="./images/logo.png" alt="Logo" class="w-15 h-10" />
+            <!-- <span class="font-bold text-blue-800 text-xl">EASyS</span> -->
+        </div>
+        <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
+            <li><a (click)="scrollToSection('inicio')" class="hover:text-blue-600 cursor-pointer">Inicio</a></li>
+            <li><a (click)="scrollToSection('beneficios')" class="hover:text-blue-600 cursor-pointer">Beneficios</a>
+            </li>
+            <li><a (click)="scrollToSection('precios')" class="hover:text-blue-600 cursor-pointer">Precios</a></li>
+            <li><a (click)="scrollToSection('blog')" class="hover:text-blue-600 cursor-pointer">Blog</a></li>
+            <li><a (click)="scrollToSection('contacto')" class="hover:text-blue-600 cursor-pointer">Contacto</a></li>
+        </ul>
+        <button (click)="irAlLogin()"
+            class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-lg font-semibold px-6 py-3 rounded transition-transform duration-200 active:scale-105">
+            Iniciar sesión
+        </button>
+
+
+    </div>
+</nav>
+
+<!-- CONTENIDO CON SCROLL -->
+<div class="pt-24 scroll-smooth mx-4 md:mx-8">
+    <section id="inicio" class="py-16 bg-sky-100"
+        style="background-image: url('./images/fondo.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+
+            <!-- Izquierda: texto y botones -->
+            <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+                <h1 class="text-5xl font-bold  mb-6" style="color: #7375f1;">Sistema de Facturación Electrónica EasyS
+                    Web</h1>
+                <p class="text-2xl font-semibold mb-4" style="color: #FFA500;">
+                    Factura más fácil con EasySWeb
+                </p>
+
+                <!-- Lista de beneficios -->
+                <ul class="mb-8 space-y-2 text-left text-gray-700 font-medium text-lg">
+                    <li class="flex items-center gap-2">
+                        <span class="text-[#FFA500] text-xl">✔</span> CFDI 4.0
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-[#FFA500] text-xl">✔</span> Timbrado masivo
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-[#FFA500] text-xl">✔</span> Plataforma Multi RFC
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-[#FFA500] text-xl">✔</span> Carta Porte 3.1
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-[#FFA500] text-xl">✔</span> Y mucho más
+                    </li>
+                </ul>
+
+                <!-- Botones -->
+                <div class="flex flex-col md:flex-row justify-center md:justify-start gap-6">
+                    <a (click)="scrollToSection('beneficios')"
+                        class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-xl font-bold px-10 py-5 rounded-full cursor-pointer transition-transform transform hover:scale-105 duration-300 ">
+                        CONOCE MÁS
+                    </a>
+
+
+                    <a (click)="scrollToSection('precios')"
+                        class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-xl font-bold px-10 py-5 rounded-full cursor-pointer transition-transform transform hover:scale-105 duration-300">
+                        VER PRECIOS
+                    </a>
+                </div>
+            </div>
+
+            <!-- Derecha: video -->
+            <div class="md:w-1/2 w-full">
+                <div class="aspect-w-16 aspect-h-9">
+                    <iframe class="w-full h-full rounded-lg shadow-lg"
+                        src="https://www.youtube.com/watch?v=yJhgHGloTU0&t=1s&ab_channel=EasysWeb"
+                        title="Video de presentación" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+
+    <!-- BENEFICIOS -->
+    <!-- BENEFICIOS -->
+    <section id="beneficios" class="py-16 bg-white text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6" style="color: #7375f1;">Conoce nuestros Beneficios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- CFDI 4.0 -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/cfdi.png" alt="CFDI 4.0" class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">CFDI 4.0</h3>
+                <p class="text-center text-gray-600">Actualiza tus facturas con la última versión del CFDI 4.0.</p>
+            </div>
+
+            <!-- Carta Porte -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/cartaPorte.png" alt="Carta Porte" class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">Carta Porte</h3>
+                <p class="text-center text-gray-600">Cumple con la regulación de la Carta Porte 3.1 de forma sencilla.
+                </p>
+            </div>
+
+            <!-- Fácil de Usar -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/facil.png" alt="Fácil de Usar" class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">Fácil de Usar</h3>
+                <p class="text-center text-gray-600">Nuestra plataforma es intuitiva y fácil de usar para todos.</p>
+            </div>
+
+            <!-- Timbrado Masivo -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/timbrado.png" alt="Timbrado Masivo" class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">Timbrado Masivo</h3>
+                <p class="text-center text-gray-600">Emite múltiples timbres de forma rápida y eficiente.</p>
+            </div>
+
+            <!-- Plataforma Multi RFC -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/multi.png" alt="Plataforma Multi RFC"
+                    class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">Plataforma Multi RFC</h3>
+                <p class="text-center text-gray-600">Gestiona múltiples RFCs desde una sola cuenta.</p>
+            </div>
+
+            <!-- Integra tu Tienda en Línea -->
+            <div class="flex flex-col items-center text-gray-700">
+                <img src="./images/tienda.png" alt="Integra tu Tienda en Línea"
+                    class="w-24 h-24 mb-4 rounded-full shadow-lg" />
+                <h3 class="text-xl font-semibold">Integra tu Tienda en Línea</h3>
+                <p class="text-center text-gray-600">Conéctate fácilmente con tu tienda en línea para automatizar el
+                    proceso.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="beneficios" class="py-16 bg-white text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6" style="color: #7375f1;">Nuestros Clientes</h2>
+
+
+
+        <!-- Integra tu Tienda en Línea -->
+        <div class="flex flex-col items-center text-gray-700">
+            <img src="./images/empresas.png" alt="empresas" class="w-50 h-50  " />
+
+        </div>
+        <!-- Integra tu Tienda en Línea -->
+        <div class="flex flex-col items-center text-gray-700">
+            <img src="./images/proveedores.jpg" alt="empresas" class="w-50 h-50  " />
+
+        </div>
+
+    </section>
+
+    <!-- PRECIOS -->
+    <section id="precios" class="py-16 bg-gray-100 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6" style="color: #7375f1;">Cotiza tus Timbres</h2>
+
+        <!-- Descripción -->
+        <p class="text-gray-600 mb-4">Sin plazos forzosos ni mensualidades, paga sólo por lo que usas.</p>
+        <p class="text-gray-600 mb-6">Vigencia de un año. Válidos para cualquier tipo de comprobantes CFDi.</p>
+
+        <!-- Contenedor principal -->
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 mb-10">
+
+            <!-- Imagen del Tigre -->
+            <img src="./images/tigre.avif" alt="tigre" class="w-64 h-auto rounded shadow" />
+
+            <!-- Calculadora de Precios con Slider -->
+            <div class="w-full md:w-1/2 text-left">
+                <label for="timbradoRange" class="block text-lg font-semibold text-gray-700 mb-2">Selecciona el número
+                    de timbres:</label>
+                <input type="range" id="timbradoRange" min="1" max="1000" [(ngModel)]="timbres"
+                    (input)="onTimbradoChange(timbres)"
+                    class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer mb-4" />
+                <div class="flex justify-between text-gray-600 mb-2">
+                    <span>1</span>
+                    <span>1000</span>
+                </div>
+                <p class="text-xl font-bold text-gray-800 mt-2">Precio: ${{ precio.toFixed(2) }}</p>
+            </div>
+
+        </div>
+
+        <!-- Botones -->
+        <div class="flex flex-col md:flex-row justify-center gap-6 mt-8">
+            <a href="#cotizarTimbrado"
+                class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-xl font-bold px-10 py-5 rounded-full cursor-pointer transition-transform transform hover:scale-105 duration-300">
+                Cotizar Timbrado Masivo
+            </a>
+            <a href="#comprarPaquetes"
+                class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-xl font-bold px-10 py-5 rounded-full cursor-pointer transition-transform transform hover:scale-105 duration-300">
+                Comprar Paquetes de Timbres
+            </a>
+        </div>
+    </section>
+
+
+
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center" style="color: #7375f1;">CONTACTO</h2>
+            <p class="text-gray-600 text-center text-lg mb-10">
+                ¿Tienes alguna duda? Escríbenos y en breve te responderemos.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-10 items-start">
+                <!-- Formulario -->
+                <form class="md:w-1/2 bg-white p-6 rounded-lg shadow-md w-full">
+                    <div class="mb-4">
+                        <label class="block text-left font-semibold text-gray-700 mb-2">Nombre *</label>
+                        <input type="text" class="w-full border border-gray-300 rounded px-4 py-2"
+                            placeholder="Tu nombre" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-left font-semibold text-gray-700 mb-2">Correo *</label>
+                        <input type="email" class="w-full border border-gray-300 rounded px-4 py-2"
+                            placeholder="tucorreo@example.com" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-left font-semibold text-gray-700 mb-2">Teléfono *</label>
+                        <input type="tel" class="w-full border border-gray-300 rounded px-4 py-2"
+                            placeholder="Tu número de teléfono" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-left font-semibold text-gray-700 mb-2">Mensaje *</label>
+                        <textarea class="w-full border border-gray-300 rounded px-4 py-2 h-32"
+                            placeholder="Tu mensaje aquí..." required></textarea>
+                    </div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="terms" class="mr-2" required />
+                        <label for="terms" class="text-gray-700 text-sm">Acepto los términos y condiciones</label>
+                    </div>
+                    <div class="mb-6">
+                        <!-- Imagen simulada de CAPTCHA -->
+                        <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="No soy un robot"
+                            class="h-12 mb-2" />
+                        <p class="text-sm text-gray-600">Este sitio está protegido por reCAPTCHA y se aplican la <a
+                                href="#" class="text-blue-600 underline">Política de privacidad</a> y los <a href="#"
+                                class="text-blue-600 underline">Términos del servicio</a> de Google.</p>
+                    </div>
+                    <button type="submit"
+                        class="bg-[#ff7a00] hover:bg-[#ff9500] text-white text-lg font-bold px-6 py-3 rounded-full w-full">
+                        Enviar Mensaje
+                    </button>
+                </form>
+
+                <!-- Mapa / Dirección -->
+                <div class="md:w-1/2 w-full">
+                    <iframe class="w-full h-96 rounded-lg shadow-md"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3733.7797471327524!2d-103.3918192!3d20.6596981!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428ad0a5b5f859d%3A0x7f64a1a73cf17a0e!2sGuadalajara%2C%20Jal.!5e0!3m2!1ses-419!2smx!4v1619479980484!5m2!1ses-419!2smx"
+                        allowfullscreen="" loading="lazy">
+                    </iframe>
+                    <p class="text-gray-700 mt-4 text-center">Guadalajara, Jalisco, México</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

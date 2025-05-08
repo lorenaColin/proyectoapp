@@ -39,22 +39,45 @@ export class FormSegurosComponent {
 
 
   cargarSeguroCarga(event: Event): void {
-    const selectedId = +(event.target as HTMLSelectElement).value;
+    const selectedId = (event.target as HTMLSelectElement).value;
   
+    // Si el valor seleccionado no es vacío
     if (selectedId) {
       const selectedSeguro = this.segurosCarga.find(
-        (seguro) => seguro.id === selectedId
-      ) || null;
+        (seguro) => seguro.id.toString() === selectedId // Comparar como cadenas
+      );
   
       if (selectedSeguro) {
         this.formSeguros.patchValue({
-          sCarge: selectedSeguro.id,
+          sCarge: selectedSeguro.id, // Asignar el ID del seguro seleccionado
         });
       }
     } else {
-      this.formSeguros.patchValue({ sCarge: null }); 
+      // Si no se seleccionó un valor, limpiar el valor de sCarge
+      this.formSeguros.patchValue({ sCarge: null });
     }
   }
   
   
+  onAmbientSelected(event: Event): void {
+    const selectedAsegure = (event.target as HTMLSelectElement).value;
+  
+    // Encuentra el seguro seleccionado de la lista de seguros ambientales
+    const selectedSeguro = this.segurosAmbientales.find(
+      (seguro) => seguro.asegure === selectedAsegure
+    );
+  
+    if (selectedSeguro) {
+      // Asigna el valor de la póliza (polize) al campo 'pSeguro'
+      this.formSeguros.patchValue({
+        pSeguro: selectedSeguro.polize,
+      });
+    } else {
+      // Si no se selecciona un valor válido, limpia el campo
+      this.formSeguros.patchValue({
+        pSeguro: null,
+      });
+    }
+  }
+   
 }

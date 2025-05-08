@@ -1,0 +1,20 @@
+::ng-deep .custom-blue-bg,
+::ng-deep .authentication-cover,
+::ng-deep .swiper-wrapper,
+::ng-deep .swiper-slide {
+  background: linear-gradient(to right, #3b82f6, #2254c0); // azul degradado
+  height: 100%;
+  width: 100%;
+}
+
+::ng-deep .aunthentication-cover-content
+{
+    background: linear-gradient(to right, #3b82f6, #052977); // azul degradado
+    height: 100%;
+    width: 100%;
+  }
+
+  ::ng-deep .custom-blue-background {
+    background: linear-gradient(to right, #3b82f6, #2254c0); // Degradado azul
+  }
+  

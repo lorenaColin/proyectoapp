@@ -1,12 +1,13 @@
 <p class="h5 font-semibold mb-2">Iniciar sesión</p>
-<div class="btn-list">
-  <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]">
-    <i class="ri-facebook-fill"></i>
+<div class="btn-list flex gap-2">
+  <button aria-label="Facebook" type="button" class="ti-btn ti-btn-icon bg-[#1877F2] text-white rounded-full p-3 hover:opacity-90 transition">
+    <i class="ri-facebook-fill text-xl"></i>
   </button>
-  <button aria-label="button" type="button" class="ti-btn ti-btn-icon ti-btn-light">
-    <i class="ri-twitter-fill"></i>
+  <button aria-label="Twitter" type="button" class="ti-btn ti-btn-icon bg-[#1DA1F2] text-white rounded-full p-3 hover:opacity-90 transition">
+    <i class="ri-twitter-fill text-xl"></i>
   </button>
 </div>
+
 <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
   <div class="grid grid-cols-12 gap-y-4">
     <div class="xl:col-span-12 col-span-12 mt-0">

@@ -8,9 +8,11 @@ import { CartaPorteService } from '../../../services/carta-porte.service';
   styleUrl: './complemento-cp.component.scss'
 })
 export class ComplementoCpComponent {
+  
   private fb = inject(FormBuilder);
   private cartaPorteService = inject(CartaPorteService);
   formCartaPorte = this.cartaPorteService.getFormCarta();
+  
   constructor() {
     this.formCartaPorte = this.cartaPorteService.getFormCarta();
 

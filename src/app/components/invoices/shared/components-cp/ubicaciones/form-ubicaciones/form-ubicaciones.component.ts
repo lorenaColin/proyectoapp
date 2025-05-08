@@ -49,11 +49,11 @@ export class FormUbicacionesComponent {
   addUbicacion(tipo: string) {
     const ubicacionesnew = this.fb.group({
       id: [],
-      tipo: [tipo, Validators.required],
-      rfc: ['', Validators.required],
-      datosGenerales: ['', Validators.required],
-      fechaHora: ['', Validators.required],
-      distancia: ['', Validators.required],
+      tipo: [tipo],
+      rfc: [''],
+      // datosGenerales: ['', Validators.required],
+      fechaHora: [''],
+      distancia: [''],
     });
 
     this.ubicaciones.push(ubicacionesnew);
@@ -199,7 +199,9 @@ export class FormUbicacionesComponent {
   
     const row = this.ubicaciones.at(index);
     const rfcControl = row.get('rfc');
-    const value = `${ubicacion.idUbicacion} - ${ubicacion.rfc}`;
+    const value = ubicacion.rfc;
+
+
     
     rfcControl?.setValue(value);
   
@@ -249,7 +251,9 @@ export class FormUbicacionesComponent {
     return this.validatorsService.isValidField(this.formCartaPorte, field);
   }
 
- 
+  get PesoBrutoTotal(): number {
+    return this.cartaPorteService.formInvoice.get('PesoBrutoTotal')?.value;
+  }
   
   
 }

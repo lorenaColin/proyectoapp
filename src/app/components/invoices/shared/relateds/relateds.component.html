@@ -8,7 +8,7 @@
 @if (mostrarTablaR) {
 <div [formGroup]="formulario">
     <div formArrayName="relaciones">
-        <!-- <pre>{{ relaciones.value | json }}</pre> -->
+        <pre>{{ relaciones.value | json }}</pre>
         <table class="w-full border border-gray-200 table text-nowrap table-bordered mb-3">
             <thead>
                 <tr>
@@ -38,21 +38,25 @@
                         <div formArrayName="uuids">
                             <div *ngFor="let uuid of getUuids(row).controls; let j = index" [formGroupName]="j"
                                 class="flex flex-col gap-1">
-                                
+
                                 <div class="flex items-center gap-2">
-                                    <input type="text" formControlName="uuid" class="form-control block flex-1">
+                                    <select formControlName="uuid" class="form-control block flex-1">
+                                        <option value="">Selecciona UUID</option>
+                                        <option *ngFor="let uuid of uuidsDisponibles" [value]="uuid">{{ uuid }}</option>
+                                    </select>
                                     <button type="button"
                                         class="ti-btn ti-btn-icon ti-btn-outline-danger !rounded-full ti-btn-wave"
                                         (click)="removeUuid(i, j)">
                                         <i class="ri-delete-bin-line"></i>
                                     </button>
                                 </div>
-                    
-                                <span *ngIf="isValidField(row, 'uuids.' + j + '.uuid')" class="text-[#EE312A] text-sm font-normal">
+
+                                <span *ngIf="isValidField(row, 'uuids.' + j + '.uuid')"
+                                    class="text-[#EE312A] text-sm font-normal">
                                     {{ getFieldError(row, 'uuids.' + j + '.uuid') }}
                                 </span>
                             </div>
-                    
+
                             <button type="button"
                                 class="mt-2 flex items-center justify-center w-10 h-10 rounded-full mx-auto ti-btn-primary"
                                 (click)="addUuid(i)">

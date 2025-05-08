@@ -5,6 +5,18 @@ import { AuthGuardService } from './components/services/auth-guard.service';
 import { noAuthGuard } from './no-auth.guard';
 
 const routes: Routes = [
+  { path: 'inicio',
+    loadChildren: () => import('./components/inicio/inicio.module').then(m => m.InicioModule),
+    canActivate: [noAuthGuard]
+  },
+  {
+    path: 'lealtad',
+    loadChildren: () => import('./components/lealtad/lealtad.module').then(m =>m.LealtadModule),
+  },
+  {
+    path: 'herramienta',
+    loadChildren: () => import('./components/herramientas/herramientas.module').then(m =>m.HerramientasModule),
+  },
   { path: 'auth',
     loadChildren: () => import('./components/authentication/authentication.module').then(m => m.AuthenticationModule),
     canActivate: [noAuthGuard]
