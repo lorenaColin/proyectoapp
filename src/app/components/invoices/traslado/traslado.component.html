@@ -1,4 +1,4 @@
-<form [formGroup]="formTraslado"  autocomplete="off">
+<form [formGroup]="formTraslado" autocomplete="off">
     <!-- <pre> {{ formTraslado.value | json }} </pre> -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="xl:col-span-12 col-span-12">
@@ -11,13 +11,7 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-12 md:col-span-3">
-                            <label for="invoice_type" class="form-label">Tipo Comprobante:</label>
-                            
-                            <span *ngIf="isValidField('invoice_type')" class="text-red-600 text-sm">
-                                {{ getFieldError('invoice_type') }}
-                            </span>
-                        </div>
+
                         <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
                             <label for="serie_folio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
@@ -95,7 +89,7 @@
                             </ul>
 
                         </div> -->
-<!-- 
+                        <!-- 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
                             <label for="usoCfdi" class="form-label text-[.875rem] text-black">Uso CFDI:</label>
                             <select class="block w-full rounded-md sm:text-sm form-select !py-[0.59rem]" name="usoCfdi"
@@ -124,18 +118,11 @@
 
                     <hr class="my-6 border-gray-300">
 
-                    <div class="form-check form-switch mb-2" id="agregaCP">
-                        <div class="custom-toggle-switch flex items-center mb-4">
-                            <input id="toggleswitchPrimary2" name="toggleswitch001" type="checkbox"
-                                (change)="agregarCartaP($event)">
-                            <label for="toggleswitchPrimary2" class="label-primary"></label><span
-                                class="ms-3 font-bold">Complemento Carta Porte </span>
-                        </div>
-                    </div>
+
 
                     <hr class="my-6 border-gray-300">
 
-                    <app-complemento-cp ></app-complemento-cp>
+                    <app-complemento-cp></app-complemento-cp>
 
                     <hr class="my-6 border-gray-300">
                     <!-- <form [formGroup]="forma_pago"> -->
@@ -202,16 +189,17 @@
                     <!-- </form> -->
                     <div class="flex justify-between my-5 p-2 mx-2">
                         <div>
-                            <button type="button"
+                            <button type="button" (click)="cancelar()"
                                 class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover">
                                 Cancelar
                             </button>
                         </div>
+
                         <div>
                             <button type="submit" (click)="onSubmitTraslado()"
-                            class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
-                            Emitir
-                        </button>
+                                class="ti-btn ti-btn-primary-full text-white !font-medium ti-btn-darken-hover">
+                                Emitir
+                            </button>
                         </div>
                     </div>
 
@@ -221,3 +209,6 @@
         </div>
     </div>
 </form>
+<div id="loader" *ngIf="showLoader">
+    <img src="images/loader.svg" alt="" />
+</div>

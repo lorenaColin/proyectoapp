@@ -138,7 +138,7 @@ export class NavService implements OnDestroy {
         { path: '/invoices/ingreso', title: 'CFDI 4.0', type: 'link' },
         { path: '/invoices/traslado', title: 'Carta Porte', type: 'link' },
         { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
-        { path: '/invoices/list', title: 'Listar', type: 'link' },
+        // { path: '/invoices/list', title: 'Listar', type: 'link' },
       ],
     },  
 
@@ -173,7 +173,24 @@ export class NavService implements OnDestroy {
       
       ],
     },  
+    { headTitle: 'emitidos' },
+    {
+      title: 'Emitidos',
+      type: 'sub',
+      selected : false,
+      active: false,
+      icon: 'file',
+      badgeClass: 'secondary',
+      badgeText: 'secondary',
+      badgeValue: 'New',
+      children: [
+        { path: '/emitidos/cfdi', title: 'CFDI 4.0', type: 'link' },
+    { path: '/emitidos/cp', title: 'Carta Porte', type: 'link' },
+      
+      ],
+    },  
   ];
+  
 
   items = new BehaviorSubject<Menu[]>(this.MENUITEMS);
 }

@@ -85,6 +85,8 @@ export class IngresoComponent implements OnInit {
   ngOnInit(): void {
     this.loadSerie();
     this.loadReceptor();
+    const uuidCompany = this.authService.getUuid();
+    console.log('UUID obtenido desde getUuid():', uuidCompany); 
     
   }
   // onSubmitIngreso() {
@@ -133,7 +135,7 @@ export class IngresoComponent implements OnInit {
     }
   
     const uuidCompany = this.authService.getUuid();
-  
+    console.log('UUID obtenido:', uuidCompany);
     const formulario = {
       ...this.formIngreso.value,
       uuid_company: uuidCompany || '',
@@ -154,7 +156,7 @@ export class IngresoComponent implements OnInit {
           icon: 'success',
           confirmButtonText: 'Ver comprobantes'
         }).then(() => {
-          this.router.navigate(['/invoices/list']);
+          this.router.navigate(['/emitidos/cfdi']);
         });
       },
       (error) => {
@@ -166,7 +168,7 @@ export class IngresoComponent implements OnInit {
           icon: 'success',
           confirmButtonText: 'Ver comprobantes'
         }).then(() => {
-          this.router.navigate(['/invoices/list']);
+          this.router.navigate(['/emitidos/cfdi']);
         });
       }
     );
@@ -180,7 +182,9 @@ export class IngresoComponent implements OnInit {
     return this.validatorsService.isValidField(this.formIngreso, field);
   }
 
-
+  cancelar() {
+    this.router.navigate(['/dashboard']);
+  }
   loadSerie(): void {
 
     this.seriesService.getAllSeries().subscribe((response) => {
@@ -318,26 +322,24 @@ export class IngresoComponent implements OnInit {
       }
     }
   }
+  receptorNombreVisible: string = '';
   selectReceptor(receptor: any): void {
-    console.log(receptor);
-    console.log(receptor.regime);
-  
-    this.formIngreso.get('receptor')?.setValue(`${receptor.name}`);
-  
+    this.formIngreso.get('receptor')?.setValue(receptor.id); // guarda solo el ID
+    this.receptorNombreVisible = receptor.name; // muestra el nombre
     this.filteredReceptors = [];
-    this.selectedIndex = -1;   
-  
-    this.listaCfdi = LISTADOUSOCFDI.filter(cfdi => 
+    this.selectedIndex = -1;
+    this.listaCfdi = LISTADOUSOCFDI.filter(cfdi =>
       cfdi.regimen.some(r => receptor.regime.includes(r))
     );
   }
+  
   @HostListener('document:click', ['$event'])
   onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
   
     if (!targetElement.closest('#receptor')) {
       const inputControl = this.formIngreso.get('receptor');
-      const inputValue = inputControl?.value?.trim().toLowerCase();
+      const inputValue = this.receptorNombreVisible.trim().toLowerCase();
   
       if (inputValue) {
         const exists = this.listReceptors.some(item => item.name.toLowerCase() === inputValue);

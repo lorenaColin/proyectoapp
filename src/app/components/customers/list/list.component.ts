@@ -23,17 +23,38 @@ export class ListComponent {
   @Input() cliente: CustomersInterface = {} as CustomersInterface;
   showLoader = false;
   listadoRegimen: RegimenInterface[] = [];
+  // ngOnInit() {
+  //   this.showLoader = true;
+  //   this.customerService.getCustomers().subscribe((response) => {
+  //     this.showLoader = false;
+  //     this.clientes = response.data;
+  //     this.filteredCustomer = response.data;
+  //     console.log(this.clientes);
+  //   });
+  //   this.listadoRegimen = this.utilsService.getRegimenSat('');
+  // }
   ngOnInit() {
     this.showLoader = true;
     this.customerService.getCustomers().subscribe((response) => {
       this.showLoader = false;
-      this.clientes = response.data;
-      this.filteredCustomer = response.data;
-      console.log(this.clientes);
+      const allClients = response.data as CustomersInterface[];
+      const uuid = this.getCompanyUuid();
+  
+      if (uuid) {
+        // Solo los clientes cuya propiedad company_id coincida
+        this.clientes = allClients.filter(c => c.company_id === uuid);
+      } else {
+        this.clientes = []; // o todos, según prefieras
+      }
+  
+      this.filteredCustomer = [...this.clientes];
     });
     this.listadoRegimen = this.utilsService.getRegimenSat('');
   }
-
+  
+  private getCompanyUuid(): string | null {
+    return localStorage.getItem('company');
+  }
   editCustomer(id: number): void {
     this.showLoader = true;
     this.customerService.getCustomerById(id).subscribe((response) => {

@@ -34,7 +34,23 @@ export class AuthService {
 
     this.startTokenRenewalTimer();
   }
+  
 
+  getNombreUsuario(): string | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        console.log('Nombre extraído del token:', decoded.name);  // <---
+        return decoded.name || null;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+  
   private startTokenRenewalTimer(): void {
     if (this.tokenRenewalSubscription) {
       // console.warn('El timer ya está a ctivo, no se inicializará de nuevo.');
@@ -88,21 +104,11 @@ export class AuthService {
         })
       );
   }
-
   getUuid(): string | null {
-    const token = this.getToken();
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        return decoded.company_uuid || null; 
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        return null; 
-      }
-    }
-    return null;
+    return localStorage.getItem('company');
   }
-
+  
+  
   verifyCode(code: string): Observable<VerifyCodeResponseInterface> {
     return this.http.post<VerifyCodeResponseInterface>(
       `${this.apiUrl}/verifycode/`,
@@ -117,7 +123,9 @@ export class AuthService {
   getRefreshToken() {
     return localStorage.getItem('refreshToken');
   }
-
+  getUserInfo(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/me`);
+  }
   refreshToken(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/refresh`, {});
   }

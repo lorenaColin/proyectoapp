@@ -34,15 +34,28 @@ export class AccountsComponent implements OnInit {
       this.listadoEmpresas = data;
     });
   }
+  // setCompany(id: string): void {
+  //   this.showLoader = true; 
+  //   localStorage.setItem('company', id);
+  
+  //   setTimeout(() => {
+  //     this.router.navigate(['dashboard']).then(() => {
+  //       this.showLoader = false; 
+  //     });
+  //   }, 500); 
+  // }
+  
   setCompany(id: string): void {
-    this.showLoader = true; 
+    this.showLoader = true;
     localStorage.setItem('company', id);
+  
+    console.log('Empresa seleccionada ID (localStorage):', id);
   
     setTimeout(() => {
       this.router.navigate(['dashboard']).then(() => {
-        this.showLoader = false; 
+        this.showLoader = false;
       });
-    }, 500); 
+    }, 500);
   }
   
   

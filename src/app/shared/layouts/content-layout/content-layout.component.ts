@@ -5,6 +5,7 @@ import { CompanyService } from '../../../components/services/company.service';
 import { CompanyDetailService } from '../../../components/services/companyDetail.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-content-layout',
@@ -97,14 +98,24 @@ export class ContentLayoutComponent {
   ngOnInit(): void {
     this.obtenerNombreEmpresa();
   }
-
   obtenerNombreEmpresa() {
+    const companyIdFromStorage = localStorage.getItem('company'); // Obtener ID desde localStorage
+    if (!companyIdFromStorage) return;
+  
     this.company.listCompany().subscribe({
       next: (response) => {
-        const company = response.data?.[0];
+        const companies = response.data || [];
+        const company = companies.find(c => c.id === companyIdFromStorage); // Buscar empresa con ID desde localStorage
+  
+        // Verificar que encontramos la empresa correcta
+        console.log('Empresa encontrada desde localStorage:', company);
+  
         this.empresaNombre = company?.name ?? 'Empresa';
-        this.companyId = company?.id;
-
+        this.companyId = company?.id ?? '';
+  
+        console.log('Nombre de la empresa:', this.empresaNombre);
+        console.log('ID de la empresa:', this.companyId);
+  
         if (this.companyId) {
           this.obtenerDetallesCompany(this.companyId);
         }
@@ -114,7 +125,7 @@ export class ContentLayoutComponent {
       }
     });
   }
-
+  
   obtenerDetallesCompany(companyId: string) {
     console.log('Buscando detalles de la company con ID:', companyId);
     this.companyDetail.getetailById(companyId).subscribe({

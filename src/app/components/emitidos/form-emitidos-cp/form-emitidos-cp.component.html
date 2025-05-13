@@ -1,0 +1,94 @@
+<div class="bg-gradient-to-r from-yellow-400 to-yellow-600  p-6 rounded-lg shadow mb-6">
+    <h1 class="text-2xl font-bold text-center">Comprobantes - Facturas</h1>
+  </div>
+  
+  <div class="p-6 space-y-4">
+    <!-- Botones de acciones -->
+    <div class="p-6 space-y-4">
+      <!-- Botones de acciones -->
+      <div class="flex flex-wrap gap-4">
+        <!-- Nuevo Comprobante -->
+        <div class="relative">
+          <button class="btn-orange" (click)="toggleNuevoComprobante()">
+            Nuevo Comprobante
+          </button>
+          <div *ngIf="showNuevoComprobante" class="absolute mt-2 bg-white border rounded shadow-md z-10 w-48">
+            <button class="btn-dropdown" (click)="nuevaFactura()">Nueva Factura Carta Porte</button>
+          </div>
+        </div>
+    
+        <!-- Filtro Avanzado -->
+        <button class="btn-orange">
+          Filtro Avanzado
+        </button>
+    
+        <!-- Descargar / Enviar -->
+        <div class="relative">
+          <button class="btn-orange" (click)="toggleDescargarEnviar()">
+            Descargar / Enviar
+          </button>
+          <div *ngIf="showDescargarEnviar" class="absolute mt-2 bg-white border rounded shadow-md z-10 w-48">
+            <button class="btn-dropdown">Descargar archivo</button>
+            <button class="btn-dropdown">Enviar archivo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+    <!-- Tabla -->
+    <div class="overflow-x-auto  shadow rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
+        <thead class="">
+          <tr>
+            <th class="px-6 py-3 font-medium">Folio</th>
+            <th class="px-6 py-3 font-medium">Fecha</th>
+            <th class="px-6 py-3 font-medium">serie</th>
+            <th class="px-6 py-3 font-medium">RFC</th>
+            <th class="px-6 py-3 font-medium">Total</th>
+            <th class="px-6 py-3 font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let factura of facturas">
+            <td class="px-6 py-4">{{ factura.folio }}</td>
+            <td class="px-6 py-4">{{ factura.date }}</td>
+            <td class="px-6 py-4">{{ factura.serie }}</td>
+            <td class="px-6 py-4">{{ factura.rfc_pac }}</td>
+            <td class="px-6 py-4">{{ factura.total }}</td>
+            <td class="px-6 py-4 space-x-2">
+              <button
+              type="button"
+              class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-success-full"
+              (click)="onDownloadXml(factura)">
+              <i class="ri-download-2-line align-middle me-2 inline-block"></i> XML
+            </button>
+            <button type="button" class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-success-full btn-wave">
+              <i class="ri-download-2-line align-middle me-2 inline-block"></i>Pdf
+          </button>
+             
+              <button aria-label="button" type="button" class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-danger-full btn-wave">
+                  <i class="ri-delete-bin-line align-middle me-2 inline-block"></i>Eliminar
+              </button>
+        
+              
+            </td>
+          </tr>
+          <tr *ngIf="facturas.length === 0">
+            <td colspan="6" class="text-center text-gray-500 py-6">
+              No hay facturas disponibles para esta empresa.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Exportar -->
+    <div class="flex justify-end gap-2 pt-4">
+      <button class="btn-orange" (click)="copiarTabla()">Copiar</button>
+      <button class="btn-orange" (click)="exportarExcel()">Excel</button>
+      <button class="btn-orange" (click)="exportarPDF()">PDF</button>
+      <button class="btn-orange" (click)="imprimirTabla()">Imprimir</button>
+    </div>
+    
+  </div>

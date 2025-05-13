@@ -60,7 +60,9 @@ export class TrasladoComponent {
     this.conceptsService.setForm(this.formTraslado);
     
   }
-
+  cancelar() {
+    this.router.navigate(['/dashboard']);
+  }
   formTraslado: FormGroup = this.fb.group({
     invoice_type: 'T',
     serie_folio: '',
@@ -79,64 +81,72 @@ export class TrasladoComponent {
     // subtotal: this.totalsService.getFormTotals().get('subtotal')?.value(6.200),
     // concepts: this.conceptsService.getProductosFormArray(),
   });
-  onSubmitTraslado() {
-    console.log('Form valid:', this.formTraslado.valid);
+  showLoader = false;
+
+onSubmitTraslado() {
+  console.log('Form valid:', this.formTraslado.valid);
   console.log('Value:', this.formTraslado.value);
 
   // Nuevo: listamos los controles inválidos
   const invalidControls = Object.keys(this.formTraslado.controls)
     .filter(key => this.formTraslado.get(key)?.invalid);
   console.log('Invalid controls:', invalidControls);
-    if (this.formTraslado.invalid) {
-      this.formTraslado.markAllAsTouched();
-      return;
-    }
   
-    const uuidCompany = this.authService.getUuid();
+  if (this.formTraslado.invalid) {
+    this.formTraslado.markAllAsTouched();
+    return;
+  }
+
+  // Activamos el loader antes de la llamada al servicio
+  this.showLoader = true;
+
+  const uuidCompany = this.authService.getUuid();
   
-    const formulario = {
-      ...this.formTraslado.value,
-      uuid_company: uuidCompany || '',
-    };
+  const formulario = {
+    ...this.formTraslado.value,
+    uuid_company: uuidCompany || '',
+  };
   
-    this.invoicesService.createInvoice(formulario).subscribe(
-      (respuesta: any) => {
-        console.log(respuesta);
-  
-        const rutaXml = respuesta?.xml_path;
-        if (rutaXml) {
-          localStorage.setItem('ultimoXmlGenerado', rutaXml);
-        }
-  
-        Swal.fire({
-          title: '¡Comprobante creado!',
-          text: 'El comprobante se ha generado correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Ver comprobantes'
-        }).then(() => {
-          this.router.navigate(['/invoices/list']);
-        });
-      },
-      (error) => {
-        console.error('Error al crear comprobante:', error);
-  
-        Swal.fire({
-          title: '¡Comprobante creado!',
-          text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
-          icon: 'success',
-          confirmButtonText: 'Ver comprobantes'
-        }).then(() => {
-          this.router.navigate(['/invoices/list']);
-        });
+  this.invoicesService.createInvoice(formulario).subscribe(
+    (respuesta: any) => {
+      console.log(respuesta);
+
+      const rutaXml = respuesta?.xml_path;
+      if (rutaXml) {
+        localStorage.setItem('ultimoXmlGenerado', rutaXml);
       }
-    );
-  }
-  
-  agregarCartaP(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    this.mostrarCP = isChecked;
-    console.log('Checkbox is:', isChecked ? 'Checked' : 'Unchecked');
-  }
+
+      // Desactivamos el loader al recibir la respuesta
+      this.showLoader = false;
+
+      Swal.fire({
+        title: '¡Comprobante creado!',
+        text: 'El comprobante se ha generado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Ver comprobantes'
+      }).then(() => {
+        this.router.navigate(['/emitidos/cp']);
+      });
+    },
+    (error) => {
+      console.error('Error al crear comprobante:', error);
+
+      // Desactivamos el loader en caso de error
+      this.showLoader = false;
+
+      Swal.fire({
+        title: '¡Comprobante creado!',
+        text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
+        icon: 'success',
+        confirmButtonText: 'Ver comprobantes'
+      }).then(() => {
+        this.router.navigate(['/emitidos/cp']);
+      });
+    }
+  );
+}
+
+
 
  
   getFieldError(field: string): string | null {
@@ -159,7 +169,6 @@ export class TrasladoComponent {
     });
   }
 
-  showLoader = false;
 
   onInputReceptorJun(event: any, listType: 'series' | 'receptors'): void {
     const query = (event.target.value || '').trim().toLowerCase();

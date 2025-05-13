@@ -15,8 +15,7 @@
                         <div class="col-span-12 md:col-span-3">
                             <label for="invoice_type" class="form-label">Tipo Comprobante:</label>
                             <select id="invoice_type" class="form-select mt-1 block w-full"
-                                formControlName="invoice_type" (change)="onTipoChange($event)"
-                                >
+                                formControlName="invoice_type" (change)="onTipoChange($event)">
                                 <option value="I">Ingreso</option>
                                 <option value="E">Egreso</option>
                             </select>
@@ -73,33 +72,40 @@
                         </div>
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
-
                             <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
+
                             <div class="input-group">
-                                <input type="text" class="form-control" name="receptor" id="receptor"
-                                    formControlName="receptor" (input)="onInputReceptorJun($event, 'receptors')"
-                                    (keydown)="onKeyDown2($event)" [ngClass]="{'is-invalid': isValidField('receptor')}">
+                                <!-- Input visible para mostrar el nombre del receptor -->
+                                <input type="text" class="form-control" [value]="receptorNombreVisible"
+                                    (input)="onInputReceptorJun($event, 'receptors')" (keydown)="onKeyDown2($event)"
+                                    [ngClass]="{'is-invalid': isValidField('receptor')}">
+
                                 <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
                                     <i class="ri-add-line"></i>
                                 </div>
                             </div>
-                            <span *ngIf="formIngreso.get('receptor')?.hasError('notFound') "
+
+                            <!-- Campo oculto que guarda el ID del receptor en el formulario -->
+                            <input type="hidden" formControlName="receptor" />
+
+                            <!-- Validaciones -->
+                            <span *ngIf="formIngreso.get('receptor')?.hasError('notFound')"
                                 class="text-[#EE312A] text-sm">
-                                Este Receptor no se encuentra .
+                                Este Receptor no se encuentra.
                             </span>
                             <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
                                 {{ getFieldError('receptor') }}
                             </span>
 
+                            <!-- Lista de resultados -->
                             <ul *ngIf="filteredReceptors.length > 0"
-                                class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full">
+                                class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full z-10">
                                 <li *ngFor="let receptor of filteredReceptors; let i = index"
                                     (click)="selectReceptor(receptor)" [ngClass]="{'bg-gray-200': i === selectedIndex}"
-                                    class="text-black">
+                                    class="text-black px-2 py-1 cursor-pointer">
                                     {{ receptor.name }}
                                 </li>
                             </ul>
-
                         </div>
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">
@@ -208,7 +214,7 @@
                     <!-- </form> -->
                     <div class="flex justify-between my-5 p-2 mx-2">
                         <div>
-                            <button type="button"
+                            <button type="button" (click)="cancelar()"
                                 class="ti-btn ti-btn-danger-full text-white !font-medium ti-btn-darken-hover">
                                 Cancelar
                             </button>
