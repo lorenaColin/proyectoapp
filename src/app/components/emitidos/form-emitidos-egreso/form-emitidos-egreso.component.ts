@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
-import { CompanyService } from '../../services/company.service';
 import { InvoicesService } from '../../services/invoices.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { saveAs } from 'file-saver';
 import { invoiceDetailInterface } from '../../interfaces/invoice.interface';
 import { Router } from '@angular/router';
+import { CompanyService } from '../../services/company.service';
 @Component({
-  selector: 'app-form-emitidos',
-  templateUrl: './form-emitidos.component.html',
-  styleUrl: './form-emitidos.component.scss'
+  selector: 'app-form-emitidos-egreso',
+  templateUrl: './form-emitidos-egreso.component.html',
+  styleUrl: './form-emitidos-egreso.component.scss'
 })
-export class FormEmitidosComponent {
+export class FormEmitidosEgresoComponent {
   showNuevoComprobante = false;
   showDescargarEnviar = false;
-  showLoader = false;
+  showLoader = false
 
   constructor(private router: Router, private companyService: CompanyService, private invoicesService: InvoicesService) {
     this.obtenerNombreEmpresa(); // Obtener la información de la empresa
@@ -29,32 +29,35 @@ export class FormEmitidosComponent {
   }
 
   nuevaFactura() {
-    this.router.navigate(['/invoices/ingreso']);
+    this.router.navigate(['invoices/ingreso']);
   }
   empresaNombre: string = ''; // Nombre de la empresa
   facturas: any[] = []; // Aquí van las facturas
   companyId: string = '';
   obtenerNombreEmpresa() {
-    this.showLoader = true; 
+    this.showLoader = true;
+
     this.companyService.listCompany().subscribe({
       next: (response) => {
         const uuidCompany = localStorage.getItem('company');
         const companies = response.data ?? [];
-    
+
         const company = companies.find(c => c.id === uuidCompany);
         this.empresaNombre = company?.name ?? 'Empresa';
-    
+
         if (uuidCompany) {
           this.companyId = uuidCompany;
-          this.obtenerFacturas(uuidCompany); 
+          this.obtenerFacturas(uuidCompany); // ✅ ahora sí usa el uuid seleccionado
         } else {
           console.error('No se encontró empresa con ese UUID en localStorage');
-            this.showLoader = false; 
+    this.showLoader = false;
+
         }
       },
       error: (err) => {
         console.error('Error al obtener empresa', err);
-           this.showLoader = false;
+    this.showLoader = false;
+
       }
     });
   }
@@ -65,35 +68,26 @@ export class FormEmitidosComponent {
         const todas = response.data ?? [];
 
         // Aquí pones los console.log de depuración:
-        // console.log('UUID localStorage (empresa actual):', uuidCompany);
-        // console.log('UUIDs en facturas recibidas:', todas.map(f => f.uuid_company));
+        console.log('UUID localStorage (empresa actual):', uuidCompany);
+        console.log('UUIDs en facturas recibidas:', todas.map(f => f.uuid_company));
 
         // Tu filtro, ahora con trim() por si hubiera espacios:
         this.facturas = todas.filter(f =>
-          (f.invoice_type === 'I') &&
+          (f.invoice_type === 'E') &&
           f.uuid_company?.trim() === uuidCompany?.trim()
-          
         );
          this.showLoader = false;
-        // console.log('Facturas filtradas para esta empresa:', this.facturas);
+
+        console.log('Facturas filtradas para esta empresa:', this.facturas);
+        
       },
+      
       error: (error) => {
         console.error('Error al obtener facturas:', error);
          this.showLoader = false;
       }
     });
   }
-onDownloadPdf(factura: any) {
-  this.invoicesService.downloadPdfById(factura.id).subscribe(blob => {
-    const url = URL.createObjectURL(blob);
-    const a   = document.createElement('a');
-    a.href    = url;
-    a.download= `factura_${factura.serie}_${factura.folio}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-}
-
 
   copiarTabla() {
     const tabla = document.querySelector('table')!;

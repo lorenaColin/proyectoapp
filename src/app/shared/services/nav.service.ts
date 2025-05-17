@@ -137,27 +137,27 @@ export class NavService implements OnDestroy {
       children: [
         { path: '/invoices/ingreso', title: 'CFDI 4.0', type: 'link' },
         { path: '/invoices/traslado', title: 'Carta Porte', type: 'link' },
-        { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
+        // { path: '/invoices/paysheet', title: 'Nómina CFDI 4.0', type: 'link' },
         // { path: '/invoices/list', title: 'Listar', type: 'link' },
       ],
     },  
 
 
-    { headTitle: 'lealtad' },
-    {
-      title: 'Referidos',
-      type: 'sub',
-      selected : false,
-      active: false,
-      icon: 'file',
-      badgeClass: 'secondary',
-      badgeText: 'secondary',
-      badgeValue: 'New',
-      children: [
-        { path: '/lealtad', title: 'Lealtad', type: 'link' },
+    // { headTitle: 'lealtad' },
+    // {
+    //   title: 'Referidos',
+    //   type: 'sub',
+    //   selected : false,
+    //   active: false,
+    //   icon: 'file',
+    //   badgeClass: 'secondary',
+    //   badgeText: 'secondary',
+    //   badgeValue: 'New',
+    //   children: [
+    //     { path: '/lealtad', title: 'Lealtad', type: 'link' },
       
-      ],
-    },  
+    //   ],
+    // },  
     { headTitle: 'Herramientas' },
     {
       title: 'Herramientas',
@@ -184,11 +184,27 @@ export class NavService implements OnDestroy {
       badgeText: 'secondary',
       badgeValue: 'New',
       children: [
-        { path: '/emitidos/cfdi', title: 'CFDI 4.0', type: 'link' },
+        { path: '/emitidos/ingreso', title: 'CFDI 4.0 Ingreso', type: 'link' },
+        { path: '/emitidos/egreso', title: 'CFDI 4.0 Egreso', type: 'link' },
     { path: '/emitidos/cp', title: 'Carta Porte', type: 'link' },
       
       ],
     },  
+    {
+  headTitle: 'Mis empresas'
+},
+{
+  title: 'Mis empresas',
+  type: 'link', // Asegúrate que sea 'link' si es una ruta directa
+  path: '/administration', // Esta es la clave
+  selected: false,
+  active: false,
+  icon: 'file',
+  badgeClass: 'secondary',
+  badgeText: 'secondary',
+  badgeValue: 'New',
+}
+    
   ];
   
 

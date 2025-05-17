@@ -10,27 +10,27 @@
     <div class="bienvenida-container" *ngIf="mostrarContenido">
       Bienvenido a <span class="underline">{{ empresaNombre }}</span>
     </div>
+   
     <div class="cards-row" *ngIf="mostrarContenido">
 
       <!-- Emitir / Ver facturas -->
       <div class="contenedor-facturase">
-        <button class="boton-amarillo"
-                (click)="navegarConLoader('/invoices/ingreso')">
+        <button class="boton-amarillo" (click)="navegarConLoader('/invoices/ingreso')">
           Emitir Factura
         </button>
-        <button class="boton-amarillo"
-                (click)="navegarConLoader('/emitidos/cfdi')">
+        <button class="boton-amarillo" (click)="navegarConLoader('/emitidos/ingreso')">
           Ver mis facturas
         </button>
       </div>
-    
+      
+
       <!-- Adquiere más Timbres -->
       <div class="contenedor-facturase">
         <button class="boton-rojo">Adquiere más Timbres</button>
         <p>T. Restantes: {{ Timbres }}</p>
         <p>Fecha Vence: {{ Fecha }}</p>
       </div>
-    
+
       <!-- Soporte -->
       <div class="contenedor-facturase">
         <h3>Soporte</h3>
@@ -40,9 +40,9 @@
         <button class="boton-azul">722 131-6259</button>
         <button class="boton-azul">soporteeasysweb.com.mx</button>
       </div>
-    
+
     </div>
-    
+
 
   </div>
   <app-footer />

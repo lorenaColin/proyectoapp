@@ -13,6 +13,7 @@
                     <div class="grid grid-cols-12 gap-4">
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
+
                             <label for="serie_folio" class="form-label text-[.875rem] text-black">Serie y Folio:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="serie_folio" id="serie_folio"
@@ -41,7 +42,42 @@
                             </ul>
                         </div>
 
+                        <div class="col-span-12 sm:col-span-12 md:col-span-3 relative">
+                            <label for="receptor" class="form-label text-[.875rem] text-black">Receptor:</label>
 
+                            <div class="input-group">
+                                <!-- Input visible para mostrar el nombre del receptor -->
+                                <input type="text" class="form-control" [value]="receptorNombreVisible"
+                                    (input)="onInputReceptorJun($event, 'receptors')" (keydown)="onKeyDown2($event)"
+                                    [ngClass]="{'is-invalid': isValidField('receptor')}">
+
+                                <div class="input-group-text" data-hs-overlay="#hs-extralarge-modal2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                            </div>
+
+                            <!-- Campo oculto que guarda el ID del receptor en el formulario -->
+                            <input type="hidden" formControlName="receptor" />
+
+                            <!-- Validaciones -->
+                            <span *ngIf="formTraslado.get('receptor')?.hasError('notFound')"
+                                class="text-[#EE312A] text-sm">
+                                Este Receptor no se encuentra.
+                            </span>
+                            <span *ngIf="isValidField('receptor')" class="text-[#EE312A] text-sm">
+                                {{ getFieldError('receptor') }}
+                            </span>
+
+                            <!-- Lista de resultados -->
+                            <ul *ngIf="filteredReceptors.length > 0"
+                                class="absolute dark:bg-white bg-gray-400 border-gray-300 rounded-lg mt-2 w-full z-10">
+                                <li *ngFor="let receptor of filteredReceptors; let i = index"
+                                    (click)="selectReceptor(receptor)" [ngClass]="{'bg-gray-200': i === selectedIndex}"
+                                    class="text-black px-2 py-1 cursor-pointer">
+                                    {{ receptor.name }}
+                                </li>
+                            </ul>
+                        </div>
 
 
                         <div class="col-span-12 sm:col-span-12 md:col-span-3">

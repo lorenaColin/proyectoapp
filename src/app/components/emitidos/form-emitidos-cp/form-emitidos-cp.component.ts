@@ -12,11 +12,11 @@ import { Router } from '@angular/router';
   styleUrl: './form-emitidos-cp.component.scss'
 })
 export class FormEmitidosCPComponent {
-showNuevoComprobante = false;
+  showNuevoComprobante = false;
   showDescargarEnviar = false;
+  showLoader = false;
 
-
-  constructor(private router: Router , private companyService: CompanyService,  private invoicesService: InvoicesService) {
+  constructor(private router: Router, private companyService: CompanyService, private invoicesService: InvoicesService) {
     this.obtenerNombreEmpresa(); // Obtener la información de la empresa
   }
 
@@ -35,23 +35,28 @@ showNuevoComprobante = false;
   facturas: any[] = []; // Aquí van las facturas
   companyId: string = '';
   obtenerNombreEmpresa() {
+    this.showLoader = true;
     this.companyService.listCompany().subscribe({
       next: (response) => {
         const uuidCompany = localStorage.getItem('company');
         const companies = response.data ?? [];
-    
+
         const company = companies.find(c => c.id === uuidCompany);
         this.empresaNombre = company?.name ?? 'Empresa';
-    
+
         if (uuidCompany) {
           this.companyId = uuidCompany;
           this.obtenerFacturas(uuidCompany); // ✅ ahora sí usa el uuid seleccionado
         } else {
           console.error('No se encontró empresa con ese UUID en localStorage');
+          this.showLoader = false;
+
         }
       },
       error: (err) => {
         console.error('Error al obtener empresa', err);
+        this.showLoader = false;
+
       }
     });
   }
@@ -67,13 +72,18 @@ showNuevoComprobante = false;
 
         // Tu filtro, ahora con trim() por si hubiera espacios:
         this.facturas = todas.filter(f =>
-          (f.invoice_type === 'T' ) &&
+          (f.invoice_type === 'T') &&
           f.uuid_company?.trim() === uuidCompany?.trim()
+
         );
+        this.showLoader = false;
+
         console.log('Facturas filtradas para esta empresa:', this.facturas);
       },
       error: (error) => {
         console.error('Error al obtener facturas:', error);
+        this.showLoader = false;
+
       }
     });
   }
@@ -81,11 +91,11 @@ showNuevoComprobante = false;
   copiarTabla() {
     const tabla = document.querySelector('table')!;
     const tablaClon = tabla.cloneNode(true) as HTMLElement;
-  
+
     tablaClon.querySelectorAll('tr').forEach(fila => {
       fila.lastElementChild?.remove();
     });
-  
+
     const range = document.createRange();
     range.selectNode(tablaClon);
     window.getSelection()?.removeAllRanges();
@@ -93,16 +103,16 @@ showNuevoComprobante = false;
     document.execCommand('copy');
     alert('Tabla copiada ');
   }
-  
+
 
   exportarExcel() {
     const tabla = document.querySelector('table')!;
     const tablaClon = tabla.cloneNode(true) as HTMLElement;
-  
+
     tablaClon.querySelectorAll('tr').forEach(fila => {
       fila.lastElementChild?.remove();
     });
-  
+
     const html = tablaClon.outerHTML.replace(/ /g, '%20');
     const url = 'data:application/vnd.ms-excel,' + html;
     const enlace = document.createElement('a');
@@ -110,31 +120,31 @@ showNuevoComprobante = false;
     enlace.download = 'facturas.xls';
     enlace.click();
   }
-  
+
 
   exportarPDF() {
     const doc = new jsPDF();
-  
+
     const columnas = ["Folio", "Fecha", "Serie", "RFC", "Total"];
     const filas = this.facturas.map(f => [f.folio, f.date, f.serie, f.rfc_pac, f.total]);
-  
+
     autoTable(doc, {
       head: [columnas],
       body: filas,
       styles: { fontSize: 8 },
     });
-  
+
     doc.save('facturas.pdf');
   }
 
   imprimirTabla() {
     const tabla = document.querySelector('table')!;
     const tablaClon = tabla.cloneNode(true) as HTMLElement;
-  
+
     tablaClon.querySelectorAll('tr').forEach(fila => {
       fila.lastElementChild?.remove();
     });
-  
+
     const printContents = tablaClon.outerHTML;
     const popupWin = window.open('', '_blank', 'width=800,height=600');
     popupWin?.document.open();
@@ -152,7 +162,7 @@ showNuevoComprobante = false;
     `);
     popupWin?.document.close();
   }
-  
+
   onDownloadXml(f: invoiceDetailInterface) {
     this.invoicesService.downloadXml(f.id).subscribe({
       next: blob => {

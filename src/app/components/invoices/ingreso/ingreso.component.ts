@@ -121,59 +121,121 @@ export class IngresoComponent implements OnInit {
   }
   
 
+  // onSubmitIngreso() {
+  //   console.log('Form valid:', this.formIngreso.valid);
+  // console.log('Value:', this.formIngreso.value);
+
+  // // Nuevo: listamos los controles inválidos
+  // const invalidControls = Object.keys(this.formIngreso.controls)
+  //   .filter(key => this.formIngreso.get(key)?.invalid);
+  // console.log('Invalid controls:', invalidControls);
+  //   if (this.formIngreso.invalid) {
+  //     this.formIngreso.markAllAsTouched();
+  //     return;
+  //   }
+  
+  //   const uuidCompany = this.authService.getUuid();
+  //   console.log('UUID obtenido:', uuidCompany);
+  //   const formulario = {
+  //     ...this.formIngreso.value,
+  //     uuid_company: uuidCompany || '',
+  //   };
+  
+  //   this.invoicesService.createInvoice(formulario).subscribe(
+  //     (respuesta: any) => {
+  //       console.log(respuesta);
+  
+  //       const rutaXml = respuesta?.xml_path;
+  //       if (rutaXml) {
+  //         localStorage.setItem('ultimoXmlGenerado', rutaXml);
+  //       }
+  
+  //       Swal.fire({
+  //         title: '¡Comprobante creado!',
+  //         text: 'El comprobante se ha generado correctamente.',
+  //         icon: 'success',
+  //         confirmButtonText: 'Ver comprobantes'
+  //       }).then(() => {
+  //         this.router.navigate(['/emitidos/cfdi']);
+  //       });
+  //     },
+  //     (error) => {
+  //       console.error('Error al crear comprobante:', error);
+  
+  //       Swal.fire({
+  //         title: '¡Comprobante creado!',
+  //         text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
+  //         icon: 'success',
+  //         confirmButtonText: 'Ver comprobantes'
+  //       }).then(() => {
+  //         this.router.navigate(['/emitidos/ingreso']);
+  //       });
+  //     }
+  //   );
+  // }
   onSubmitIngreso() {
-    console.log('Form valid:', this.formIngreso.valid);
+  console.log('Form valid:', this.formIngreso.valid);
   console.log('Value:', this.formIngreso.value);
 
-  // Nuevo: listamos los controles inválidos
   const invalidControls = Object.keys(this.formIngreso.controls)
     .filter(key => this.formIngreso.get(key)?.invalid);
   console.log('Invalid controls:', invalidControls);
-    if (this.formIngreso.invalid) {
-      this.formIngreso.markAllAsTouched();
-      return;
-    }
-  
-    const uuidCompany = this.authService.getUuid();
-    console.log('UUID obtenido:', uuidCompany);
-    const formulario = {
-      ...this.formIngreso.value,
-      uuid_company: uuidCompany || '',
-    };
-  
-    this.invoicesService.createInvoice(formulario).subscribe(
-      (respuesta: any) => {
-        console.log(respuesta);
-  
-        const rutaXml = respuesta?.xml_path;
-        if (rutaXml) {
-          localStorage.setItem('ultimoXmlGenerado', rutaXml);
-        }
-  
-        Swal.fire({
-          title: '¡Comprobante creado!',
-          text: 'El comprobante se ha generado correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Ver comprobantes'
-        }).then(() => {
-          this.router.navigate(['/emitidos/cfdi']);
-        });
-      },
-      (error) => {
-        console.error('Error al crear comprobante:', error);
-  
-        Swal.fire({
-          title: '¡Comprobante creado!',
-          text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
-          icon: 'success',
-          confirmButtonText: 'Ver comprobantes'
-        }).then(() => {
-          this.router.navigate(['/emitidos/cfdi']);
-        });
-      }
-    );
+
+  if (this.formIngreso.invalid) {
+    this.formIngreso.markAllAsTouched();
+    return;
   }
-  
+
+  this.showLoader = true; // 🔄 Mostrar loader
+
+  const uuidCompany = this.authService.getUuid();
+  console.log('UUID obtenido:', uuidCompany);
+
+  const formulario = {
+    ...this.formIngreso.value,
+    uuid_company: uuidCompany || '',
+  };
+
+  const invoiceType = formulario.invoice_type;
+
+  this.invoicesService.createInvoice(formulario).subscribe(
+    (respuesta: any) => {
+      this.showLoader = false; // ✅ Ocultar loader
+      console.log(respuesta);
+
+      const rutaXml = respuesta?.xml_path;
+      if (rutaXml) {
+        localStorage.setItem('ultimoXmlGenerado', rutaXml);
+      }
+
+      Swal.fire({
+        title: '¡Comprobante creado!',
+        text: 'El comprobante se ha generado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Ver comprobantes'
+      }).then(() => {
+        if (invoiceType === 'I') {
+          this.router.navigate(['/emitidos/ingreso']);
+        } else if (invoiceType === 'E') {
+          this.router.navigate(['/emitidos/egreso']);
+        }
+      });
+    },
+    (error) => {
+      this.showLoader = false; // ❌ Ocultar loader en caso de error
+      console.error('Error al crear comprobante:', error);
+
+      Swal.fire({
+        title: 'Error al timbrar',
+        text: 'El comprobante no fue timbrado. Por favor, verifica los datos e intenta nuevamente.',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      });
+    }
+  );
+}
+
+
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.formIngreso, field);
   }

@@ -1,5 +1,5 @@
 <div class="bg-gradient-to-r from-yellow-400 to-yellow-600  p-6 rounded-lg shadow mb-6">
-    <h1 class="text-2xl font-bold text-center">Comprobantes - Facturas Ingreso</h1>
+    <h1 class="text-2xl font-bold text-center">Comprobantes - Facturas Egreso</h1>
   </div>
   
   <div class="p-6 space-y-4">
@@ -63,9 +63,8 @@
               (click)="onDownloadXml(factura)">
               <i class="ri-download-2-line align-middle me-2 inline-block"></i> XML
             </button>
-            <button type="button" class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-success-full btn-wave"
-              (click)="onDownloadPdf(factura)">
-              <i class="ri-download-2-line align-middle me-2 inline-block"  ></i>Pdf
+            <button type="button" class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-success-full btn-wave">
+              <i class="ri-download-2-line align-middle me-2 inline-block"></i>Pdf
           </button>
              
               <button aria-label="button" type="button" class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-danger-full btn-wave">
@@ -93,6 +92,7 @@
     </div>
     
   </div>
+
 <div id="loader" *ngIf="showLoader">
     <img src="images/loader.svg" alt="" />
 </div>

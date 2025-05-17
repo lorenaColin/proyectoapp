@@ -12,16 +12,19 @@ export class InvoicesService {
   public apiUrl = `${environment.apiUrl}/invoices`;
   public apiUrlFactura = `${environment.apiUrl}/factura`;
   public api = `${environment.apiUrl}/invoicesxml`;
+ public api2 = `${environment.apiUrl}/factura`;
+
+
   public apiUuid = `${environment.apiUrl}/obtenerUUIDs`;
 
 
   public http = inject(HttpClient);
-  
+
 
   createInvoice(formulario: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, formulario);
   }
- getInovicebyId(uuidCompany: string): Observable<invoiceDetailListResponseInterface> {
+  getInovicebyId(uuidCompany: string): Observable<invoiceDetailListResponseInterface> {
     return this.http.get<invoiceDetailListResponseInterface>(`${this.apiUrlFactura}/${uuidCompany}`);
   }
   downloadXml(id: number): Observable<Blob> {
@@ -29,6 +32,11 @@ export class InvoicesService {
       responseType: 'blob'
     });
   }
+downloadPdfById(id: number): Observable<Blob> {
+  return this.http.get(`${environment.apiUrl}/factura/${id}/descargar-pdf`, {
+    responseType: 'blob'
+  });
+}
   obtenerUUIDs(): Observable<{ uuids: string[] }> {
     return this.http.get<{ uuids: string[] }>(this.apiUuid);
   }

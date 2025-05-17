@@ -65,6 +65,7 @@ export class TrasladoComponent {
   }
   formTraslado: FormGroup = this.fb.group({
     invoice_type: 'T',
+    receptor: ['1', [Validators.required]],
     serie_folio: '',
     fecha: '',
      ...this.totalsForm.controls,
@@ -109,6 +110,7 @@ onSubmitTraslado() {
   
   this.invoicesService.createInvoice(formulario).subscribe(
     (respuesta: any) => {
+       this.showLoader = false;
       console.log(respuesta);
 
       const rutaXml = respuesta?.xml_path;
@@ -116,8 +118,7 @@ onSubmitTraslado() {
         localStorage.setItem('ultimoXmlGenerado', rutaXml);
       }
 
-      // Desactivamos el loader al recibir la respuesta
-      this.showLoader = false;
+     
 
       Swal.fire({
         title: '¡Comprobante creado!',
@@ -130,17 +131,14 @@ onSubmitTraslado() {
     },
     (error) => {
       console.error('Error al crear comprobante:', error);
-
+ this.showLoader = false;
       // Desactivamos el loader en caso de error
-      this.showLoader = false;
 
       Swal.fire({
         title: '¡Comprobante creado!',
         text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
         icon: 'success',
-        confirmButtonText: 'Ver comprobantes'
-      }).then(() => {
-        this.router.navigate(['/emitidos/cp']);
+        confirmButtonText: 'Entendido'
       });
     }
   );
@@ -159,9 +157,10 @@ onSubmitTraslado() {
   listSeries: SerietInterface[] = [];
   ngOnInit(): void {
     this.loadSerie();
+    this.loadReceptor();
   }
   
-  loadSerie(): void {
+   loadSerie(): void {
 
     this.seriesService.getAllSeries().subscribe((response) => {
       const { error, data } = response;
@@ -170,67 +169,68 @@ onSubmitTraslado() {
   }
 
 
+
   onInputReceptorJun(event: any, listType: 'series' | 'receptors'): void {
     const query = (event.target.value || '').trim().toLowerCase();
-
+  
     const control = this.formTraslado.get(listType === 'series' ? 'serie_folio' : 'receptor');
     if (!control) return;
-
+  
     if (query.length === 0) {
       control.setErrors({ notFound: true });
-
+  
       if (control.hasValidator(Validators.required)) {
         control.setValidators([Validators.required]);
       }
       control.updateValueAndValidity();
-
+  
       if (listType === 'series') {
         this.filteredSeries = [];
       } else {
         this.filteredReceptors = [];
       }
-
+  
       this.showLoader = false;
       return;
     }
-
+  
     if (query.length < 2) {
       if (listType === 'series') {
         this.filteredSeries = [];
       } else {
         this.filteredReceptors = [];
       }
-
+  
       this.showLoader = false;
       control.setErrors({ notFound: true });
       return;
     }
-
+  
     this.showLoader = true;
-
+  
     setTimeout(() => {
       if (listType === 'series') {
         this.filteredSeries = this.listSeries.filter(item =>
           item.serie.toLowerCase().includes(query) || item.folio.toString().includes(query)
         );
-
+  
         control.setErrors(this.filteredSeries.length === 0 ? { notFound: true } : null);
       } else {
         this.filteredReceptors = this.listReceptors.filter(item =>
           item.name.toLowerCase().includes(query) || item.id.toString().includes(query)
         );
-
+  
         control.setErrors(this.filteredReceptors.length === 0 ? { notFound: true } : null);
       }
-
+  
       this.showLoader = false;
     }, 500);
   }
+  
+ 
 
 
-
-
-
+  
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
       if (this.selectedIndex < this.filteredSeries.length - 1) {
@@ -276,7 +276,7 @@ onSubmitTraslado() {
       (!error) ? this.listReceptors = data : '';
     });
   }
-
+ 
   onKeyDown2(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
       if (this.selectedIndex < this.filteredReceptors.length - 1) {
@@ -297,30 +297,28 @@ onSubmitTraslado() {
       }
     }
   }
+  receptorNombreVisible: string = '';
   selectReceptor(receptor: any): void {
-    console.log(receptor);
-    console.log(receptor.regime);
-
-    this.formTraslado.get('receptor')?.setValue(`${receptor.name}`);
-
+    this.formTraslado.get('receptor')?.setValue(receptor.id); // guarda solo el ID
+    this.receptorNombreVisible = receptor.name; // muestra el nombre
     this.filteredReceptors = [];
     this.selectedIndex = -1;
-
     this.listaCfdi = LISTADOUSOCFDI.filter(cfdi =>
       cfdi.regimen.some(r => receptor.regime.includes(r))
     );
   }
+  
   @HostListener('document:click', ['$event'])
   onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-
+  
     if (!targetElement.closest('#receptor')) {
       const inputControl = this.formTraslado.get('receptor');
-      const inputValue = inputControl?.value?.trim().toLowerCase();
-
+      const inputValue = this.receptorNombreVisible.trim().toLowerCase();
+  
       if (inputValue) {
         const exists = this.listReceptors.some(item => item.name.toLowerCase() === inputValue);
-
+  
         if (!exists) {
           inputControl?.setErrors({ notFound: true });
         } else {
@@ -329,6 +327,7 @@ onSubmitTraslado() {
       }
     }
   }
+
 
   searchFormaPago() {
     const { metodo_pago: metodoPago } = this.formTraslado.value;
