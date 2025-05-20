@@ -8,7 +8,10 @@ import { CartaPorteService } from '../../../services/carta-porte.service';
   styleUrl: './complemento-cp.component.scss'
 })
 export class ComplementoCpComponent {
-  
+  ngOnInit() {
+  this.formCartaPorte.reset();
+}
+
   private fb = inject(FormBuilder);
   private cartaPorteService = inject(CartaPorteService);
   formCartaPorte = this.cartaPorteService.getFormCarta();

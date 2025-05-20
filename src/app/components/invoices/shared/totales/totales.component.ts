@@ -10,4 +10,13 @@ export class TotalesComponent {
   private totalsService = inject(TotalsService);
   totalsForm = this.totalsService.getFormTotals();
 
+  ngOnDestroy(): void {
+    this.totalsForm.reset({
+      subtotal: '0.00',
+      total: '0.00',
+      descuento: '0.00',
+      retenciones: '0.00',
+      traslados: '0.00',
+    });
+  }
 }

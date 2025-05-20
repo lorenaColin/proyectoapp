@@ -87,7 +87,16 @@ export class FormEmitidosCPComponent {
       }
     });
   }
-
+onDownloadPdf(factura: any) {
+  this.invoicesService.downloadPdfById(factura.id).subscribe(blob => {
+    const url = URL.createObjectURL(blob);
+    const a   = document.createElement('a');
+    a.href    = url;
+    a.download= `factura_${factura.serie}_${factura.folio}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
   copiarTabla() {
     const tabla = document.querySelector('table')!;
     const tablaClon = tabla.cloneNode(true) as HTMLElement;

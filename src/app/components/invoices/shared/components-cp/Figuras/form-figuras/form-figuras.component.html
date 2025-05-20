@@ -1,31 +1,57 @@
 <form [formGroup]="formCartaPorte">
-<div class="grid grid-cols-12 gap-4">
+  <div class="grid grid-cols-12 gap-4">
     <h5 class="mt-3">Figuras</h5>
     <div class="col-span-12 sm:col-span-12 md:col-span-12">
-        <div class="row">
-            <div class="table-responsive">
-                <table class="table text-nowrap table-bordered mb-3">
-                    <thead>
-                        <tr>
-                            <th style="width: 15%;">TipoFigura</th>
-                            <th>RFCFigura</th>
-                            <th>Unidad</th>
-                            <th>NumLicencia</th>
-                            <th> N. Reg. Trib.</th>
-                            <th> R. Fiscal</th>
-                            <th style="width: 3%;">Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody formArrayName="remolques">
-                    </tbody>
-                </table>
-                <button type="button"
-                    class="mt-4 flex items-center justify-center w-10 h-10 rounded-full  mx-auto  ti-btn-primary "
-                    data-hs-overlay="#hs-extralarge-modal3">
-                    <i class="ri-add-line "></i>
-                </button>
-            </div>
+      <div class="row">
+        <div class="table-responsive">
+          <table class="table text-nowrap table-bordered mb-3">
+            <thead>
+              <tr>
+                <th style="width: 15%;">TipoFigura</th>
+                <th>RFCFigura</th>
+                <th>NumLicencia</th>
+                <th>N. Reg. Trib.</th>
+                <th>R. Fiscal</th>
+                <th style="width: 3%;">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="figuras">
+              <tr *ngFor="let m of figuras.controls; let i = index" [formGroupName]="i">
+                <td>{{ m.get('tipoFigura')?.value }}</td>
+                <td>{{ m.get('rfcFigura')?.value }}</td>
+                <td>{{ m.get('numLicencia')?.value }}</td>
+                <td>{{ m.get('numRegIdTribFigura')?.value }}</td>
+                <td>{{ m.get('residenciaFiscalFigura')?.value }}</td>
+                <!-- <td>{{ m.get('nombreFigura')?.value }}</td> -->
+
+                <td>
+                  <button type="button" (click)="removeFigura(i)">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+          <button type="button"
+            class="mt-4 flex items-center justify-center w-10 h-10 rounded-full  mx-auto  ti-btn-primary "
+            data-hs-overlay="#hs-extralarge-modal9">
+            <i class="ri-add-line "></i>
+          </button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 </form>
+
+<div id="hs-extralarge-modal9" class="hs-overlay hidden fixed ti-modal [--overlay-backdrop:static]"
+  data-hs-overlay-keyboard="false">
+  <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
+    <div class="ti-modal-content">
+      <div class="ti-modal-header">
+        <h6 class="ti-modal-title">Figuras</h6>
+      </div>
+      <app-form-invoice-figuras />
+    </div>
+  </div>
+</div>

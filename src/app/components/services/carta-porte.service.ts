@@ -49,9 +49,7 @@ export class CartaPorteService {
   getFormCarta(): FormGroup {
     return this.formInvoice;
   }
-  // getAutotrasporte(): FormGroup {
-  //   return this.autotransporte
-  // }
+
   getAutotransporteForm(): FormGroup {
     return this.formInvoice.get('autotransporte') as FormGroup;
   }
@@ -70,9 +68,10 @@ export class CartaPorteService {
     return this.formInvoice.get('mercancias') as FormArray;
 
   }
+
+
   getFigurasFormArray(): FormArray {
     return this.formInvoice.get('figuras') as FormArray;
-
   }
 
 

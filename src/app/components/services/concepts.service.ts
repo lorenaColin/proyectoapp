@@ -87,4 +87,6 @@ export class ConceptsService {
     this.totalsService.setValueTotals(totales);
 
   }
+
+  
 }

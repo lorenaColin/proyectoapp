@@ -41,9 +41,20 @@ export class FormUbicacionesComponent {
   }
 
   ngOnInit(): void {
+     this.resetFormularioUbicaciones();
     this.addUbicacion('Origen');
     this.addUbicacion('Destino');
   }
+resetFormularioUbicaciones(): void {
+  while (this.ubicaciones.length !== 0) {
+    this.ubicaciones.removeAt(0);
+  }
+
+  this.formCartaPorte.reset();
+}
+ngOnDestroy(): void {
+  this.subscriptions.forEach(sub => sub.unsubscribe());
+}
 
 
   addUbicacion(tipo: string) {

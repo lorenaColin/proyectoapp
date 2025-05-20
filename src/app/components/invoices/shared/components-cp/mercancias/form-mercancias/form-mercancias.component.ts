@@ -39,5 +39,11 @@ private cartaPorteService = inject(CartaPorteService);
    removeMercancia(index: number): void {
     this.mercancias.removeAt(index);
   }
+     ngOnDestroy(): void {
+    // 🔴 Limpiar el FormArray al salir del componente
+    while (this.mercancias.length !== 0) {
+      this.mercancias.removeAt(0);
+    }
+  }
   
 }

@@ -28,6 +28,7 @@ import { FormRemolquesComponent } from './shared/components-cp/Remolques/form-re
 import { FormSegurosComponent } from './shared/components-cp/Seguros/form-seguros/form-seguros.component';
 import { FormFigurasComponent } from './shared/components-cp/Figuras/form-figuras/form-figuras.component';
 import { FormInvoiceMercanciaComponent } from './form-invoice-mercancia/form-invoice-mercancia.component';
+import { FormInvoiceFigurasComponent } from './form-invoice-figuras/form-invoice-figuras.component';
 
 
 
@@ -56,7 +57,8 @@ import { FormInvoiceMercanciaComponent } from './form-invoice-mercancia/form-inv
     FormRemolquesComponent,
     FormSegurosComponent,
     FormFigurasComponent,
-    FormInvoiceMercanciaComponent
+    FormInvoiceMercanciaComponent,
+    FormInvoiceFigurasComponent
   ],
   imports: [
     CommonModule,

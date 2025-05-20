@@ -12,11 +12,14 @@ export class ConceptosComponent implements OnInit {
   public conceptsService = inject(ConceptsService);
   @Input() typeProof!: string; 
   public idProduct:number = 0;
+  
   ngOnInit(): void {
     console.log('init', this.typeProof);
     console.log(this.conceptsService.products())
   }
-
+ngOnDestroy(): void {
+    this.conceptsService.products.set([]);
+  }
   
   // ngOnChanges(): void {
   //   console.log('change',this.typeProof);

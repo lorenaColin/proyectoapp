@@ -44,3 +44,9 @@ export interface catpais {
     error: boolean;
     data: catpais[];  
   }
+    export interface ApiResponseFiguras {
+        message: string;
+        statusCode: number;
+        error: boolean;
+        data: FigurasInterface[];  
+      }

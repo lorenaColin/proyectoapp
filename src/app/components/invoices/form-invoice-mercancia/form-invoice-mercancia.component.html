@@ -73,20 +73,26 @@
           <option value="usd">Estados Unidos</option>
         </select>
       </div>
-      <div class="flex justify-end pt-6">
-        <button type="button" (click)="guardar()" class="btn btn-primary">Guardar</button>
-      </div>
+    
+    </div>
+     <div class="flex justify-between mb-4 mt-5">
+
+        <div class="ms-3">
+            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+                data-hs-overlay="#hs-extralarge-modal8">
+                Cancelar
+            </button>
+        </div>
+
+        <div class="me-3">
+            <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium" >
+                Guardar
+            </button>
+        </div>
+
     </div>
   </form>
   
-  
-<div class="flex justify-between mb-4 mt-5">
-
-    <div class="ms-3">
-        <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
-            data-hs-overlay="#hs-extralarge-modal8">
-            Cancelar
-        </button>
-    </div>
-    
+<div id="loader" *ngIf="showLoader">
+    <img src="./images/loader.svg" alt="" />
 </div>

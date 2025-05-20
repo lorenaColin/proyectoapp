@@ -1,0 +1,75 @@
+<form [formGroup]="form" (ngSubmit)="guardar()" class="p-4 space-y-6">
+    <div class="relative">
+        <label for="claveInterna" class="form-label text-[.875rem] text-black">RFC figura:</label>
+        <div class="input-group">
+            <input type="text" class="form-control" name="claveInterna" id="claveInterna" formControlName="rfcFigura"
+                oninput="this.value = this.value.toUpperCase();" [value]="claveConcepto" (input)="onInput($event)"
+                (keydown)="onKeyDown($event)"
+                [ngClass]="{'is-invalid': form.get('claveInterna')?.hasError('notFound') && form.get('rfcFigura')?.touched}"
+                autocomplete="off">
+        </div>
+
+        <span *ngIf="form.get('rfcFigura')?.hasError('notFound')" class="text-[#EE312A] text-sm">
+            Este código de producto no se encuentra en el catálogo.
+        </span>
+        <span *ngIf="isValidField('rfcFigura')" class="text-[#EE312A] text-sm">
+            {{ getFieldError('rfcFigura') }}
+        </span>
+
+        <ul *ngIf="filteresFiguras.length > 0" class="absolute rounded-lg mt-2 w-full bg-white shadow z-10">
+            <li *ngFor="let conceptos of filteresFiguras; let i = index" (click)="selectMercancia(conceptos)"
+                class="cursor-pointer p-2 hover:bg-gray-200" [ngClass]="{'bg-gray-200': i === selectedIndex}">
+                {{ conceptos.nombreFigura }} - {{ conceptos.rfcFigura }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+        <div>
+            <label>Tipo Figura</label>
+            <input formControlName="tipoFigura" class="form-control" readonly />
+
+        </div>
+        <div>
+            <label>Licencia</label>
+            <input formControlName="numLicencia" class="form-control" readonly />
+        </div>
+        <div>
+            <label>nombre Figura</label>
+            <input formControlName="nombreFigura" class="form-control" readonly />
+        </div>
+        <div>
+            <label>Id Tributario</label>
+            <input formControlName="numRegIdTribFigura" class="form-control" readonly />
+        </div>
+        <div>
+            <label>Residencia Fiscal</label>
+            <input formControlName="residenciaFiscalFigura" class="form-control" readonly />
+        </div>
+    </div>
+    <div class="flex justify-between mb-4 mt-5">
+
+        <div class="ms-3">
+            <button type="button" class="ti-btn ti-btn-danger-full text-white !font-medium"
+                data-hs-overlay="#hs-extralarge-modal9">
+                Cancelar
+            </button>
+        </div>
+
+        <div class="me-3">
+            <button type="submit" class="ti-btn ti-btn-primary-full text-white !font-medium" >
+                Guardar
+            </button>
+        </div>
+
+    </div>
+
+
+
+
+
+
+</form>
+<div id="loader" *ngIf="showLoader">
+    <img src="./images/loader.svg" alt="" />
+</div>
