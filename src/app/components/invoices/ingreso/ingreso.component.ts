@@ -35,13 +35,13 @@ export class IngresoComponent implements OnInit {
   private seriesService = inject(SeriesService);
   private customerService = inject(CustomerService);
   private relatedsService = inject(RelatedsService);
- 
+
   private utilsService = inject(UtilsService);
   private invoicesService = inject(InvoicesService);
   private authService = inject(AuthService);
 
   listadoFechas = this.utilsService.getDates();
-  listadoMetodoPago: MetodoPagoInterface[]= LISTADOMETODOPAGO;
+  listadoMetodoPago: MetodoPagoInterface[] = LISTADOMETODOPAGO;
   listadoFormaPago: FormaPagoInterface[] = [];
   listaCfdi = LISTADOUSOCFDI;
   formaPagoForm = this.formaPagoService.getFormFormaPago();
@@ -56,10 +56,10 @@ export class IngresoComponent implements OnInit {
   filteredReceptors: CustomersInterface[] = [];
   selectedIndex: number = -1;
 
-  constructor(  private router: Router) {
+  constructor(private router: Router) {
     this.totalsService.setForm(this.formIngreso);
     this.conceptsService.setForm(this.formIngreso);
-    
+
   }
 
 
@@ -86,11 +86,11 @@ export class IngresoComponent implements OnInit {
     this.loadSerie();
     this.loadReceptor();
     const uuidCompany = this.authService.getUuid();
-    console.log('UUID obtenido desde getUuid():', uuidCompany); 
-    
+    console.log('UUID obtenido desde getUuid():', uuidCompany);
+
   }
   // onSubmitIngreso() {
-    
+
   //   if (this.formIngreso.invalid) {
   //     this.formIngreso.markAllAsTouched();
   //     return;
@@ -119,7 +119,7 @@ export class IngresoComponent implements OnInit {
     this.formIngreso.get('invoice_type')?.setValue(tipo);
     this.typeProof = tipo;
   }
-  
+
 
   // onSubmitIngreso() {
   //   console.log('Form valid:', this.formIngreso.valid);
@@ -133,23 +133,23 @@ export class IngresoComponent implements OnInit {
   //     this.formIngreso.markAllAsTouched();
   //     return;
   //   }
-  
+
   //   const uuidCompany = this.authService.getUuid();
   //   console.log('UUID obtenido:', uuidCompany);
   //   const formulario = {
   //     ...this.formIngreso.value,
   //     uuid_company: uuidCompany || '',
   //   };
-  
+
   //   this.invoicesService.createInvoice(formulario).subscribe(
   //     (respuesta: any) => {
   //       console.log(respuesta);
-  
+
   //       const rutaXml = respuesta?.xml_path;
   //       if (rutaXml) {
   //         localStorage.setItem('ultimoXmlGenerado', rutaXml);
   //       }
-  
+
   //       Swal.fire({
   //         title: '¡Comprobante creado!',
   //         text: 'El comprobante se ha generado correctamente.',
@@ -161,7 +161,7 @@ export class IngresoComponent implements OnInit {
   //     },
   //     (error) => {
   //       console.error('Error al crear comprobante:', error);
-  
+
   //       Swal.fire({
   //         title: '¡Comprobante creado!',
   //         text: 'El comprobante se ha generado correctamente (aunque no fue timbrado).',
@@ -174,66 +174,66 @@ export class IngresoComponent implements OnInit {
   //   );
   // }
   onSubmitIngreso() {
-  console.log('Form valid:', this.formIngreso.valid);
-  console.log('Value:', this.formIngreso.value);
+    console.log('Form valid:', this.formIngreso.valid);
+    console.log('Value:', this.formIngreso.value);
 
-  const invalidControls = Object.keys(this.formIngreso.controls)
-    .filter(key => this.formIngreso.get(key)?.invalid);
-  console.log('Invalid controls:', invalidControls);
+    const invalidControls = Object.keys(this.formIngreso.controls)
+      .filter(key => this.formIngreso.get(key)?.invalid);
+    console.log('Invalid controls:', invalidControls);
 
-  if (this.formIngreso.invalid) {
-    this.formIngreso.markAllAsTouched();
-    return;
-  }
-
-  this.showLoader = true; // 🔄 Mostrar loader
-
-  const uuidCompany = this.authService.getUuid();
-  console.log('UUID obtenido:', uuidCompany);
-
-  const formulario = {
-    ...this.formIngreso.value,
-    uuid_company: uuidCompany || '',
-  };
-
-  const invoiceType = formulario.invoice_type;
-
-  this.invoicesService.createInvoice(formulario).subscribe(
-    (respuesta: any) => {
-      this.showLoader = false; // ✅ Ocultar loader
-      console.log(respuesta);
-
-      const rutaXml = respuesta?.xml_path;
-      if (rutaXml) {
-        localStorage.setItem('ultimoXmlGenerado', rutaXml);
-      }
-
-      Swal.fire({
-        title: '¡Comprobante creado!',
-        text: 'El comprobante se ha generado correctamente.',
-        icon: 'success',
-        confirmButtonText: 'Ver comprobantes'
-      }).then(() => {
-        if (invoiceType === 'I') {
-          this.router.navigate(['/emitidos/ingreso']);
-        } else if (invoiceType === 'E') {
-          this.router.navigate(['/emitidos/egreso']);
-        }
-      });
-    },
-    (error) => {
-      this.showLoader = false; // ❌ Ocultar loader en caso de error
-      console.error('Error al crear comprobante:', error);
-
-      Swal.fire({
-        title: 'Error al timbrar',
-        text: 'El comprobante no fue timbrado. Por favor, verifica los datos e intenta nuevamente.',
-        icon: 'error',
-        confirmButtonText: 'Entendido'
-      });
+    if (this.formIngreso.invalid) {
+      this.formIngreso.markAllAsTouched();
+      return;
     }
-  );
-}
+
+    this.showLoader = true; // 🔄 Mostrar loader
+
+    const uuidCompany = this.authService.getUuid();
+    console.log('UUID obtenido:', uuidCompany);
+
+    const formulario = {
+      ...this.formIngreso.value,
+      uuid_company: uuidCompany || '',
+    };
+
+    const invoiceType = formulario.invoice_type;
+
+    this.invoicesService.createInvoice(formulario).subscribe(
+      (respuesta: any) => {
+        this.showLoader = false; // ✅ Ocultar loader
+        console.log(respuesta);
+
+        const rutaXml = respuesta?.xml_path;
+        if (rutaXml) {
+          localStorage.setItem('ultimoXmlGenerado', rutaXml);
+        }
+
+        Swal.fire({
+          title: '¡Comprobante creado!',
+          text: 'El comprobante se ha generado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Ver comprobantes'
+        }).then(() => {
+          if (invoiceType === 'I') {
+            this.router.navigate(['/emitidos/ingreso']);
+          } else if (invoiceType === 'E') {
+            this.router.navigate(['/emitidos/egreso']);
+          }
+        });
+      },
+      (error) => {
+        this.showLoader = false; // ❌ Ocultar loader en caso de error
+        console.error('Error al crear comprobante:', error);
+
+        Swal.fire({
+          title: 'Error al timbrar',
+          text: 'El comprobante no fue timbrado. Por favor, verifica los datos e intenta nuevamente.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      }
+    );
+  }
 
 
   getFieldError(field: string): string | null {
@@ -259,65 +259,71 @@ export class IngresoComponent implements OnInit {
 
   onInputReceptorJun(event: any, listType: 'series' | 'receptors'): void {
     const query = (event.target.value || '').trim().toLowerCase();
-  
+
     const control = this.formIngreso.get(listType === 'series' ? 'serie_folio' : 'receptor');
     if (!control) return;
-  
+
     if (query.length === 0) {
       control.setErrors({ notFound: true });
-  
+
       if (control.hasValidator(Validators.required)) {
         control.setValidators([Validators.required]);
       }
       control.updateValueAndValidity();
-  
+
       if (listType === 'series') {
         this.filteredSeries = [];
       } else {
         this.filteredReceptors = [];
       }
-  
+
       this.showLoader = false;
       return;
     }
-  
+
     if (query.length < 2) {
       if (listType === 'series') {
         this.filteredSeries = [];
       } else {
         this.filteredReceptors = [];
       }
-  
+
       this.showLoader = false;
       control.setErrors({ notFound: true });
       return;
     }
-  
+
     this.showLoader = true;
-  
+
     setTimeout(() => {
       if (listType === 'series') {
         this.filteredSeries = this.listSeries.filter(item =>
           item.serie.toLowerCase().includes(query) || item.folio.toString().includes(query)
         );
-  
+
         control.setErrors(this.filteredSeries.length === 0 ? { notFound: true } : null);
       } else {
+        const companyId = this.getCompanyUuid(); // <-- Asegúrate de tener este método
+
         this.filteredReceptors = this.listReceptors.filter(item =>
-          item.name.toLowerCase().includes(query) || item.id.toString().includes(query)
+          item.company_id === companyId && (
+            item.name.toLowerCase().includes(query) || item.id.toString().includes(query)
+          )
         );
-  
+
         control.setErrors(this.filteredReceptors.length === 0 ? { notFound: true } : null);
       }
-  
+
       this.showLoader = false;
     }, 500);
   }
-  
- 
+
+  private getCompanyUuid(): string | null {
+    return localStorage.getItem('company');
+  }
 
 
-  
+
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
       if (this.selectedIndex < this.filteredSeries.length - 1) {
@@ -363,7 +369,7 @@ export class IngresoComponent implements OnInit {
       (!error) ? this.listReceptors = data : '';
     });
   }
- 
+
   onKeyDown2(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown') {
       if (this.selectedIndex < this.filteredReceptors.length - 1) {
@@ -394,18 +400,18 @@ export class IngresoComponent implements OnInit {
       cfdi.regimen.some(r => receptor.regime.includes(r))
     );
   }
-  
+
   @HostListener('document:click', ['$event'])
   onClickOutside2(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-  
+
     if (!targetElement.closest('#receptor')) {
       const inputControl = this.formIngreso.get('receptor');
       const inputValue = this.receptorNombreVisible.trim().toLowerCase();
-  
+
       if (inputValue) {
         const exists = this.listReceptors.some(item => item.name.toLowerCase() === inputValue);
-  
+
         if (!exists) {
           inputControl?.setErrors({ notFound: true });
         } else {
@@ -415,15 +421,15 @@ export class IngresoComponent implements OnInit {
     }
   }
 
-  searchFormaPago(){
-    const { metodo_pago:metodoPago } = this.formIngreso.value;
+  searchFormaPago() {
+    const { metodo_pago: metodoPago } = this.formIngreso.value;
     this.listadoFormaPago = [];
-    if(metodoPago === "") return;
+    if (metodoPago === "") return;
     this.listadoFormaPago = LISTADOFORMAPAGO.filter(forma => forma.metodoPago === metodoPago);
   }
-  
 
- 
+
+
 
   checkAndClearInput(fieldName: string, list: any[], compareFn: (item: any) => string): void {
     const inputValue = this.formIngreso.get(fieldName)?.value;
@@ -442,7 +448,7 @@ export class IngresoComponent implements OnInit {
 
   agregarCartaP(event: Event) {
     this.mostrarCP = (event.target as HTMLInputElement).checked;
-  
+
     if (this.mostrarCP) {
       // al mostrar, añadimos el sub-form
       this.formIngreso.addControl('complemento_carta_porte', this.formCartaPorte);
@@ -451,6 +457,6 @@ export class IngresoComponent implements OnInit {
       this.formIngreso.removeControl('complemento_carta_porte');
     }
   }
-  
+
 
 }

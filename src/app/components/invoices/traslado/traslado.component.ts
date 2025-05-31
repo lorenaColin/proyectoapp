@@ -65,8 +65,8 @@ export class TrasladoComponent {
   }
   formTraslado: FormGroup = this.fb.group({
     invoice_type: 'T',
-    receptor: ['1', [Validators.required]],
-    serie_folio: '',
+    receptor: ['', [Validators.required]],
+    serie_folio: ['', [Validators.required]],
     fecha: '',
      ...this.totalsForm.controls,
         relaciones: this.relacionForm.get('relaciones') as FormArray,
@@ -88,7 +88,6 @@ onSubmitTraslado() {
   console.log('Form valid:', this.formTraslado.valid);
   console.log('Value:', this.formTraslado.value);
 
-  // Nuevo: listamos los controles inválidos
   const invalidControls = Object.keys(this.formTraslado.controls)
     .filter(key => this.formTraslado.get(key)?.invalid);
   console.log('Invalid controls:', invalidControls);
@@ -98,7 +97,6 @@ onSubmitTraslado() {
     return;
   }
 
-  // Activamos el loader antes de la llamada al servicio
   this.showLoader = true;
 
   const uuidCompany = this.authService.getUuid();
@@ -132,7 +130,6 @@ onSubmitTraslado() {
     (error) => {
       console.error('Error al crear comprobante:', error);
  this.showLoader = false;
-      // Desactivamos el loader en caso de error
 
       Swal.fire({
         title: '¡Comprobante creado!',
@@ -216,8 +213,11 @@ onSubmitTraslado() {
   
         control.setErrors(this.filteredSeries.length === 0 ? { notFound: true } : null);
       } else {
+         const companyId = this.getCompanyUuid(); 
         this.filteredReceptors = this.listReceptors.filter(item =>
+            item.company_id === companyId && (
           item.name.toLowerCase().includes(query) || item.id.toString().includes(query)
+        )
         );
   
         control.setErrors(this.filteredReceptors.length === 0 ? { notFound: true } : null);
@@ -228,6 +228,10 @@ onSubmitTraslado() {
   }
   
  
+
+  private getCompanyUuid(): string | null {
+    return localStorage.getItem('company');
+  }
 
 
   
@@ -299,8 +303,8 @@ onSubmitTraslado() {
   }
   receptorNombreVisible: string = '';
   selectReceptor(receptor: any): void {
-    this.formTraslado.get('receptor')?.setValue(receptor.id); // guarda solo el ID
-    this.receptorNombreVisible = receptor.name; // muestra el nombre
+    this.formTraslado.get('receptor')?.setValue(receptor.id); 
+    this.receptorNombreVisible = receptor.name; 
     this.filteredReceptors = [];
     this.selectedIndex = -1;
     this.listaCfdi = LISTADOUSOCFDI.filter(cfdi =>
@@ -344,7 +348,7 @@ onSubmitTraslado() {
     const isValid = list.some(item => compareFn(item) === inputValue);
 
     if (!isValid) {
-      this.formTraslado.get(fieldName)?.setValue('');  // Limpiar el campo si no está en la lista
+      this.formTraslado.get(fieldName)?.setValue('');  
     }
   }
 }

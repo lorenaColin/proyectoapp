@@ -41,10 +41,9 @@ export class ListComponent {
       const uuid = this.getCompanyUuid();
   
       if (uuid) {
-        // Solo los clientes cuya propiedad company_id coincida
         this.clientes = allClients.filter(c => c.company_id === uuid);
       } else {
-        this.clientes = []; // o todos, según prefieras
+        this.clientes = []; 
       }
   
       this.filteredCustomer = [...this.clientes];
@@ -91,24 +90,51 @@ export class ListComponent {
     }
   }
 
-  refreshCustomerList(): void {
-    this.showLoader = true;
-    this.customerService.getCustomers().subscribe(
-      (response) => {
-        this.clientes = response.data;
-        this.filteredCustomer = response.data;
-        this.showLoader = false;
-      },
-      () => {
-        this.showLoader = false;
-        Swal.fire(
-          'Error',
-          'No se pudo actualizar la lista de clientes.',
-          'error'
-        );
+  // refreshCustomerList(): void {
+  //   this.showLoader = true;
+  //   this.customerService.getCustomers().subscribe(
+  //     (response) => {
+  //       this.clientes = response.data;
+  //       this.filteredCustomer = response.data;
+  //       this.showLoader = false;
+  //     },
+  //     () => {
+  //       this.showLoader = false;
+  //       Swal.fire(
+  //         'Error',
+  //         'No se pudo actualizar la lista de clientes.',
+  //         'error'
+  //       );
+  //     }
+  //   );
+  // }
+refreshCustomerList(): void {
+  this.showLoader = true;
+  const uuid = this.getCompanyUuid(); // Obtener el uuid
+
+  this.customerService.getCustomers().subscribe(
+    (response) => {
+      const allClients = response.data as CustomersInterface[];
+
+      if (uuid) {
+        this.clientes = allClients.filter(c => c.company_id === uuid);
+      } else {
+        this.clientes = [];
       }
-    );
-  }
+
+      this.filteredCustomer = [...this.clientes];
+      this.showLoader = false;
+    },
+    () => {
+      this.showLoader = false;
+      Swal.fire(
+        'Error',
+        'No se pudo actualizar la lista de clientes.',
+        'error'
+      );
+    }
+  );
+}
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value

@@ -134,17 +134,17 @@
         <div class="col-span-12 sm:col-span-12 md:col-span-4">
             <label for="PesoBrutoTotal" class="form-label">P. Bruto: </label>
             <!-- Usar el getter para obtener el valor -->
-            <input type="text" class="form-control" [value]="PesoBrutoTotal" disabled>
+            <input type="text" class="form-control" [value]="PesoBrutoTotal" readonly>
         </div>
-        <div class="col-span-12 sm:col-span-12 md:col-span-4">
+        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-4">
             <label for="uPeso" class="form-label">U. Peso: </label>
             <select class="form-control" id="uPeso">
-                <option value="">Selecciona unidad</option>
+                <option value="">Selecciona unidad</option> -->
                 <!-- @foreach($unidadesPeso as $unidad)
                 <option value="{{ $unidad->key_unit }}">{{ $unidad->name }}</option>
                 @endforeach -->
-            </select>
-        </div>
+            <!-- </select>
+        </div> -->
         <div class="col-span-12 sm:col-span-12 md:col-span-4">
             <label for="rDevolucion" class="form-label">R. Devolución</label>
             <select class="form-control" id="rDevolucion">

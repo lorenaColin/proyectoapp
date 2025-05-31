@@ -183,7 +183,6 @@ export class FormCustomerComponent implements OnChanges {
   onSubmit(): void {
     this.showLoader = true;
 
-    // Verificar si el formulario es válido
     if (this.myForm.invalid) {
       this.showLoader = false;
       this.myForm.markAllAsTouched();

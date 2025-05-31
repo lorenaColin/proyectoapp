@@ -17,7 +17,7 @@ export class FormEmitidosEgresoComponent {
   showLoader = false
 
   constructor(private router: Router, private companyService: CompanyService, private invoicesService: InvoicesService) {
-    this.obtenerNombreEmpresa(); // Obtener la información de la empresa
+    this.obtenerNombreEmpresa(); 
   }
 
   toggleNuevoComprobante() {
@@ -31,8 +31,10 @@ export class FormEmitidosEgresoComponent {
   nuevaFactura() {
     this.router.navigate(['invoices/ingreso']);
   }
-  empresaNombre: string = ''; // Nombre de la empresa
-  facturas: any[] = []; // Aquí van las facturas
+  empresaNombre: string = ''; 
+  // facturas: any[] = []; 
+  facturas: invoiceDetailInterface[] = [];
+
   companyId: string = '';
   obtenerNombreEmpresa() {
     this.showLoader = true;
@@ -47,7 +49,7 @@ export class FormEmitidosEgresoComponent {
 
         if (uuidCompany) {
           this.companyId = uuidCompany;
-          this.obtenerFacturas(uuidCompany); // ✅ ahora sí usa el uuid seleccionado
+          this.obtenerFacturas(uuidCompany);
         } else {
           console.error('No se encontró empresa con ese UUID en localStorage');
     this.showLoader = false;
@@ -67,15 +69,14 @@ export class FormEmitidosEgresoComponent {
       next: (response) => {
         const todas = response.data ?? [];
 
-        // Aquí pones los console.log de depuración:
         console.log('UUID localStorage (empresa actual):', uuidCompany);
         console.log('UUIDs en facturas recibidas:', todas.map(f => f.uuid_company));
 
-        // Tu filtro, ahora con trim() por si hubiera espacios:
         this.facturas = todas.filter(f =>
           (f.invoice_type === 'E') &&
           f.uuid_company?.trim() === uuidCompany?.trim()
         );
+         this.facturasOriginal = [...this.facturas];
          this.showLoader = false;
 
         console.log('Facturas filtradas para esta empresa:', this.facturas);
@@ -176,7 +177,6 @@ onDownloadPdf(factura: any) {
   onDownloadXml(f: invoiceDetailInterface) {
     this.invoicesService.downloadXml(f.id).subscribe({
       next: blob => {
-        // Detectar si es JSON por error
         const reader = new FileReader();
         reader.onload = () => {
           try {
@@ -191,4 +191,46 @@ onDownloadPdf(factura: any) {
       error: err => console.error('Error descarga XML', err)
     });
   }
+  showFiltroAvanzado = false;
+  filtroTexto = '';
+  facturasOriginal: invoiceDetailInterface[] = []
+  toggleFiltroAvanzado() {
+    this.showFiltroAvanzado = !this.showFiltroAvanzado;
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+
+    this.facturas = this.facturasOriginal.filter(factura =>
+      factura.folio?.toLowerCase().includes(filterValue) ||
+      factura.total?.toString().toLowerCase().includes(filterValue) ||
+      factura.date?.toLowerCase().includes(filterValue)
+    );
+  }
+  paginaActual: number = 1;
+  facturasPorPagina: number = 5;
+
+  get totalPaginas(): number {
+    return Math.ceil(this.facturas.length / this.facturasPorPagina);
+  }
+
+  get facturasPaginadas(): any[] {
+    const start = (this.paginaActual - 1) * this.facturasPorPagina;
+    return this.facturas.slice(start, start + this.facturasPorPagina);
+  }
+
+  irPaginaAnterior() {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
+  }
+
+  irPaginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
+  }
+
 }

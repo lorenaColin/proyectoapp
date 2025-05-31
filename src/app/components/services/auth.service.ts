@@ -60,7 +60,7 @@ export class AuthService {
     // console.log('Inicializando startTokenRenewalTimer');
     this.tokenRenewalSubscription = interval(1 * 60 * 1000).subscribe(() => {
       // console.log('Interval ejecutado');
-      this.checkTokenExpiry();
+      // this.checkTokenExpiry();
     });
   }
   // getUuid(): string | null {
@@ -191,31 +191,31 @@ export class AuthService {
     return this.isSessionExpired;
   }
 
-  checkTokenExpiry() {
-    // console.log('checkTokenExpiry');
-    if (this.isTokenRenewing) return;
+  // checkTokenExpiry() {
+  //   // console.log('checkTokenExpiry');
+  //   if (this.isTokenRenewing) return;
 
-    const token = this.getToken();
-    if (!token) return;
+  //   const token = this.getToken();
+  //   if (!token) return;
 
-    const decoded: any = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
+  //   const decoded: any = jwtDecode(token);
+  //   const currentTime = Date.now() / 1000;
 
-    if (decoded.exp - currentTime < 60) {
-      // console.log('Token está por expirar, intentando renovar...');
-      this.isTokenRenewing = true;
-      this.renewToken().subscribe({
-        next: () => {
-          // console.log('Token renovado');
-          this.isTokenRenewing = false;
-        },
-        error: (err) => {
-          // console.log('Error al renovar el token', err);
-          this.isTokenRenewing = false;
-        },
-      });
-    }
-  }
+  //   if (decoded.exp - currentTime < 60) {
+  //     // console.log('Token está por expirar, intentando renovar...');
+  //     this.isTokenRenewing = true;
+  //     this.renewToken().subscribe({
+  //       next: () => {
+  //         // console.log('Token renovado');
+  //         this.isTokenRenewing = false;
+  //       },
+  //       error: (err) => {
+  //         // console.log('Error al renovar el token', err);
+  //         this.isTokenRenewing = false;
+  //       },
+  //     });
+  //   }
+  // }
 
   renewToken(): Observable<any> {
     const token = this.getToken();
