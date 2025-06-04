@@ -17,22 +17,51 @@ public filteredMercancia: MercanciaInterface[] = [];
 showLoader = false;
 mercanciaSeleccionada: MercanciaInterface = {} as MercanciaInterface;
 
+// ngOnInit(): void {
+//   this.showLoader = true;
+//   this.mercanciaService.getAllmercancias().subscribe((response) => {
+//     let { error, data } = response;
+//     console.log(data);
+//     if (!error) {
+//       if (Array.isArray(data)) {
+//         this.mercancias = data;
+//         this.filteredMercancia = response.data;
+//       } else {
+//         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
+//       }
+//       console.log(data);
+//     }
+//     this.showLoader = false;
+//   });
+// }
 ngOnInit(): void {
   this.showLoader = true;
   this.mercanciaService.getAllmercancias().subscribe((response) => {
     let { error, data } = response;
     console.log(data);
+
     if (!error) {
       if (Array.isArray(data)) {
-        this.mercancias = data;
-        this.filteredMercancia = response.data;
+        const uuid = this.getCompanyUuid();
+
+        if (uuid) {
+          this.mercancias = data.filter(m => m.uuid_company === uuid);
+        } else {
+          this.mercancias = [];
+        }
+
+        this.filteredMercancia = [...this.mercancias];
       } else {
         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
       }
-      console.log(data);
     }
+
     this.showLoader = false;
   });
+}
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
 }
 
 

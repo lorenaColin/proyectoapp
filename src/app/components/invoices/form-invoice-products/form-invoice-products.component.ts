@@ -108,52 +108,109 @@ export class FormInvoiceProductsComponent implements OnInit {
     // console.log('Buscando pais:', query);
     this.buscar1.next(query);
   }
-private Buscar(query:string):void{
-    const control = this.formConcepts.get('claveProdServ');
-    if (!control) return;
-    if (query.length === 0) {
-      control.setErrors(null);
+// private Buscar(query:string):void{
+//     const control = this.formConcepts.get('claveProdServ');
+//     if (!control) return;
+//     if (query.length === 0) {
+//       control.setErrors(null);
       
-      if (control.hasValidator(Validators.required)) {
-        control.setValidators([Validators.required]);
-      }
-      control.updateValueAndValidity();
-      this.filteredConcepto = [];
-      this.showLoader = false;
-      return;
+//       if (control.hasValidator(Validators.required)) {
+//         control.setValidators([Validators.required]);
+//       }
+//       control.updateValueAndValidity();
+//       this.filteredConcepto = [];
+//       this.showLoader = false;
+//       return;
+//     }
+//     if (query.length < 2) {
+//       control.setErrors({ notFound: true });
+//       this.filteredConcepto = [];
+//       this.showLoader = false;
+//       return;
+//     }
+//     this.showLoader = true;
+//     this.productoService.getAllConceptos(query).subscribe({
+//           next: (response: ApiResponseConceptos) => {
+//             // console.log('Respuesta de la API:', response);
+//             this.filteredConcepto = response.data || [];
+//             // console.log('Productos obtenidos:', this.filteredConcepto);
+    
+//             const exactMatch = this.filteredConcepto.some(producto =>
+//               producto.internal_key.toString().toLowerCase() === query 
+//             );
+    
+//             if (!exactMatch) {
+//               control.setErrors({ notFound: true });
+//               this.limpiarCampos();
+//             } else {
+//               control.setErrors(null);
+//             }
+    
+//             this.showLoader = false;
+//           },
+//           error: (err) => {
+//             // console.error('Error en la búsqueda de productos:', err);
+//             this.showLoader = false;
+//           }
+//         });
+//   }
+private Buscar(query: string): void {
+  const control = this.formConcepts.get('claveProdServ');
+  if (!control) return;
+
+  if (query.length === 0) {
+    control.setErrors(null);
+    if (control.hasValidator(Validators.required)) {
+      control.setValidators([Validators.required]);
     }
-    if (query.length < 2) {
-      control.setErrors({ notFound: true });
-      this.filteredConcepto = [];
-      this.showLoader = false;
-      return;
-    }
-    this.showLoader = true;
-    this.productoService.getAllConceptos(query).subscribe({
-          next: (response: ApiResponseConceptos) => {
-            // console.log('Respuesta de la API:', response);
-            this.filteredConcepto = response.data || [];
-            // console.log('Productos obtenidos:', this.filteredConcepto);
-    
-            const exactMatch = this.filteredConcepto.some(producto =>
-              producto.internal_key.toString().toLowerCase() === query 
-            );
-    
-            if (!exactMatch) {
-              control.setErrors({ notFound: true });
-              this.limpiarCampos();
-            } else {
-              control.setErrors(null);
-            }
-    
-            this.showLoader = false;
-          },
-          error: (err) => {
-            // console.error('Error en la búsqueda de productos:', err);
-            this.showLoader = false;
-          }
-        });
+    control.updateValueAndValidity();
+    this.filteredConcepto = [];
+    this.showLoader = false;
+    return;
   }
+
+  if (query.length < 2) {
+    control.setErrors({ notFound: true });
+    this.filteredConcepto = [];
+    this.showLoader = false;
+    return;
+  }
+
+  this.showLoader = true;
+
+  const uuid = this.getCompanyUuid();
+
+  this.productoService.getAllConceptos(query).subscribe({
+    next: (response: ApiResponseConceptos) => {
+      const data = response.data || [];
+
+      // ✅ Filtrar por empresa actual
+      const conceptosFiltrados = uuid
+        ? data.filter(c => c.uuid_company === uuid)
+        : [];
+
+      this.filteredConcepto = conceptosFiltrados;
+
+      const exactMatch = this.filteredConcepto.some(producto =>
+        producto.internal_key.toLowerCase() === query
+      );
+
+      if (!exactMatch) {
+        control.setErrors({ notFound: true });
+        this.limpiarCampos();
+      } else {
+        control.setErrors(null);
+      }
+
+      this.showLoader = false;
+    },
+    error: (err) => {
+      this.showLoader = false;
+      // Manejo del error si es necesario
+    }
+  });
+}
+
   private limpiarCampos(): void {
     this.formConcepts.get('claveInterna')?.setValue('');
     this.formConcepts.get('claveProdServ')?.setValue('');
@@ -214,30 +271,13 @@ private Buscar(query:string):void{
       noIdentificacion,
       descripcion,
       quantity,
-      // valorUnitario
     }
-    // // const descripcion = conceptos.description ?? ''; 
-    // // const descriptionUnit = unidad; 
+  
     
-    // console.log({producto})
     this.formConcepts.patchValue(producto);
-    // console.log(descripcion)
-    // this.formConcepts.get('descripcion')?.setValue(descripcion.toString());
-    // this.formConcepts.patchValue({descripcion});
+
     this.claveConcepto = concepto.internal_key;
-    // this.formConcepts.get('claveProdServ')?.setValue(claveProdServ);
-    // this.formConcepts.get('claveUnidad')?.setValue(claveUnidad);
-    // this.formConcepts.get('descripcion')?.setValue(descripcion);
-    // this.formConcepts.get('valorUnitario')?.setValue(valorUnitario);
-    /*
-    this.formConcepts.get('claveInterna')?.setValue(conceptos.internal_key);
-    this.formConcepts.get('cantidad')?.setValue(conceptos.quantity);
-    this.formConcepts.get('valorUnitario')?.setValue(conceptos.unit_price);
-    this.formConcepts.get('noIdentificacion')?.setValue(conceptos.identifier_number);
-      if (this.formConcepts.get('unit_description')) {
-      // this.formConcepts.get('unit_description')?.setValue(descriptionUnit);
-    }
-    */
+ 
     this.filteredConcepto = [];
     this.selectedIndex = -1;
 
@@ -257,6 +297,9 @@ private Buscar(query:string):void{
     }
   }
 
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
 
   susb(){
     ['quantity', 'unit_price', 'discount'].forEach(field => {
@@ -272,9 +315,7 @@ private Buscar(query:string):void{
       this.traslados.clear();
       this.retenciones.clear();
       if(value != '02'){
-        // console.log(this.daniel)
-        // console.log(this.daniel.unsubscribe());
-        // console.log(this.daniel)
+     
 
       }
       if (value === '02') {

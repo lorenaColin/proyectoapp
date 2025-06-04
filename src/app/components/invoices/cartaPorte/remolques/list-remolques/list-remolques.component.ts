@@ -18,19 +18,51 @@ export class ListRemolquesComponent {
   private remolquesServicio = inject(remolquesService);
   serieSeleccionado: remolquesInterface = {} as remolquesInterface;
 
+  // ngOnInit(): void {
+  //   this.showLoader = true;
+  //   this.remolquesServicio.getAllRemolques().subscribe((response) => {
+  //     let { error, data } = response;
+  //     console.log(data);
+  //     if (!error) {
+  //       this.remolques = data;
+  //       this.filteredRemolques = [...data];
+  //       console.log(data); 
+  //     }
+  //     this.showLoader = false;
+  //   });
+  // }
   ngOnInit(): void {
-    this.showLoader = true;
-    this.remolquesServicio.getAllRemolques().subscribe((response) => {
-      let { error, data } = response;
-      console.log(data);
-      if (!error) {
-        this.remolques = data;
-        this.filteredRemolques = [...data];
-        console.log(data); 
+  this.showLoader = true;
+  this.remolquesServicio.getAllRemolques().subscribe((response) => {
+    let { error, data } = response;
+    console.log(data);
+
+    if (!error) {
+      if (Array.isArray(data)) {
+        const uuid = this.getCompanyUuid();
+
+        if (uuid) {
+          this.remolques = data.filter(remolque => remolque.uuid_company === uuid);
+        } else {
+          this.remolques = [];
+        }
+
+        this.filteredRemolques = [...this.remolques];
+      } else {
+        console.error('Se esperaba un arreglo, pero se recibió:', data);
+        this.remolques = [];
+        this.filteredRemolques = [];
       }
-      this.showLoader = false;
-    });
-  }
+    }
+
+    this.showLoader = false;
+  });
+}
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
     editRemolques(id: number): void {
       this.showLoader = true;
       console.log("ID que se pasa al backend:", id);

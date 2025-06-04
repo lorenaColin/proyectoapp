@@ -101,52 +101,119 @@ export class FormInvoiceMercanciaComponent {
     this.Buscar(query);  // ✅ aquí sin .next
   }
   
-  private Buscar(query: string): void {
-    const control = this.form.get('BienesTransp');
-    if (!control) return;
-    if (query.length === 0) {
-      control.setErrors(null);
+  // private Buscar(query: string): void {
+  //   const control = this.form.get('BienesTransp');
+  //   if (!control) return;
+  //   if (query.length === 0) {
+  //     control.setErrors(null);
 
-      if (control.hasValidator(Validators.required)) {
-        control.setValidators([Validators.required]);
-      }
-      control.updateValueAndValidity();
-      this.filteredMercancia = [];
-      this.showLoader = false;
-      return;
+  //     if (control.hasValidator(Validators.required)) {
+  //       control.setValidators([Validators.required]);
+  //     }
+  //     control.updateValueAndValidity();
+  //     this.filteredMercancia = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+  //   if (query.length < 2) {
+  //     control.setErrors({ notFound: true });
+  //     this.filteredMercancia = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+  //   this.showLoader = true;
+  //   this.mercanciSer.getAllMercanciaQuery(query).subscribe({
+  //     next: (response: ApiResponseMercnaica) => {
+  //       console.log('Respuesta de la API:', response);
+  //       this.filteredMercancia = response.data || [];
+  //       console.log('Productos obtenidos:', this.filteredMercancia);
+
+  //       const exactMatch = this.filteredMercancia.some(producto =>
+  //         producto.claveProdServCP.toString().toLowerCase() === query ||
+  //         producto.descripcion.toLowerCase() === query
+  //       );
+
+  //       if (!exactMatch) {
+  //         control.setErrors({ notFound: true });
+  //       } else {
+  //         control.setErrors(null);
+  //       }
+
+  //       this.showLoader = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error en la búsqueda de productos:', err);
+  //       this.showLoader = false;
+  //     }
+  //   });
+  // }
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
+private Buscar(query: string): void {
+  const control = this.form.get('BienesTransp');
+  if (!control) return;
+
+  if (query.length === 0) {
+    control.setErrors(null);
+    if (control.hasValidator(Validators.required)) {
+      control.setValidators([Validators.required]);
     }
-    if (query.length < 2) {
-      control.setErrors({ notFound: true });
-      this.filteredMercancia = [];
-      this.showLoader = false;
-      return;
-    }
-    this.showLoader = true;
-    this.mercanciSer.getAllMercanciaQuery(query).subscribe({
-      next: (response: ApiResponseMercnaica) => {
-        console.log('Respuesta de la API:', response);
-        this.filteredMercancia = response.data || [];
-        console.log('Productos obtenidos:', this.filteredMercancia);
-
-        const exactMatch = this.filteredMercancia.some(producto =>
-          producto.claveProdServCP.toString().toLowerCase() === query ||
-          producto.descripcion.toLowerCase() === query
-        );
-
-        if (!exactMatch) {
-          control.setErrors({ notFound: true });
-        } else {
-          control.setErrors(null);
-        }
-
-        this.showLoader = false;
-      },
-      error: (err) => {
-        console.error('Error en la búsqueda de productos:', err);
-        this.showLoader = false;
-      }
-    });
+    control.updateValueAndValidity();
+    this.filteredMercancia = [];
+    this.showLoader = false;
+    return;
   }
+
+  if (query.length < 2) {
+    control.setErrors({ notFound: true });
+    this.filteredMercancia = [];
+    this.showLoader = false;
+    return;
+  }
+
+  this.showLoader = true;
+
+  const ui_company = this.getCompanyUuid();
+
+  this.mercanciSer.getAllMercanciaQuery(query).subscribe({
+    next: (response: ApiResponseMercnaica) => {
+      console.log('Respuesta de la API:', response);
+
+      const allMercancia = response.data || [];
+
+      // Filtrar por empresa
+      this.filteredMercancia = allMercancia.filter(item => {
+        const matchEmpresa = item.uuid_company === ui_company;
+        const matchTexto =
+          item.claveProdServCP?.toLowerCase().includes(query) ||
+          item.descripcion?.toLowerCase().includes(query);
+
+        return matchEmpresa && matchTexto;
+      });
+
+      console.log('Filtrados:', this.filteredMercancia.length);
+
+      const exactMatch = this.filteredMercancia.some(producto =>
+        producto.claveProdServCP.toString().toLowerCase() === query ||
+        producto.descripcion.toLowerCase() === query
+      );
+
+      if (!exactMatch) {
+        control.setErrors({ notFound: true });
+      } else {
+        control.setErrors(null);
+      }
+
+      this.showLoader = false;
+    },
+    error: (err) => {
+      console.error('Error en la búsqueda de productos:', err);
+      this.showLoader = false;
+    }
+  });
+}
 
 
 

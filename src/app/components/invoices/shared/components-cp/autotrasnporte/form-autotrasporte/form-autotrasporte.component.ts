@@ -28,13 +28,37 @@ export class FormAutotrasporteComponent {
     this.loadTrasporte();
   }
   loadTrasporte(): void {
-
-    this.AutotransporteService.getAutotransports().subscribe((response) => {
-      const { error, data } = response;
-      console.log('Datos de autotrasporte recibidos:', data);
-      (!error) ? this.listAutotransporte = data : '';
-    });
+  const companyUuid = this.getCompanyUuid();
+  if (!companyUuid) {
+    console.warn('No se encontró el UUID de la empresa en localStorage');
+    return;
   }
+
+  this.AutotransporteService.getAutotransports().subscribe((response) => {
+    const { error, data } = response;
+    console.log('Datos de autotransporte recibidos:', data);
+
+    if (!error && data) {
+      // Filtrar por empresa
+      this.listAutotransporte = data.filter(
+        (item: AutotransportInterface) => item.company_id === companyUuid
+      );
+      console.log('Filtrados por empresa:', this.listAutotransporte);
+    }
+  });
+}
+
+  // loadTrasporte(): void {
+
+  //   this.AutotransporteService.getAutotransports().subscribe((response) => {
+  //     const { error, data } = response;
+  //     console.log('Datos de autotrasporte recibidos:', data);
+  //     (!error) ? this.listAutotransporte = data : '';
+  //   });
+  // }
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
 
   selectedAutotransport: AutotransportInterface | null = null;
 

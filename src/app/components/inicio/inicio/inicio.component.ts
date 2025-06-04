@@ -17,17 +17,13 @@ export class InicioComponent {
   irAlLogin() {
     this.router.navigate(['/auth/login']);
   }
-  // El valor inicial del slider
   timbres: number = 100;
-  // El precio calculado en función del valor del slider
   precio: number = this.calculatePrice(this.timbres);
 
-  // Función para calcular el precio
   calculatePrice(timbres: number): number {
-    return timbres * 0.1;  // Puedes ajustar esta fórmula según tus necesidades
+    return timbres * 0.1; 
   }
 
-  // Función para manejar el cambio de valor del slider
   onTimbradoChange(value: number): void {
     this.timbres = value;
     this.precio = this.calculatePrice(value);

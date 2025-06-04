@@ -19,18 +19,54 @@ export class ListAutotrasporteComponent {
   filteredAutotransports: any[] = [];
   @Input() auto: AutotransportInterface = {} as AutotransportInterface;
 
-  ngOnInit(): void {
-    this.showLoader = true;
-    this.autotransportService.getAutotransports().subscribe((response) => {
-      this.showLoader = false;
-      this.listadoAutos = response.data;
-      this.filteredAutotransports = response.data;
+  // ngOnInit(): void {
+  //   this.showLoader = true;
+  //   this.autotransportService.getAutotransports().subscribe((response) => {
+  //     this.showLoader = false;
+  //     this.listadoAutos = response.data;
+  //     this.filteredAutotransports = response.data;
 
-      let { error, data } = response;
-      if (error) return console.error('Error al obtener las empresas');
-      this.listadoAutos = data;
-    });
-  }
+  //     let { error, data } = response;
+  //     if (error) return console.error('Error al obtener las empresas');
+  //     this.listadoAutos = data;
+  //   });
+  // }
+  ngOnInit(): void {
+  this.showLoader = true;
+  this.autotransportService.getAutotransports().subscribe((response) => {
+    this.showLoader = false;
+
+    const { error, data } = response;
+
+    if (error) {
+      console.error('Error al obtener los autotransportes');
+      this.listadoAutos = [];
+      this.filteredAutotransports = [];
+      return;
+    }
+
+    if (Array.isArray(data)) {
+      const uuid = this.getCompanyUuid();
+
+      if (uuid) {
+        this.listadoAutos = data.filter(auto => auto.company_id === uuid);
+      } else {
+        this.listadoAutos = [];
+      }
+
+      this.filteredAutotransports = [...this.listadoAutos];
+    } else {
+      console.error('Se esperaba un arreglo, pero se recibió:', data);
+      this.listadoAutos = [];
+      this.filteredAutotransports = [];
+    }
+  });
+}
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
 
   editAutotransport(id: number): void {
     this.showLoader = true;
@@ -73,24 +109,52 @@ export class ListAutotrasporteComponent {
     }
   }
 
-  refreshAutotransportList(): void {
-    this.showLoader = true;
-    this.autotransportService.getAutotransports().subscribe(
-      (response) => {
-        this.listadoAutos = response.data;
-        this.filteredAutotransports = response.data;
-        this.showLoader = false;
-      },
-      () => {
-        this.showLoader = false;
-        Swal.fire(
-          'Error',
-          'No se pudo actualizar la lista de autotransportes.',
-          'error'
-        );
+  // refreshAutotransportList(): void {
+  //   this.showLoader = true;
+  //   this.autotransportService.getAutotransports().subscribe(
+  //     (response) => {
+  //       this.listadoAutos = response.data;
+  //       this.filteredAutotransports = response.data;
+  //       this.showLoader = false;
+  //     },
+  //     () => {
+  //       this.showLoader = false;
+  //       Swal.fire(
+  //         'Error',
+  //         'No se pudo actualizar la lista de autotransportes.',
+  //         'error'
+  //       );
+  //     }
+  //   );
+  // }
+refreshAutotransportList(): void {
+  this.showLoader = true;
+  this.autotransportService.getAutotransports().subscribe(
+    (response) => {
+      const { error, data } = response;
+      const uuid = this.getCompanyUuid();
+
+      if (!error && Array.isArray(data) && uuid) {
+        this.listadoAutos = data.filter(auto => auto.company_id === uuid);
+        this.filteredAutotransports = [...this.listadoAutos];
+      } else {
+        this.listadoAutos = [];
+        this.filteredAutotransports = [];
+        console.error('Error al filtrar autotransportes por company_id');
       }
-    );
-  }
+
+      this.showLoader = false;
+    },
+    () => {
+      this.showLoader = false;
+      Swal.fire(
+        'Error',
+        'No se pudo actualizar la lista de autotransportes.',
+        'error'
+      );
+    }
+  );
+}
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value

@@ -18,22 +18,50 @@ export class ListComponent {
   serieSeleccionado: SerietInterface = {} as SerietInterface;
   clientes: SerietInterface[] = [];
   filteredSerie: SerietInterface[] = [];
-  ngOnInit(): void {
-    this.showLoader = true;
-    this.seriesServicio.getAllSeries().subscribe((response) => {
-      let { error, data } = response;
-      console.log(data);
-      if (!error) {
-        this.series = data;
-        this.filteredSerie = [...data];
+  // ngOnInit(): void {
+  //   this.showLoader = true;
+  //   this.seriesServicio.getAllSeries().subscribe((response) => {
+  //     let { error, data } = response;
+  //     console.log(data);
+  //     if (!error) {
+  //       this.series = data;
+  //       this.filteredSerie = [...data];
 
-        console.log(data); 
+  //       console.log(data); 
+  //     }
+  //       console.error('Se esperaba un arreglo, pero se recibió un objeto.');
+
+  //     this.showLoader = false;
+  //   });
+  // }
+ngOnInit(): void {
+  this.showLoader = true;
+  this.seriesServicio.getAllSeries().subscribe((response) => {
+    let { error, data } = response;
+
+    if (!error && Array.isArray(data)) {
+      const uuid = this.getCompanyUuid();
+
+      if (uuid) {
+        this.series = data.filter(s => s.uuid_company === uuid);
+      } else {
+        this.series = [];
       }
-        console.error('Se esperaba un arreglo, pero se recibió un objeto.');
 
-      this.showLoader = false;
-    });
-  }
+      this.filteredSerie = [...this.series];
+    } else {
+      console.error('Se esperaba un arreglo, pero se recibió un objeto o hubo un error.', response);
+      this.series = [];
+      this.filteredSerie = [];
+    }
+
+    this.showLoader = false;
+  });
+}
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
 
   editCustomer(id: number): void {
     this.showLoader = true;

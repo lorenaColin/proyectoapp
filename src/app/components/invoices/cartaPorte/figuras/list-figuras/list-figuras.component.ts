@@ -19,23 +19,55 @@ showLoader = false;
 figuraSeleccionada: FigurasInterface = {} as FigurasInterface;
 
 
+// ngOnInit(): void {
+//   this.showLoader = true;
+//   this.figurasService.getAllFiguras().subscribe((response) => {
+//     let { error, data } = response;
+//     console.log(data);
+//     if (!error) {
+//       if (Array.isArray(data)) {
+//         this.figuras = data;
+//         this.filteredFigura = [...data];
+//       } else {
+//         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
+//       }
+//       console.log(data);
+//     }
+//     this.showLoader = false;
+//   });
+// }
 ngOnInit(): void {
   this.showLoader = true;
   this.figurasService.getAllFiguras().subscribe((response) => {
     let { error, data } = response;
     console.log(data);
+
     if (!error) {
       if (Array.isArray(data)) {
-        this.figuras = data;
-        this.filteredFigura = [...data];
+        const uuid = this.getCompanyUuid();
+
+        if (uuid) {
+          this.figuras = data.filter(figura => figura.uuid_company === uuid);
+        } else {
+          this.figuras = [];
+        }
+
+        this.filteredFigura = [...this.figuras];
       } else {
-        console.error('Se esperaba un arreglo, pero se recibió un objeto.');
+        console.error('Se esperaba un arreglo, pero se recibió:', data);
+        this.figuras = [];
+        this.filteredFigura = [];
       }
-      console.log(data);
     }
+
     this.showLoader = false;
   });
 }
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
 editFigura(id: number): void {
     this.showLoader = true;
     console.log("ID que se pasa al backend:", id);
@@ -86,24 +118,52 @@ public figuras: FigurasInterface[] = [];
 
 filteredInsurances: any[] = [];
   
-    refreshInsuranceList(): void {
-      this.showLoader = true;
-      this.figurasService.getInsurance().subscribe(
-        (response) => {
-          this.figuras = response.data;
-          this.filteredInsurances = response.data;
-          this.showLoader = false;
-        },
-        () => {
-          this.showLoader = false;
-          Swal.fire(
-            'Error',
-            'No se pudo actualizar la lista de seguros.',
-            'error'
-          );
-        }
+    // refreshInsuranceList(): void {
+    //   this.showLoader = true;
+    //   this.figurasService.getInsurance().subscribe(
+    //     (response) => {
+    //       this.figuras = response.data;
+    //       this.filteredInsurances = response.data;
+    //       this.showLoader = false;
+    //     },
+    //     () => {
+    //       this.showLoader = false;
+    //       Swal.fire(
+    //         'Error',
+    //         'No se pudo actualizar la lista de seguros.',
+    //         'error'
+    //       );
+    //     }
+    //   );
+    // }
+refreshInsuranceList(): void {
+  this.showLoader = true;
+  this.figurasService.getInsurance().subscribe(
+    (response) => {
+      const { error, data } = response;
+      const uuid = this.getCompanyUuid();
+
+      if (!error && Array.isArray(data) && uuid) {
+        this.figuras = data.filter(figura => figura.uuid_company === uuid);
+        this.filteredInsurances = [...this.figuras];
+      } else {
+        this.figuras = [];
+        this.filteredInsurances = [];
+        console.error('Error al filtrar figuras por uuid_company');
+      }
+
+      this.showLoader = false;
+    },
+    () => {
+      this.showLoader = false;
+      Swal.fire(
+        'Error',
+        'No se pudo actualizar la lista de seguros.',
+        'error'
       );
     }
+  );
+}
 
  
  applyFilter(event: Event): void {

@@ -17,7 +17,7 @@ interface Item {
 })
 export class HeaderComponent {
   cartItemCount: number = 5;
-  notificationCount: number = 5;
+  // notificationCount: number = 5;
   public isCollapsed = true;
 
   private authService = inject(AuthService);
@@ -30,6 +30,8 @@ export class HeaderComponent {
 
   fullScreenIconVisible = true;
   exitFullScreenIconVisible = false;
+ notifications: string[] = [];
+notificationCount: number = 0;
 
   themeChange(type: string, type1: string, type2: string) {
     this.elementRef.nativeElement.ownerDocument.documentElement?.setAttribute('class', type);

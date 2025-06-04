@@ -25,18 +25,52 @@ export class FormSegurosComponent {
      this.loadSeguros();
    }
 
-  loadSeguros(): void {
-    this.seguroService.getInsurance().subscribe((response) => {
-      const { error, data } = response;
-      if (!error) {
-        this.listSeguros = data;
+  // loadSeguros(): void {
+  //   this.seguroService.getInsurance().subscribe((response) => {
+  //     const { error, data } = response;
+  //     if (!error) {
+  //       this.listSeguros = data;
   
-        this.segurosAmbientales = this.listSeguros.filter(seguro => seguro.type === 'Ambiental');
-        this.segurosCarga = this.listSeguros.filter(seguro => seguro.type === 'Carga');
-      }
-    });
+  //       this.segurosAmbientales = this.listSeguros.filter(seguro => seguro.type === 'Ambiental');
+  //       this.segurosCarga = this.listSeguros.filter(seguro => seguro.type === 'Carga');
+  //     }
+  //   });
+  // }
+
+loadSeguros(): void {
+  const companyUuid = this.getCompanyUuid();
+  console.log('UUID de empresa:', companyUuid);
+
+  if (!companyUuid) {
+    console.warn('UUID de empresa no encontrado en localStorage');
+    return;
   }
 
+  this.seguroService.getInsurance().subscribe((response) => {
+    const { error, data } = response;
+
+    if (!error && data) {
+      // Debug de todos los seguros carga
+      console.log('Seguros Carga sin filtrar:', data.filter(seguro => seguro.type === 'Carga'));
+      console.log('Seguros Carga con company_id:', data.filter(seguro => seguro.type === 'Carga' && String(seguro.company_id) === String(companyUuid)));
+
+      this.listSeguros = data.filter(
+        (seguro: InsuranceInterface) => String(seguro.company_id) === String(companyUuid)
+      );
+
+      this.segurosAmbientales = this.listSeguros.filter(
+        (seguro) => seguro.type.toLowerCase() === 'ambiental'
+      );
+
+      this.segurosCarga = this.listSeguros.filter(
+        (seguro) => seguro.type.toLowerCase() === 'carga'
+      );
+
+      console.log('Seguros Ambientales filtrados:', this.segurosAmbientales);
+      console.log('Seguros Carga filtrados:', this.segurosCarga);
+    }
+  });
+}
 
   cargarSeguroCarga(event: Event): void {
     const selectedId = (event.target as HTMLSelectElement).value;
@@ -62,22 +96,22 @@ export class FormSegurosComponent {
   onAmbientSelected(event: Event): void {
     const selectedAsegure = (event.target as HTMLSelectElement).value;
   
-    // Encuentra el seguro seleccionado de la lista de seguros ambientales
     const selectedSeguro = this.segurosAmbientales.find(
       (seguro) => seguro.asegure === selectedAsegure
     );
   
     if (selectedSeguro) {
-      // Asigna el valor de la póliza (polize) al campo 'pSeguro'
       this.formSeguros.patchValue({
         pSeguro: selectedSeguro.polize,
       });
     } else {
-      // Si no se selecciona un valor válido, limpia el campo
       this.formSeguros.patchValue({
         pSeguro: null,
       });
     }
   }
-   
+   private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
 }

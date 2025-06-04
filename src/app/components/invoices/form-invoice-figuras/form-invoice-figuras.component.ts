@@ -88,53 +88,119 @@ export class FormInvoiceFigurasComponent {
     console.log('Buscando :', query);
     this.Buscar(query);  // ✅ aquí sin .next
   }
-  
-  private Buscar(query: string): void {
-    const control = this.form.get('rfcFigura');
-    if (!control) return;
-    if (query.length === 0) {
-      control.setErrors(null);
+  private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
 
-      if (control.hasValidator(Validators.required)) {
-        control.setValidators([Validators.required]);
-      }
-      control.updateValueAndValidity();
-      this.filteresFiguras = [];
-      this.showLoader = false;
-      return;
+private Buscar(query: string): void {
+  const control = this.form.get('rfcFigura');
+  if (!control) return;
+
+  if (query.length === 0) {
+    control.setErrors(null);
+    if (control.hasValidator(Validators.required)) {
+      control.setValidators([Validators.required]);
     }
-    if (query.length < 2) {
-      control.setErrors({ notFound: true });
-      this.filteresFiguras = [];
-      this.showLoader = false;
-      return;
-    }
-    this.showLoader = true;
-    this.figurasService.getAllFigurasQuery(query).subscribe({
-      next: (response: ApiResponseFiguras) => {
-        console.log('Respuesta de la API:', response);
-        this.filteresFiguras = response.data || [];
-        console.log('Productos obtenidos:', this.filteresFiguras);
-
-        const exactMatch = this.filteresFiguras.some(producto =>
-          producto.rfcFigura.toString().toLowerCase() === query ||
-          producto.nombreFigura.toLowerCase() === query
-        );
-
-        if (!exactMatch) {
-          control.setErrors({ notFound: true });
-        } else {
-          control.setErrors(null);
-        }
-
-        this.showLoader = false;
-      },
-      error: (err) => {
-        console.error('Error en la búsqueda de productos:', err);
-        this.showLoader = false;
-      }
-    });
+    control.updateValueAndValidity();
+    this.filteresFiguras = [];
+    this.showLoader = false;
+    return;
   }
+
+  if (query.length < 2) {
+    control.setErrors({ notFound: true });
+    this.filteresFiguras = [];
+    this.showLoader = false;
+    return;
+  }
+
+  this.showLoader = true;
+
+  const companyUuid = this.getCompanyUuid();
+  if (!companyUuid) {
+    console.warn('No hay UUID de empresa en localStorage');
+    control.setErrors({ notFound: true });
+    this.filteresFiguras = [];
+    this.showLoader = false;
+    return;
+  }
+
+  this.figurasService.getAllFigurasQuery(query).subscribe({
+    next: (response: ApiResponseFiguras) => {
+      console.log('Respuesta de la API:', response);
+
+      // Filtramos las figuras que tengan el mismo company_id (o UUID) que companyUuid
+      this.filteresFiguras = (response.data || []).filter(figura => figura.uuid_company === companyUuid);
+
+      console.log('Productos filtrados:', this.filteresFiguras);
+
+      const exactMatch = this.filteresFiguras.some(producto =>
+        producto.rfcFigura.toLowerCase() === query.toLowerCase() ||
+        producto.nombreFigura.toLowerCase() === query.toLowerCase()
+      );
+
+      if (!exactMatch) {
+        control.setErrors({ notFound: true });
+      } else {
+        control.setErrors(null);
+      }
+
+      this.showLoader = false;
+    },
+    error: (err) => {
+      console.error('Error en la búsqueda de productos:', err);
+      control.setErrors({ notFound: true });
+      this.showLoader = false;
+    }
+  });
+}
+
+  // private Buscar(query: string): void {
+  //   const control = this.form.get('rfcFigura');
+  //   if (!control) return;
+  //   if (query.length === 0) {
+  //     control.setErrors(null);
+
+  //     if (control.hasValidator(Validators.required)) {
+  //       control.setValidators([Validators.required]);
+  //     }
+  //     control.updateValueAndValidity();
+  //     this.filteresFiguras = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+  //   if (query.length < 2) {
+  //     control.setErrors({ notFound: true });
+  //     this.filteresFiguras = [];
+  //     this.showLoader = false;
+  //     return;
+  //   }
+  //   this.showLoader = true;
+  //   this.figurasService.getAllFigurasQuery(query).subscribe({
+  //     next: (response: ApiResponseFiguras) => {
+  //       console.log('Respuesta de la API:', response);
+  //       this.filteresFiguras = response.data || [];
+  //       console.log('Productos obtenidos:', this.filteresFiguras);
+
+  //       const exactMatch = this.filteresFiguras.some(producto =>
+  //         producto.rfcFigura.toString().toLowerCase() === query ||
+  //         producto.nombreFigura.toLowerCase() === query
+  //       );
+
+  //       if (!exactMatch) {
+  //         control.setErrors({ notFound: true });
+  //       } else {
+  //         control.setErrors(null);
+  //       }
+
+  //       this.showLoader = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error en la búsqueda de productos:', err);
+  //       this.showLoader = false;
+  //     }
+  //   });
+  // }
 
 
 

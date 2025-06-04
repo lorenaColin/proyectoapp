@@ -164,7 +164,7 @@ export class NavService implements OnDestroy {
       type: 'sub',
       selected : false,
       active: false,
-      icon: 'file',
+      icon: 'archive',
       badgeClass: 'secondary',
       badgeText: 'secondary',
       badgeValue: 'New',
@@ -195,11 +195,11 @@ export class NavService implements OnDestroy {
 },
 {
   title: 'Mis empresas',
-  type: 'link', // Asegúrate que sea 'link' si es una ruta directa
-  path: '/administration', // Esta es la clave
+  type: 'link', 
+  path: '/administration',
   selected: false,
   active: false,
-  icon: 'file',
+  icon: 'briefcase',
   badgeClass: 'secondary',
   badgeText: 'secondary',
   badgeValue: 'New',

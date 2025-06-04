@@ -23,23 +23,52 @@ export class ListUbicacionesComponent {
   private ubicacionServicio = inject(ubicacionesService);
   ubicacionSeleccionado: ubicacionInterface = {} as ubicacionInterface;
 
+  // ngOnInit(): void {
+  //   this.showLoader = true;
+  //   this.ubicacionServicio.getAllubicacion().subscribe((response) => {
+  //     let { error, data } = response;
+  //     console.log(data);
+  //     if (!error) {
+  //       if (Array.isArray(data)) {
+  //         this.ubicaciones = data;
+  //         this.filteredUbicaciones = [...data];
+  //       } else {
+  //         console.error('Se esperaba un arreglo, pero se recibió un objeto.');
+  //       }
+  //       console.log(data);
+  //     }
+  //     this.showLoader = false;
+  //   });
+  // }
   ngOnInit(): void {
-    this.showLoader = true;
-    this.ubicacionServicio.getAllubicacion().subscribe((response) => {
-      let { error, data } = response;
-      console.log(data);
-      if (!error) {
-        if (Array.isArray(data)) {
-          this.ubicaciones = data;
-          this.filteredUbicaciones = [...data];
-        } else {
-          console.error('Se esperaba un arreglo, pero se recibió un objeto.');
-        }
-        console.log(data);
+  this.showLoader = true;
+  this.ubicacionServicio.getAllubicacion().subscribe((response) => {
+    let { error, data } = response;
+
+    if (!error && Array.isArray(data)) {
+      const uuid = this.getCompanyUuid();
+
+      if (uuid) {
+        this.ubicaciones = data.filter(u => u.uuid_company === uuid);
+      } else {
+        this.ubicaciones = [];
       }
-      this.showLoader = false;
-    });
-  }
+
+      this.filteredUbicaciones = [...this.ubicaciones];
+    } else {
+      console.error('Se esperaba un arreglo, pero se recibió un objeto o hubo un error.', response);
+      this.ubicaciones = [];
+      this.filteredUbicaciones = [];
+    }
+
+    this.showLoader = false;
+  });
+}
+
+private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
   editUbicacion(id: number): void {
     this.showLoader = true;
     console.log("ID que se pasa al backend:", id);

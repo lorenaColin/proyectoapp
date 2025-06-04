@@ -22,14 +22,34 @@ this.formRemolques=this.cartaPorteService.getRemolques();
   ngOnInit(): void {
     this.loadTrasporte();
   }
-  loadTrasporte(): void {
+  // loadTrasporte(): void {
 
-    this.remolqueService.getAllRemolques().subscribe((response) => {
-      const { error, data } = response;
-      console.log('Datos remolque recibidos:', data);
-      (!error) ? this.listRemolque = data : '';
-    });
+  //   this.remolqueService.getAllRemolques().subscribe((response) => {
+  //     const { error, data } = response;
+  //     console.log('Datos remolque recibidos:', data);
+  //     (!error) ? this.listRemolque = data : '';
+  //   });
+  // }
+loadTrasporte(): void {
+  const companyUuid = this.getCompanyUuid();
+
+  if (!companyUuid) {
+    console.warn('UUID de empresa no encontrado en localStorage');
+    return;
   }
+
+  this.remolqueService.getAllRemolques().subscribe((response) => {
+    const { error, data } = response;
+    console.log('Datos remolque recibidos:', data);
+
+    if (!error && data) {
+      this.listRemolque = data.filter(
+        (remolque: remolquesInterface) => remolque.uuid_company === companyUuid
+      );
+      console.log('Remolques filtrados por empresa:', this.listRemolque);
+    }
+  });
+}
 
 
    selectedremolque: remolquesInterface | null = null;
@@ -58,5 +78,8 @@ this.formRemolques=this.cartaPorteService.getRemolques();
     }
   }
   
-  
+  private getCompanyUuid(): string | null {
+  return localStorage.getItem('company');
+}
+
 }
